@@ -2,17 +2,26 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
 
 public class AccountsPanel {
     private JFrame frame;
     private JPanel cardPanel;
     private CardLayout cardLayout;
-    private JTextField emailField;
+    private JPanel messagePanel;
+    private JLabel messageLabel;
+    private JTextField emailField;  // Declare emailField as a class member
+
+    // File path for user data
+    private static final String USER_DATA_FILE = "user_data.txt";
 
     public AccountsPanel() {
         frame = new JFrame("Boiler Bay Login");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(350, 500); // Increased dimensions
 
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
@@ -20,12 +29,21 @@ public class AccountsPanel {
         cardPanel.add(createSignInPanel(), "SignIn");
         cardPanel.add(createNewAccountPanel(), "NewAccount");
 
+        // Create message panel
+        messagePanel = new JPanel(new BorderLayout());
+        messageLabel = new JLabel();
+        messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        messagePanel.add(messageLabel, BorderLayout.CENTER);
+        cardPanel.add(messagePanel, "Message");
+
         frame.add(cardPanel);
 
         cardLayout.show(cardPanel, "SignIn");
     }
 
     private JPanel createSignInPanel() {
+        frame.setSize(400, 450);
+        frame.setResizable(false);
         JPanel signInPanel = new JPanel();
         signInPanel.setLayout(new BoxLayout(signInPanel, BoxLayout.Y_AXIS));
         signInPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -45,7 +63,7 @@ public class AccountsPanel {
         emailInputLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         emailInputLabel.setFont(largeFont);
         emailField = new JTextField();
-        emailField.setMaximumSize(new Dimension(300, 60)); // Increased dimensions
+        emailField.setMaximumSize(new Dimension(300, 30)); // Adjusted dimensions
         emailField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JButton forgotPasswordButton = new JButton("Forgot Password");
@@ -82,6 +100,8 @@ public class AccountsPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(cardPanel, "NewAccount");
+                frame.setSize(500, 300);
+                frame.setResizable(false);
             }
         });
 
@@ -100,8 +120,10 @@ public class AccountsPanel {
         signInPanel.add(Box.createVerticalStrut(10));
         signInPanel.add(signInLabel);
         signInPanel.add(Box.createVerticalStrut(15));
-        signInPanel.add(emailInputLabel);
-        signInPanel.add(emailField);
+
+        // Add text labels before fields
+        signInPanel.add(createFieldWithLabel("Email", emailField));
+
         signInPanel.add(Box.createVerticalStrut(20));
         signInPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
         signInPanel.add(Box.createVerticalStrut(10));
@@ -120,20 +142,160 @@ public class AccountsPanel {
         return signInPanel;
     }
 
-    private JPanel createNewAccountPanel() {
-        JPanel newAccountPanel = new JPanel();
-        newAccountPanel.setLayout(new BoxLayout(newAccountPanel, BoxLayout.Y_AXIS));
+    private JPanel createFieldWithLabel(String labelText, JComponent field) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Arial", Font.PLAIN, 18)); // Set font size
+        label.setPreferredSize(new Dimension(100, 20)); // Adjusted label size
+        panel.add(label);
+        panel.add(field);
+        return panel;
+    }
 
-        // Add components for creating a new account (similar to the above panel)
+    private JPanel createNewAccountPanel() {
+        JPanel newAccountPanel = new JPanel(new GridLayout(0, 2, 10, 10)); // GridLayout with 2 columns and 10x10 spacing
+        newAccountPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+
+        Font largeFont = new Font("Arial", Font.PLAIN, 18);
+
+        JLabel createAccountLabel = new JLabel("Create a New Account");
+        createAccountLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        createAccountLabel.setFont(largeFont);
+
+        JTextField nameField = new JTextField();
+        JTextField usernameField = new JTextField();
+        JTextField emailField = new JTextField();
+        JPasswordField passwordField = new JPasswordField();
+
+        Dimension fieldSize = new Dimension(150, 10);
+
+        nameField.setMaximumSize(fieldSize);
+        usernameField.setMaximumSize(fieldSize);
+        emailField.setMaximumSize(fieldSize);
+        passwordField.setMaximumSize(fieldSize);
+
+
+        String[] roles = {"Customer", "Seller"};
+        JComboBox<String> roleDropdown = new JComboBox<>(roles);
+        roleDropdown.setAlignmentX(Component.CENTER_ALIGNMENT);
+        roleDropdown.setFont(largeFont);
+
+        JButton submitButton = new JButton("Submit");
+        submitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        submitButton.setFont(largeFont);
+        submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = nameField.getText().trim();
+                String username = usernameField.getText().trim();
+                String email = emailField.getText().trim();
+                char[] passwordChars = passwordField.getPassword();
+                String password = new String(passwordChars);
+                String role = (String) roleDropdown.getSelectedItem();
+
+                if (name.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                    JOptionPane.showMessageDialog(frame, "All fields must be filled out.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (password.length() < 8 || !password.matches(".*\\d.*") || !password.matches(".*[!@#$%^&*()-_=+\\[\\]{};:'\",.<>/?].*")) {
+                    JOptionPane.showMessageDialog(frame, "Password must be at least 8 characters long, include 1 digit, and 1 special character.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                try {
+                    if (isDuplicateEmailOrUsername(username, email)) {
+                        showMessage("An account with the same email or username already exists.", "Error");
+                    } else {
+                        if (writeAccountDataToFile(name, email, username, password, role)) {
+                            showMessage("Account created successfully. Redirecting to Sign In.", "Success");
+                            cardLayout.show(cardPanel, "SignIn");
+                        } else {
+                            showMessage("Failed to create the account.", "Error");
+                        }
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    showMessage("Error saving user data. Please try again later.", "Error");
+                    cardLayout.show(cardPanel, "SignIn");
+                }
+            }
+
+        });
+
+        JButton backButton = new JButton("Back to Sign In");
+        backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        backButton.setFont(largeFont);
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(cardPanel, "SignIn");
+                frame.setSize(400, 450);
+            }
+        });
+
+        newAccountPanel.add(Box.createVerticalStrut(20));
+        newAccountPanel.add(createAccountLabel);
+
+        // Add text labels and fields in a table-like structure
+        addFieldWithLabel(newAccountPanel, "Name", nameField);
+        addFieldWithLabel(newAccountPanel, "Username", usernameField);
+        addFieldWithLabel(newAccountPanel, "Email", emailField);
+        addFieldWithLabel(newAccountPanel, "Password", passwordField);
+        addFieldWithLabel(newAccountPanel, "Role", roleDropdown);
+
+        newAccountPanel.add(submitButton);
+        newAccountPanel.add(backButton);
 
         return newAccountPanel;
     }
 
-    public void display() {
-        frame.setVisible(true);
+    // Helper method to add text labels before fields
+    private void addFieldWithLabel(JPanel panel, String labelText, JComponent field) {
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Arial", Font.PLAIN, 18)); // Set font size
+        panel.add(label);
+        panel.add(field);
+    }
+
+
+
+    private boolean isDuplicateEmailOrUsername(String username, String email) throws IOException {
+        try (Scanner scanner = new Scanner(new FileReader(USER_DATA_FILE))) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] userData = line.split(";");
+                if (userData[1].equalsIgnoreCase(email) || userData[2].equalsIgnoreCase(username)) {
+                    return true; // Duplicate email or username found
+                }
+            }
+        }
+        return false; // No duplicate found
+    }
+
+    private boolean writeAccountDataToFile(String name, String email, String username, String password, String role) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(USER_DATA_FILE, true))) {
+            // Append the new account data to the file
+            writer.write(name + ";" + email + ";" + username + ";" + password + ";" + role);
+            writer.newLine();
+            return true;
+        }
+    }
+
+    private void showMessage(String message, String title) {
+        messageLabel.setText(message);
+        cardLayout.show(cardPanel, "Message");
+        JOptionPane.showMessageDialog(frame, message, title, JOptionPane.INFORMATION_MESSAGE);
+        cardLayout.show(cardPanel, "NewAccount"); // switch back to the new account panel after showing the message
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new AccountsPanel().display());
+    }
+
+    private void display() {
+        frame.setVisible(true);
     }
 }
