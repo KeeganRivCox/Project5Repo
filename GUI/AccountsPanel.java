@@ -200,6 +200,11 @@ public class AccountsPanel {
                     return;
                 }
 
+                if (!email.endsWith("@purdue.edu")) {
+                    JOptionPane.showMessageDialog(frame, "Email must end with @purdue.edu.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 if (password.length() < 8 || !password.matches(".*\\d.*") || !password.matches(".*[!@#$%^&*()-_=+\\[\\]{};:'\",.<>/?].*")) {
                     JOptionPane.showMessageDialog(frame, "Password must be at least 8 characters long, include 1 digit, and 1 special character.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -212,6 +217,7 @@ public class AccountsPanel {
                         if (writeAccountDataToFile(name, email, username, password, role)) {
                             showMessage("Account created successfully. Redirecting to Sign In.", "Success");
                             cardLayout.show(cardPanel, "SignIn");
+                            frame.setSize(400, 450);
                         } else {
                             showMessage("Failed to create the account.", "Error");
                         }
@@ -220,8 +226,11 @@ public class AccountsPanel {
                     ex.printStackTrace();
                     showMessage("Error saving user data. Please try again later.", "Error");
                     cardLayout.show(cardPanel, "SignIn");
+                    frame.setSize(400, 450);
+
                 }
             }
+
 
         });
 
@@ -266,8 +275,8 @@ public class AccountsPanel {
         try (Scanner scanner = new Scanner(new FileReader(USER_DATA_FILE))) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                String[] userData = line.split(";");
-                if (userData[1].equalsIgnoreCase(email) || userData[2].equalsIgnoreCase(username)) {
+                String[] userData = line.split(",");
+                if (userData.length >= 3 && (userData[1].equalsIgnoreCase(email) || userData[2].equalsIgnoreCase(username))) {
                     return true; // Duplicate email or username found
                 }
             }
@@ -275,14 +284,16 @@ public class AccountsPanel {
         return false; // No duplicate found
     }
 
+
     private boolean writeAccountDataToFile(String name, String email, String username, String password, String role) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(USER_DATA_FILE, true))) {
-            // Append the new account data to the file
-            writer.write(name + ";" + email + ";" + username + ";" + password + ";" + role);
+            // Append the new account data to the file using a comma as the delimiter
+            writer.write(name + "," + email + "," + username + "," + password + "," + role);
             writer.newLine();
             return true;
         }
     }
+
 
     private void showMessage(String message, String title) {
         messageLabel.setText(message);
