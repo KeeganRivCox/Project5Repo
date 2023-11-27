@@ -394,7 +394,14 @@ public class AccountsPanel {
         resetPasswordPanel.add(Box.createVerticalStrut(10));
         resetPasswordPanel.add(createFieldWithLabel("Username", resetUsernameField));
         resetPasswordPanel.add(Box.createVerticalStrut(10));
-        resetPasswordPanel.add(resetSubmitButton);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+        buttonPanel.add(resetSubmitButton);
+        buttonPanel.add(Box.createHorizontalStrut(10)); // Add some spacing between buttons
+        buttonPanel.add(createBackToMenuButton());
+
+        resetPasswordPanel.add(buttonPanel);
         resetPasswordPanel.add(Box.createVerticalStrut(20));
 
         return resetPasswordPanel;
@@ -461,7 +468,14 @@ public class AccountsPanel {
         passwordPanel.add(Box.createVerticalStrut(10));
         passwordPanel.add(createFieldWithLabel("Confirm New Password", confirmNewPasswordField));
         passwordPanel.add(Box.createVerticalStrut(10));
-        passwordPanel.add(resetPasswordButton);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+        buttonPanel.add(resetPasswordButton);
+        buttonPanel.add(Box.createHorizontalStrut(10)); // Add some spacing between buttons
+        buttonPanel.add(createBackToMenuButton());
+
+        passwordPanel.add(buttonPanel);
         passwordPanel.add(Box.createVerticalStrut(20));
 
         return passwordPanel;
@@ -557,7 +571,14 @@ public class AccountsPanel {
         deleteAccountRequestPanel.add(Box.createVerticalStrut(10));
         deleteAccountRequestPanel.add(createFieldWithLabel("Username", deleteAccountUsernameField));
         deleteAccountRequestPanel.add(Box.createVerticalStrut(10));
-        deleteAccountRequestPanel.add(deleteAccountRequestButton);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+        buttonPanel.add(deleteAccountRequestButton);
+        buttonPanel.add(Box.createHorizontalStrut(10)); // Add some spacing between buttons
+        buttonPanel.add(createBackToMenuButton());
+
+        deleteAccountRequestPanel.add(buttonPanel);
         deleteAccountRequestPanel.add(Box.createVerticalStrut(20));
 
         return deleteAccountRequestPanel;
@@ -621,7 +642,14 @@ public class AccountsPanel {
         deleteAccountPasswordPanel.add(Box.createVerticalStrut(10));
         deleteAccountPasswordPanel.add(createFieldWithLabel("Confirm Password", confirmDeleteAccountPasswordField));
         deleteAccountPasswordPanel.add(Box.createVerticalStrut(10));
-        deleteAccountPasswordPanel.add(deleteAccountButton);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+        buttonPanel.add(deleteAccountButton);
+        buttonPanel.add(Box.createHorizontalStrut(10)); // Add some spacing between buttons
+        buttonPanel.add(createBackToMenuButton());
+
+        deleteAccountPasswordPanel.add(buttonPanel);
         deleteAccountPasswordPanel.add(Box.createVerticalStrut(20));
 
         return deleteAccountPasswordPanel;
@@ -748,6 +776,20 @@ public class AccountsPanel {
         }
     }
 
+    private JButton createBackToMenuButton() {
+        JButton backButton = new JButton("Back to Menu");
+        Font largeFont = new Font("Arial", Font.PLAIN, 18);
+        backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        backButton.setFont(largeFont);
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(cardPanel, "SignIn");
+                frame.setSize(400, 500);
+            }
+        });
+        return backButton;
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new AccountsPanel().display());
