@@ -90,6 +90,7 @@ public class SellerGUI {
                 frame.setSize(600, 400);
                 frame.setLocationRelativeTo(null);
                 frame.setTitle("The Product");
+                productSearchBar.setText("");
                 cl.show(panelCont,"3");
             }
         });
