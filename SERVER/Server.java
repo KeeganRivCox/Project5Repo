@@ -11,6 +11,8 @@ public class Server{
     public static final int SERVER_PORT = 9087;
 
     public static final String ACCOUNT_HASH_MAP = new File("accountHashMapData").getAbsolutePath();
+    public static final String SELLER_HASH_MAP = new File("sellerHashMapData").getAbsolutePath();
+    public static final String CUSTOMER_HASH_MAP = new File("customerHashMapData").getAbsolutePath();
 
     private ServerSocket server;
 

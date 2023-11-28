@@ -1,10 +1,17 @@
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ConnectedClient {
 
     private Socket connection;
+    private ObjectOutputStream requestWriter;
+    private ObjectInputStream requestReader;
+
+    private static final int CREATE_ACCOUNT = 0;
+    private static final int GET_ACCOUNT = 1;
+    private static final int DELETE_ACCOUNT = 2;
 
     public ConnectedClient(Socket clientConnection) {
 
@@ -12,146 +19,211 @@ public class ConnectedClient {
 
     }
 
-    // Executing specific task based upon object type sent - synchronized to prevent race events
     public void execute() {
-
-        BufferedReader br;
-        ObjectInputStream ois;
-        PrintWriter pw;
-        int requestType;
-        int objectType;
 
         try {
 
-            br = new BufferedReader(new InputStreamReader(this.connection.getInputStream()));
+             requestReader = new ObjectInputStream(connection.getInputStream());
+             requestWriter = new ObjectOutputStream(connection.getOutputStream());
 
-            ois = new ObjectInputStream(this.connection.getInputStream());
+             // Stores request sent by request object
+             int request = Integer.parseInt(requestReader.readObject().toString());
 
-            pw = new PrintWriter(this.connection.getOutputStream());
+             switch (request) {
 
-            String requestLine = br.readLine();
+                case CREATE_ACCOUNT -> {
 
-            requestType = determineRequest(requestLine);
-            objectType = determineRequestObject(requestLine);
+                    serverCreateAccount();
 
-            if (performRequest(requestType, objectType, ois)) {
+                }
 
-                pw.println("success");
+                case GET_ACCOUNT -> {
 
-            } else {
+                    serverGetAccount();
 
-                pw.println("failure");
-
-            }
-
-            pw.flush();
-            pw.close();
-            br.close();
-            ois.close();
-
-        } catch (IOException e) {
-
-            throw new RuntimeException(e);
-
-        }
-
-
-    }
-
-    private boolean performRequest(int requestType, int objectType, ObjectInputStream ois) {
-
-
-        switch (objectType) {
-
-            case Request.ACCOUNT -> {
-
-                HashMap<String, Account> accountMap = getAccountHashMap();
-                try {
-                    Account account = (Account) ois.readObject();
-                    assert accountMap != null;
-                    if (accountMap.containsKey(account.getEmail())) {
-                        return false;
-                    } else {
-                        accountMap.put(account.getEmail(), account);
-                        returnAccountHashMap(accountMap);
-                        return true;
-                    }
-                } catch (IOException | ClassNotFoundException e) {
-                    throw new RuntimeException(e);
                 }
 
             }
 
+
+
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
 
-        return false;
 
     }
 
-    private void returnAccountHashMap(HashMap<String,Account> accountMap) {
+    private void serverGetAccount() throws IOException, ClassNotFoundException {
 
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Server.ACCOUNT_HASH_MAP))) {
+        HashMap<String, Account> accountHashMap = getAccountHashMap();
 
-            oos.writeObject(accountMap);
+        String accountEmail = (String) requestReader.readObject();
 
-        } catch (IOException e) {
+        requestWriter.writeObject(accountHashMap.getOrDefault(accountEmail, null));
 
-            System.out.println("Error occurred trying to access account hash map...");
-
-        }
+        requestWriter.close();
+        requestReader.close();
 
     }
 
-    private HashMap<String,Account> getAccountHashMap() {
+    private void serverCreateAccount() throws IOException, ClassNotFoundException {
 
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Server.ACCOUNT_HASH_MAP))) {
+       HashMap<String, Account> accountHashMap = getAccountHashMap();
 
-            return (HashMap<String, Account>) ois.readObject();
+       Account accountToCreate = (Account) requestReader.readObject();
+
+       String accountEmail = accountToCreate.getEmail();
+
+       String accountRole = accountToCreate.getRole().toLowerCase();
+
+       // Sends failure message if map already has an account with same email
+       if (accountHashMap.containsKey(accountEmail)) {
+
+           requestWriter.writeObject("failure");
+
+       } else {
+
+           accountHashMap.put(accountEmail, accountToCreate);
+           updateAccountHashMap(accountHashMap);
+
+           switch (accountRole) {
+
+               case "seller" -> {
+
+                   HashMap<String, Seller> sellerHashMap = getSellerHashMap();
+
+                   sellerHashMap.put(accountEmail, new Seller(accountToCreate, new ArrayList<>()));
+
+                   updateSellerHashMap(sellerHashMap);
+
+               }
+
+               case "customer" -> {
+
+                   HashMap<String, Customer> customerHashMap = getCustomerHashMap();
+
+                   customerHashMap.put(accountEmail, new Customer(accountToCreate, new ArrayList<>(), new ShoppingCart()));
+
+                   updateCustomerHashMap(customerHashMap);
+
+               }
+
+           }
+
+           requestWriter.writeObject("success");
+
+       }
+
+       requestWriter.close();
+       requestReader.close();
+
+    }
+
+    private static HashMap<String, Customer> getCustomerHashMap() {
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Server.CUSTOMER_HASH_MAP))) {
+
+            HashMap<String, Customer> customerHashMap = (HashMap<String, Customer>) ois.readObject();
+
+            return customerHashMap;
 
         } catch (EOFException e) {
 
-            System.out.println("No account hash map stored yet...");
-            return new HashMap<String, Account>();
+            return new HashMap<String, Customer>();
 
-        } catch (IOException e) {
-
-            System.out.println("Error occurred trying to access account hash map...");
-            return null;
-
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
 
     }
 
-    private int determineRequestObject(String requestLine) {
+    private static void updateCustomerHashMap(HashMap<String, Customer> customerHashMap) {
 
-        String[] requestData = requestLine.split(",");
-        return Integer.parseInt(requestData[1]);
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Server.CUSTOMER_HASH_MAP))) {
+
+            oos.writeObject(customerHashMap);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
-    private int determineRequest(String requestLine) {
+    private static HashMap<String, Seller> getSellerHashMap() {
 
-        String[] requestData = requestLine.split(",");
-        return Integer.parseInt(requestData[0]);
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Server.SELLER_HASH_MAP))) {
+
+            HashMap<String, Seller> sellerHashMap = (HashMap<String, Seller>) ois.readObject();
+
+            return sellerHashMap;
+
+        } catch (EOFException e) {
+
+            return new HashMap<String, Seller>();
+
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private static void updateSellerHashMap(HashMap<String, Seller> sellerHashMap) {
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Server.SELLER_HASH_MAP))) {
+
+            oos.writeObject(sellerHashMap);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private static HashMap<String, Account> getAccountHashMap() {
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Server.ACCOUNT_HASH_MAP))) {
+
+            HashMap<String, Account> accountHashMap = (HashMap<String, Account>) ois.readObject();
+
+            return accountHashMap;
+
+        } catch (EOFException e) {
+
+            return new HashMap<String, Account>();
+
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private static void updateAccountHashMap(HashMap<String, Account> accountHashMap) {
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Server.ACCOUNT_HASH_MAP))) {
+
+            oos.writeObject(accountHashMap);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
     public void close() {
 
         try {
-
             connection.close();
-
         } catch (IOException e) {
-
             throw new RuntimeException(e);
-
         }
 
     }
 
+    public static void main(String[] args) {
 
+        getAccountHashMap();
+
+    }
 
 }

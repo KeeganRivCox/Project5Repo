@@ -3,19 +3,25 @@ import java.net.Socket;
 
 public class Request {
 
-    public static final int CREATE = 0;
-    public static final int UPDATE = 1;
-    public static final int ACCOUNT = 2;
-    public static final int SELLER = 2;
-    public static final int CUSTOMER = 3;
+    private static final int CREATE_ACCOUNT = 0;
+    private static final int GET_ACCOUNT = 1;
+    private static final int DELETE_ACCOUNT = 2;
 
     private Socket serverConnection;
+    private ObjectOutputStream requestWriter;
+    private ObjectInputStream requestReader;
 
     // POST object for sending an account to store to server
     public Request() {
 
         try {
+
             serverConnection = new Socket("localhost", 9087);
+
+            requestWriter = new ObjectOutputStream(serverConnection.getOutputStream());
+
+            requestReader = new ObjectInputStream(serverConnection.getInputStream());
+
         } catch (IOException e) {
             System.out.println("Connection error occurred while getting from server...");
         }
@@ -24,55 +30,55 @@ public class Request {
 
     public boolean createAccount(Account account) {
 
-        ObjectOutputStream oos;
-
-        BufferedReader br;
-
-        PrintWriter pw;
-
         try {
 
-            oos = new ObjectOutputStream(this.serverConnection.getOutputStream());
+            requestWriter.writeObject(String.valueOf(CREATE_ACCOUNT));
 
-            br = new BufferedReader(new InputStreamReader(this.serverConnection.getInputStream()));
+            requestWriter.writeObject(account);
 
-            pw = new PrintWriter(this.serverConnection.getOutputStream());
+            String response = (String) requestReader.readObject();
 
-            sendServerRequest(CREATE, ACCOUNT, pw);
-            pw.flush();
+            requestReader.close();
+            requestWriter.close();
 
-            oos.writeObject(account);
+            if (response.equalsIgnoreCase("success")) {
+                return true;
+            }
 
-            String confirmation = br.readLine();
+            return false;
 
-            oos.close();
-            br.close();
-            pw.close();
-
-            return confirmation.equalsIgnoreCase("success");
-
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
 
     }
 
-    public void sendServerRequest(int requestType, int accountType, PrintWriter pw) {
+    public Account getAccount(String email) {
 
-        String requestLine = String.format("%d,%d", requestType, accountType);
+        try {
 
-        pw.println(requestLine);
-        pw.flush();
+            requestWriter.writeObject(String.valueOf(GET_ACCOUNT));
+
+            requestWriter.writeObject(email);
+
+            Account retrievedAccount = (Account) requestReader.readObject();
+
+            requestWriter.close();
+            requestReader.close();
+
+            return retrievedAccount;
+
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
     public static void main(String[] args) {
 
-        if (!new Request().createAccount(new Account("Kyclon", "nageekr@gmail.com", "AstroBoy@1", "seller"))) {
+        Account keegaAccount = new Request().getAccount("nageekr@gmail.com");
 
-            System.out.println("That account already exists");
-
-        }
+        System.out.println(keegaAccount.getEmail());
 
     }
 

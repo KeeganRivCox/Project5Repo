@@ -4,21 +4,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Scanner;
 
-/**
- Project 4 -- Product Class
-
- In our project, we've developed a comprehensive online market application with various classes
- collaborating to provide a rich and dynamic user experience. We designed this system to allow
- users to create accounts, navigate through a variety of features, and interact with the market's
- extensive functionalities.
-
- @author Adeetya, Jordan, Keegan, Natalie, and Robert, Lab Section 39
-
- @version November 13th, 2023
-
-
- */
-
 public class Product implements Serializable {
     private String name;
     private String description;
@@ -36,42 +21,6 @@ public class Product implements Serializable {
         this.quantitySold = 0;
         this.revenueGenerated = 0;
         this.store = store;
-    }
-
-    // sorts the products by price and quantity: high to low and low to high
-    public static ArrayList<Product> sortProducts(ArrayList<Product> allProducts, Scanner scanner) {
-
-        switch (sortChoice) { // sortType: high = high to low, low = low to high
-            case 1 -> {
-
-
-                return Product.sortByPrice(allProducts, "high");
-
-
-            }
-            case 2 -> {
-
-
-                return Product.sortByQuantity(allProducts, "high");
-
-
-            }
-            case 3 -> {
-
-
-                return Product.sortByPrice(allProducts, "low");
-
-
-            }
-            case 4 -> {
-
-
-                return Product.sortByQuantity(allProducts, "low");
-
-
-            }
-        }
-        return allProducts;
     }
 
     // sorts the list of products by price
@@ -224,21 +173,6 @@ public class Product implements Serializable {
       
     }
 
-    // formats the product details
-    public String productLine() {
-        return String.format("Product: %s, Description: %s, Seller: %s, Store: %s, Price: $%.2f, Quantity Available: %d\n", this.name, this.description, this.getStore().getSellerOwner().getUsername(), this.getStore().getName(), this.getPrice(), this.getQuantity());
-    }
-
-    // lists all the products
-    public static void listProducts(ArrayList<Product> products) {
-        int counter = 1;
-        for (Product product : products) {
-            System.out.printf("%d. ", counter);
-            System.out.print(product.productLine());
-            counter++;
-        }
-    }
-
     // returns the product name
     public String getName() {
         return name;
@@ -295,7 +229,6 @@ public class Product implements Serializable {
 
 
     // Keegan - A method to return if two products are equal
-
     public boolean equals(Product product) {
         return this.getStore().equals(product.getStore()) && this.getDescription().equals(product.getDescription()) && this.getPrice() == product.getPrice() && this.getQuantity() == product.getQuantity();
     }

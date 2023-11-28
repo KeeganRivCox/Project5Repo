@@ -9,11 +9,11 @@ public class Account implements Serializable {
     private String role;
 
     //Constructor for creating Account objects with name, email, and username
-    public Account(String name, String email, String username) {
+    public Account(String name, String email, String username, String role) {
         this.name = name;
         this.email = email;
         this.username = username;
-        this.role = "";
+        this.role = role;
     }
 
     // empty Account constructor
@@ -21,7 +21,11 @@ public class Account implements Serializable {
         this.name = account.name;
         this.email = account.email;
         this.username = account.username;
-        this.role = "";
+        this.role = account.role;
+    }
+
+    public String getRole() {
+        return role;
     }
 
     public String getName() {
