@@ -5,7 +5,8 @@ public class Request {
 
     private static final int CREATE_ACCOUNT = 0;
     private static final int GET_ACCOUNT = 1;
-    private static final int DELETE_ACCOUNT = 2;
+    private static final int UPDATE_PASSWORD = 2;
+    private static final int DELETE_ACCOUNT = 3;
 
     private Socket serverConnection;
     private ObjectOutputStream requestWriter;
@@ -28,6 +29,17 @@ public class Request {
 
     }
 
+    // createAccount
+    // getAccount
+    // updateAccountPassword
+    // deleteAccount
+    // getSeller
+    // getAllSellers
+    // getCustomer
+    // getAllCustomers
+    // updateSeller
+    // updateCustomer
+
     public boolean createAccount(Account account) {
 
         try {
@@ -41,11 +53,7 @@ public class Request {
             requestReader.close();
             requestWriter.close();
 
-            if (response.equalsIgnoreCase("success")) {
-                return true;
-            }
-
-            return false;
+            return response.equalsIgnoreCase("success");
 
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -74,11 +82,55 @@ public class Request {
 
     }
 
+    public boolean updateAccountPassword(String accountEmail, String newPassword) {
+
+        try {
+
+            requestWriter.writeObject(String.valueOf(UPDATE_PASSWORD));
+
+            requestWriter.writeObject(accountEmail);
+
+            requestWriter.writeObject(newPassword);
+
+            Boolean response = (Boolean) requestReader.readObject();
+
+            requestReader.close();
+            requestWriter.close();
+
+            return response;
+
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public boolean deleteAccount(String accountEmail) {
+
+        try {
+
+            requestWriter.writeObject(String.valueOf(DELETE_ACCOUNT));
+
+            requestWriter.writeObject(accountEmail);
+
+            Boolean response = (Boolean) requestReader.readObject();
+
+            requestReader.close();
+            requestWriter.close();
+
+            return response;
+
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    // Test account line: "Keegan", "nageekr@gmail.com", "AstroBoy@1", "Kyclon", "seller"
+
     public static void main(String[] args) {
 
-        Account keegaAccount = new Request().getAccount("nageekr@gmail.com");
 
-        System.out.println(keegaAccount.getEmail());
 
     }
 
