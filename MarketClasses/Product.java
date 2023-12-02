@@ -27,16 +27,6 @@ public class Product implements Serializable {
     private double price;
     double revenueGenerated;
     private final Store store;
-  
-    // Keegan - Prompt that pops up when asking to sort
-    private static final String SORT_PROMPT =
-            """
-            How would you like to sort?
-            1. Price - high to low
-            2. Quantity - high to low
-            3. Price - low to high
-            4. Quantity - low to high
-            """;
 
     public Product(String name, double price, int quantity, String description, Store store) {
         this.name = name;
@@ -48,37 +38,8 @@ public class Product implements Serializable {
         this.store = store;
     }
 
-    // creates a product to be put in a Store
-    public static Product generateProduct(Store store, Scanner scanner, int i) {
-
-        System.out.println("Enter the name of product " + i);
-        String productName = scanner.nextLine();
-
-        System.out.println("Enter the price of product " + i);
-        double productPrice = Market.validateDouble(scanner);
-
-        System.out.println("Enter the quantity of product " + i);
-        int productQuantity = Market.validatePromptInput(Integer.MAX_VALUE, scanner);
-
-        System.out.println("Enter the description of product " + i);
-        scanner.nextLine();
-        String productDescription = scanner.nextLine();
-
-        return new Product(productName, productPrice, productQuantity, productDescription, store);
-    }
-
-    // prints the product page with the product and its details in a certain format
-    public static void printProductPage(Product product) {
-        String sellerName = product.getStore().getSellerOwner().getUsername();
-        String storeName = product.getStore().getName();
-        System.out.printf("Seller: %s\nStore: %s\nProduct Name: %s\nDescription: %s\nPrice: $%.2f\nQuantity Available: %d\n", sellerName, storeName, product.getName(), product.getDescription(), product.getPrice(), product.getQuantity());
-    }
-
     // sorts the products by price and quantity: high to low and low to high
     public static ArrayList<Product> sortProducts(ArrayList<Product> allProducts, Scanner scanner) {
-
-        System.out.print(SORT_PROMPT); // 1. Price - High to low, 2. Quantity - High to low, 3. Price - Low to high, 4. Quantity - Low to high
-        int sortChoice = Market.validatePromptInput(4, scanner);
 
         switch (sortChoice) { // sortType: high = high to low, low = low to high
             case 1 -> {
