@@ -20,13 +20,14 @@ public class SellerPanel {
 
     private String editProductName;
     private CardLayout cardLayout;
-    private String editStoreName;
     private String customerName;
     private String productName;
     private String specificStoreName;
     private String productInShoppingCartName;
     private JLabel selectedCustomerLabel;
     private JLabel selectedStoreLabel;
+    private JLabel selectedStoreStatsLabel;
+
     private JLabel selectedProductLabel;
     private JLabel selectedAllStoreLabel;
     private JLabel selectedProductInShoppingCartLabel;
@@ -70,8 +71,10 @@ public class SellerPanel {
         cardPanel.add(createMainPanel(), "Main Page");
         cardPanel.add(createAccountPanel(), "Account Options");
         cardPanel.add(createEditStorePanel(), "Edit Store");
+        cardPanel.add(createListStorePanel(), "List Store");
         cardPanel.add(createContactCustomerPanel(), "Contact Customers");
         cardPanel.add(createProductListingsPanel(), "Product Listings");
+        cardPanel.add(createStorePanel(), "Create Store");
         cardPanel.add(createIndividualProductPanel(), "Individual Products");
         cardPanel.add(createCustomerPurchaseHistoryPanel(), "Customer Purchase History");
         cardPanel.add(createSellerListingSortPanel(), "Seller Listing Sort");
@@ -146,7 +149,11 @@ public class SellerPanel {
         toDoLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
         JButton listStoreButton = createButton("List\nStore");
-
+        listStoreButton.addActionListener(e -> {
+            cardLayout.show(cardPanel, "List Store");
+//            frame.setResizable(true);
+            frame.setSize(400, 400);
+        });
         JButton createProductButton = createButton("Create\nProduct");
         createProductButton.addActionListener(e -> {
             cardLayout.show(cardPanel, "Create Product");
@@ -155,6 +162,11 @@ public class SellerPanel {
         });
 
         JButton createStoreButton = createButton("Create\nStore");
+        createStoreButton.addActionListener(e -> {
+            cardLayout.show(cardPanel, "Create Store");
+//            frame.setResizable(true);
+            frame.setSize(400, 200);
+        });
 
         JButton storeStatisticsButton = createButton("Store\nStatistics");
         storeStatisticsButton.addActionListener(new ActionListener() {
@@ -302,27 +314,24 @@ public class SellerPanel {
 
     }
 
-    //method that creates the panel for seller listings page
-    private JPanel createEditStorePanel() {
-        JPanel editStorePanel = new JPanel();
-        editStorePanel.setLayout(new BoxLayout(editStorePanel, BoxLayout.Y_AXIS));
+    private JPanel createListStorePanel() {
+        JPanel listStorePanel = new JPanel();
+        listStorePanel.setLayout(new BoxLayout(listStorePanel, BoxLayout.Y_AXIS));
 
         // Back button
         JButton backButton2 = createBackToMenuButton();
         backButton2.setMaximumSize(new Dimension(70, 10));
 
-
-        JLabel titleLabel = new JLabel("          Choose a Store");
+        JLabel titleLabel = new JLabel("           List of Stores");
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
         // Panel for back button and title
         JPanel titlePanel2 = new JPanel();
-        titlePanel2.setLayout(new BorderLayout());  // Use BorderLayout for the title panel
-        titlePanel2.add(backButton2, BorderLayout.WEST);  // Align the back button to the left
-        titlePanel2.add(Box.createHorizontalStrut(10));  // Add space between back button and title
-        titlePanel2.add(titleLabel, BorderLayout.CENTER);  // Center-align the title
-
+        titlePanel2.setLayout(new BorderLayout());
+        titlePanel2.add(backButton2, BorderLayout.WEST);
+        titlePanel2.add(Box.createHorizontalStrut(10));
+        titlePanel2.add(titleLabel, BorderLayout.CENTER);
 
         JPanel storeNamePanel = new JPanel();
         String[] dummyStores = new String[]{"Store One", "Store Two", "Store Three", "Store Four", "Store Five",
@@ -334,13 +343,73 @@ public class SellerPanel {
             label.setAlignmentX(Component.CENTER_ALIGNMENT);
             label.setFont(new Font("Arial", Font.PLAIN, 18));
 
+            storeNamePanel.add(label);
+            storeNamePanel.add(new JSeparator(JSeparator.HORIZONTAL));
+        }
+
+        // Remove the last separator to avoid an extra line at the end
+        storeNamePanel.remove(storeNamePanel.getComponentCount() - 1);
+
+        JScrollPane lsp = new JScrollPane(storeNamePanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        lsp.setPreferredSize(new Dimension(300, 320));
+
+
+
+
+        listStorePanel.setLayout(new BoxLayout(listStorePanel, BoxLayout.Y_AXIS));
+
+        // Increase the height by adjusting the strut values
+        listStorePanel.add(Box.createVerticalStrut(20));
+        listStorePanel.add(titlePanel2);
+        listStorePanel.add(Box.createVerticalStrut(20));
+        listStorePanel.add(lsp);
+
+        return listStorePanel;
+    }
+
+    //method that creates the panel for seller listings page
+    private JPanel createEditStorePanel() {
+        JPanel editStorePanel = new JPanel();
+        editStorePanel.setLayout(new BoxLayout(editStorePanel, BoxLayout.Y_AXIS));
+
+        // Back button
+        JButton backButton2 = createBackToMenuButton();
+        backButton2.setMaximumSize(new Dimension(70, 10));
+
+        JLabel titleLabel = new JLabel("          Choose a Store");
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+
+        // Panel for back button and title
+        JPanel titlePanel2 = new JPanel();
+        titlePanel2.setLayout(new BorderLayout());
+        titlePanel2.add(backButton2, BorderLayout.WEST);
+        titlePanel2.add(Box.createHorizontalStrut(10));
+        titlePanel2.add(titleLabel, BorderLayout.CENTER);
+
+        JPanel storeNamePanel = new JPanel();
+        String[] dummyStores = new String[]{"Store One", "Store Two", "Store Three", "Store Four", "Store Five",
+                "Store Six", "Store Seven", "Store Eight", "Store Nine", "Store Ten", "Store Eleven", "Store Twelve"};
+        storeNamePanel.setLayout(new BoxLayout(storeNamePanel, BoxLayout.Y_AXIS));
+
+        // Display selected store's name
+        selectedStoreLabel = new JLabel("Selected Store: ");
+        selectedStoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        selectedStoreLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+
+        for (String name : dummyStores) {
+            JLabel label = new JLabel(name);
+            label.setAlignmentX(Component.CENTER_ALIGNMENT);
+            label.setFont(new Font("Arial", Font.PLAIN, 18));
+
             label.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     // Handle click event
                     editStoreName = label.getText();
-                    // Update the display with the selected store's name
+//                    System.out.println("Selected Store: " + editStoreName);
                     selectedStoreLabel.setText("Selected Store: " + editStoreName);
+
                 }
             });
 
@@ -352,12 +421,8 @@ public class SellerPanel {
         storeNamePanel.remove(storeNamePanel.getComponentCount() - 1);
 
         JScrollPane psp = new JScrollPane(storeNamePanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-        // Display selected store's name
         psp.setPreferredSize(new Dimension(300, 320));
-        selectedStoreLabel = new JLabel("Selected Store: ");
-        selectedStoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        selectedStoreLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+
 
         // Confirm button
         JButton confirmButton = new JButton("Confirm");
@@ -365,17 +430,6 @@ public class SellerPanel {
         confirmButton.setFont(new Font("Arial", Font.PLAIN, 18));
         confirmButton.addActionListener(new ActionListener() {
             @Override
-//            public void actionPerformed(ActionEvent e) {
-//                // Handle confirmation action
-//                // You can add your logic here
-//
-//                System.out.println("Store Confirmed: " + editStoreName);
-//                System.out.println(editStoreFlag);
-//                cardPanel.add(createEditStoreDetailsPanel(), "Edit Store Details");
-//                cardLayout.show(cardPanel, "Edit Store Details");
-//                frame.setSize(400, 300);
-//
-//            }
             public void actionPerformed(ActionEvent e) {
                 if (editStoreFlag) {
                     cardPanel.add(createEditProductPanel(), "Edit Product");
@@ -386,10 +440,7 @@ public class SellerPanel {
                     cardPanel.add(createEditStoreDetailsPanel(), "Edit Store Details");
                     cardLayout.show(cardPanel, "Edit Store Details");
                     frame.setSize(400, 300);
-
-                }
-
-            }
+                }}
         });
 
         editStorePanel.setLayout(new BoxLayout(editStorePanel, BoxLayout.Y_AXIS));
@@ -405,6 +456,66 @@ public class SellerPanel {
         editStorePanel.add(confirmButton);
 
         return editStorePanel;
+    }
+
+    private JPanel createStorePanel() {
+        JPanel createStorePanel = new JPanel();
+        createStorePanel.setLayout(new BoxLayout(createStorePanel, BoxLayout.Y_AXIS));
+
+        // Title
+        JLabel titleLabel = new JLabel("      Create Store");
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+
+        // Back to Menu Button
+        JButton backToMenuButton = createBackToMenuButton();
+
+        // Top Panel
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+        topPanel.add(backToMenuButton);
+        topPanel.add(Box.createHorizontalStrut(10));
+        topPanel.add(titleLabel);
+        topPanel.add(Box.createHorizontalGlue()); // Add glue to push the title to the right
+
+        createStorePanel.add(topPanel);
+        createStorePanel.add(Box.createVerticalStrut(20));
+
+        // Form Panel
+        JPanel formPanel = new JPanel(new GridLayout(2, 1, 10, 10));
+
+        // Name
+        JTextField nameTextField = new JTextField(20);
+        formPanel.add(createFieldWithLabel("Name:", nameTextField));
+
+        // Create Store Button
+        JButton createStoreButton = new JButton("Create Store");
+        createStoreButton.setFont(new Font("Arial", Font.PLAIN, 16));
+        createStoreButton.addActionListener(e -> {
+            // Handle the creation of the store here
+            String name = nameTextField.getText().trim();
+
+            // Validate Name
+            if (name.isEmpty()) {
+                JOptionPane.showMessageDialog(createStorePanel, "Name cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Set the editStoreName
+            editStoreName = name;
+
+            // Open "Create Product" card
+            cardLayout.show(cardPanel, "Create Product");
+//            frame.setResizable(true);
+            frame.setSize(400, 300);
+        });
+
+        // Add components to the form panel
+        formPanel.add(createStoreButton);
+        createStorePanel.add(formPanel);
+        createStoreButton.add(Box.createVerticalStrut(10));
+
+        return createStorePanel;
     }
 
     private JPanel createEditProductPanel() {
@@ -763,7 +874,8 @@ public class SellerPanel {
         JButton addProductButton = createButton("Add Product");
         addProductButton.addActionListener(e -> {
             cardLayout.show(cardPanel, "Create Product");
-            frame.setSize(400, 350);
+//            frame.setResizable(true);
+            frame.setSize(400, 300);
         });
 
 
@@ -825,6 +937,12 @@ public class SellerPanel {
             }
         });
         JButton editStoreProductsButton = createButton("Edit Store Products");
+        editStoreProductsButton.addActionListener(e -> {
+            cardPanel.add(createEditProductPanel(), "Edit Product");
+            cardLayout.show(cardPanel, "Edit Product");
+            frame.setSize(400, 500);
+            editStoreFlag = false;
+        });
 
         // Action listeners for the buttons
         addProductButton.addActionListener(e -> System.out.println("Adding product to store: " + editStoreName));
@@ -938,6 +1056,7 @@ public class SellerPanel {
 
         // Create Product Button
         JButton createProductButton = new JButton("Create Product");
+        createProductButton.setFont(new Font("Arial", Font.PLAIN, 16));
         createProductButton.addActionListener(e -> {
             // Handle the creation of the product here
             String name = nameTextField.getText().trim();
@@ -1012,6 +1131,7 @@ public class SellerPanel {
 
         // Add components to the form panel
         formPanel.add(createProductButton);
+        createProductButton.add(Box.createVerticalStrut(10));
         createProductPanel.add(formPanel);
         createProductButton.add(Box.createVerticalStrut(10));
 
@@ -1047,6 +1167,7 @@ public class SellerPanel {
 
         // Name
         JTextField nameTextField = new JTextField(20);
+        nameTextField.setText(editProductName); // Autofill the name field
         formPanel.add(createFieldWithLabel("Name:", nameTextField));
 
         // Description
@@ -1072,7 +1193,7 @@ public class SellerPanel {
 
 
 
-        // Create Product Button
+        // Edit Product Button
         JButton editProductButton = new JButton("Edit Product");
         editProductButton.setFont(new Font("Arial", Font.PLAIN, 18));
         editProductButton.addActionListener(e -> {
@@ -1138,6 +1259,10 @@ public class SellerPanel {
                 descriptionTextArea.setText("");
                 priceSpinner.setValue(0.0);
                 quantitySpinner.setValue(1);
+                cardPanel.add(createEditProductPanel(), "Edit Product");
+                cardLayout.show(cardPanel, "Edit Product");
+                frame.setSize(400, 500);
+                editStoreFlag = false;
             } else {
                 // User clicked 'No', do nothing or handle accordingly
                 System.out.println("Product creation cancelled by user.");
@@ -1377,7 +1502,7 @@ public class SellerPanel {
                     // Handle click event
                     editStoreName = label.getText();
                     // Update the display with the selected store's name
-                    selectedStoreLabel.setText("Selected Store: " + editStoreName);
+                    selectedStoreStatsLabel.setText("Selected Store: " + editStoreName);
                 }
             });
 
@@ -1392,9 +1517,9 @@ public class SellerPanel {
 
         // Display selected store's name
         psp.setPreferredSize(new Dimension(500, 320));
-        selectedStoreLabel = new JLabel("Selected Store: ");
-        selectedStoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        selectedStoreLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        selectedStoreStatsLabel = new JLabel("Selected Store: ");
+        selectedStoreStatsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        selectedStoreStatsLabel.setFont(new Font("Arial", Font.PLAIN, 18));
 
         // Confirm button
         JButton confirmButton = new JButton("Confirm");
@@ -1419,7 +1544,7 @@ public class SellerPanel {
         createViewSpecificStoreStatistics.add(Box.createVerticalStrut(20));
         createViewSpecificStoreStatistics.add(psp);
         createViewSpecificStoreStatistics.add(Box.createVerticalStrut(20));
-        createViewSpecificStoreStatistics.add(selectedStoreLabel);
+        createViewSpecificStoreStatistics.add(selectedStoreStatsLabel);
         createViewSpecificStoreStatistics.add(Box.createVerticalStrut(20));
         createViewSpecificStoreStatistics.add(confirmButton);
         createViewSpecificStoreStatistics.add(Box.createVerticalStrut(20));
