@@ -11,8 +11,15 @@ public class ConnectedClient {
 
     private static final int CREATE_ACCOUNT = 0;
     private static final int GET_ACCOUNT = 1;
-    private static final int UPDATE_PASSWORD = 2;
-    private static final int DELETE_ACCOUNT = 3;
+    private static final int GET_ALL_ACCOUNTS = 2;
+    private static final int UPDATE_PASSWORD = 3;
+    private static final int DELETE_ACCOUNT = 4;
+    private static final int GET_SELLER = 5;
+    private static final int GET_ALL_SELLERS = 6;
+    private static final int UPDATE_SELLER = 7;
+    private static final int GET_CUSTOMER = 8;
+    private static final int GET_ALL_CUSTOMERS = 9;
+    private static final int UPDATE_CUSTOMER = 10;
 
     public ConnectedClient(Socket clientConnection) {
 
@@ -44,6 +51,12 @@ public class ConnectedClient {
 
                 }
 
+                 case GET_ALL_ACCOUNTS -> {
+
+                    serverGetAllAccounts();
+
+                 }
+
                 case UPDATE_PASSWORD -> {
 
                     serverUpdateAccountPassword();
@@ -56,12 +69,83 @@ public class ConnectedClient {
 
                  }
 
+                 case GET_SELLER -> {
+
+                    serverGetSeller();
+
+                 }
+
+                 case GET_ALL_SELLERS -> {
+
+                    serverGetAllSellers();
+
+                 }
+
+                 case UPDATE_SELLER -> {
+
+                    serverUpdateSeller();
+
+                 }
+
             }
 
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
 
+
+    }
+
+    private void serverUpdateSeller() throws IOException, ClassNotFoundException {
+
+        HashMap<String, Seller> sellerHashMap = getSellerHashMap();
+
+        Seller retrievedSeller = (Seller) requestReader.readObject();
+
+        String sellerEmail = retrievedSeller.getEmail();
+
+        if (sellerHashMap.containsKey(sellerEmail)) {
+
+            sellerHashMap.replace(sellerEmail, retrievedSeller);
+
+            updateSellerHashMap(sellerHashMap);
+
+            requestWriter.writeObject(Boolean.TRUE);
+
+        } else {
+
+            requestWriter.writeObject(Boolean.FALSE);
+
+        }
+
+        requestWriter.close();
+        requestReader.close();
+
+    }
+
+    private void serverGetAllSellers() throws IOException {
+
+        HashMap<String, Seller> sellerHashMap = getSellerHashMap();
+
+        ArrayList<Seller> allSellers = new ArrayList<>(sellerHashMap.values());
+
+        requestWriter.writeObject(allSellers);
+
+        requestWriter.close();
+        requestReader.close();
+
+    }
+
+    private void serverGetSeller() throws IOException, ClassNotFoundException {
+
+        HashMap<String, Seller> sellerHashMap = getSellerHashMap();
+
+        String retrievedSellerEmail = (String) requestReader.readObject();
+
+        requestWriter.writeObject(sellerHashMap.getOrDefault(retrievedSellerEmail, null));
+
+        requestWriter.close();
+        requestReader.close();
 
     }
 
@@ -144,6 +228,19 @@ public class ConnectedClient {
 
     }
 
+    private void serverGetAllAccounts() throws IOException, ClassNotFoundException {
+
+        HashMap<String, Account> accountHashMap = getAccountHashMap();
+
+        ArrayList<Account> allAccounts = new ArrayList<>(accountHashMap.values());
+
+        requestWriter.writeObject(allAccounts);
+
+        requestWriter.close();
+        requestReader.close();
+
+    }
+
     private void serverGetAccount() throws IOException, ClassNotFoundException {
 
         HashMap<String, Account> accountHashMap = getAccountHashMap();
@@ -165,14 +262,21 @@ public class ConnectedClient {
 
        String accountEmail = accountToCreate.getEmail();
 
+       String accountUsername = accountToCreate.getUsername();
+
        String accountRole = accountToCreate.getRole().toLowerCase();
 
        // Sends failure message if map already has an account with same email
        if (accountHashMap.containsKey(accountEmail)) {
 
-           requestWriter.writeObject("failure");
+           requestWriter.writeObject("email");
+
+       } else if (!usernameAvailable(accountUsername)) {
+
+           requestWriter.writeObject("username");
 
        } else {
+
 
            accountHashMap.put(accountEmail, accountToCreate);
            updateAccountHashMap(accountHashMap);
@@ -207,6 +311,26 @@ public class ConnectedClient {
 
        requestWriter.close();
        requestReader.close();
+
+    }
+
+    private static boolean usernameAvailable(String username) {
+
+        HashMap<String, Account> accountHashMap = getAccountHashMap();
+
+        ArrayList<Account> allAccounts = new ArrayList<>(accountHashMap.values());
+
+        for (Account account : allAccounts) {
+
+            if (account.getUsername().equals(username)) {
+
+                return false;
+
+            }
+
+        }
+
+        return true;
 
     }
 
