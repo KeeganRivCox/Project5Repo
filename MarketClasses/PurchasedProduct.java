@@ -3,26 +3,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-/**
- Project 4 -- PurchasedProduct Class
-
- It encapsulates the details of a purchased product, facilitating serialization for storage or transfer of
- purchase information. Customers can easily access the name, amount purchased, store name,
- and the purchased product itself.
-
- @author Adeetya, Jordan, Keegan, Natalie, and Robert, Lab Section 39
-
- @version November 13th, 2023
-
-
- */
 public class PurchasedProduct implements Serializable {
 
     private Product purchasedProduct;
     private int amountPurchased;
 
     public PurchasedProduct(Product product, int amountPurchased) {
-        this.purchasedProduct = product;
+        this.purchasedProduct = new Product(product.getName(), product.getPrice(), product.getQuantity(), product.getDescription(), product.getStore());
         this.amountPurchased = amountPurchased;
     }
 
