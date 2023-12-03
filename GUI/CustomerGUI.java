@@ -89,5 +89,4 @@ public class CustomerGUI extends JComponent implements Runnable{
 
     }
 
-
 }
