@@ -9,10 +9,16 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class SellerPanel {
+
+
     private JFrame frame;
     private JPanel cardPanel;
 
     private String editStoreName;
+
+    private boolean editStoreFlag;
+
+    private String editProductName;
     private CardLayout cardLayout;
 
     JFrame loginFrame; //probably delete this stuff below
@@ -33,6 +39,7 @@ public class SellerPanel {
     JButton searchByStoreButton;
     JButton searchByDescriptionButton;
     JButton returnToMainPageButton;
+    private JPanel mainSellerPanel;
 
 
     //ActionListener actionListener = new ActionListener() {
@@ -91,9 +98,15 @@ public class SellerPanel {
         switchToAccountPanelButton.setFont(new Font("Arial", Font.PLAIN, 10));
         switchToAccountPanelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                cardLayout.show(cardPanel, "Account Options");
+                // Assuming you have an instance of the AccountsPanel class named 'accountsPanel'
+                // and the main panel is accessible through a method or variable named 'getMainPanel'
+//                JPanel accountsMainPanel = AccountsPanel.getMainSignInPanel();
+//                if (accountsMainPanel != null) {
+//                    cardLayout.show(cardPanel, accountsMainPanel.getName());
+//                }
             }
         });
+
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
@@ -103,23 +116,27 @@ public class SellerPanel {
         topPanel.add(Box.createHorizontalStrut(20));
         topPanel.add(switchToAccountPanelButton);
 
-        JButton searchButton = new JButton("Search");
-        searchButton.setFont(new Font("Arial", Font.PLAIN, 18));
-        searchButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "No products were found.",
-                        "Seller", JOptionPane.ERROR_MESSAGE);
-            }
-        });
+//        JButton searchButton = new JButton("Search");
+//        searchButton.setFont(new Font("Arial", Font.PLAIN, 18));
+//        searchButton.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                JOptionPane.showMessageDialog(null, "No products were found.",
+//                        "Seller", JOptionPane.ERROR_MESSAGE);
+//            }
+//        });
+//
+//        JTextField searchField = new JTextField();
+//        searchField.setPreferredSize(new Dimension(300, 30));
 
-        JTextField searchField = new JTextField();
-        searchField.setPreferredSize(new Dimension(300, 30));
+//        JPanel searchPanel = new JPanel(new FlowLayout());
+//        Dimension searchPanelDimension = new Dimension(400, 40);
+//        searchPanel.setPreferredSize(searchPanelDimension);
+//        searchPanel.add(searchField);
+//        searchPanel.add(searchButton);
 
-        JPanel searchPanel = new JPanel(new FlowLayout());
-        Dimension searchPanelDimension = new Dimension(400, 40);
-        searchPanel.setPreferredSize(searchPanelDimension);
-        searchPanel.add(searchField);
-        searchPanel.add(searchButton);
+        JLabel toDoLabel = new JLabel("What would you like to do?");
+        toDoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        toDoLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
         JButton listStoreButton = createButton("List\nStore");
         JButton createProductButton = createButton("Create\nProduct");
@@ -131,6 +148,13 @@ public class SellerPanel {
         JButton createStoreButton = createButton("Create\nStore");
         JButton storeStatisticsButton = createButton("Store\nStatistics");
         JButton editProductButton = createButton("Edit\nProduct");
+        editProductButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(cardPanel, "Edit Store");
+                editStoreFlag = true;
+                frame.setSize(400, 500);
+            }
+        });
         JButton editStoreButton = createButton("Edit\nStore");
         editStoreButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -163,17 +187,18 @@ public class SellerPanel {
         buttonPanel.add(messageCustomerButton);
 
         topPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, topPanel.getPreferredSize().height + 40));
-        searchPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, searchPanel.getPreferredSize().height + 50));
+//        searchPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, searchPanel.getPreferredSize().height + 50));
         buttonPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, buttonPanel.getPreferredSize().height + 250));
 
 
         mainPagePanel.add(Box.createVerticalStrut(20));
         mainPagePanel.add(topPanel);
-        mainPagePanel.add(searchPanel);
-        mainPagePanel.add(Box.createVerticalStrut(10));
+        mainPagePanel.add(Box.createVerticalStrut(25));
+        mainPagePanel.add(toDoLabel);
+        mainPagePanel.add(Box.createVerticalStrut(25));
         mainPagePanel.add(buttonPanel);
         mainPagePanel.add(Box.createVerticalStrut(20));
-
+        mainSellerPanel = mainPagePanel;
         return mainPagePanel;
     }
 
@@ -268,7 +293,7 @@ public class SellerPanel {
         backButton2.setMaximumSize(new Dimension(70, 10));
 
 
-        JLabel titleLabel = new JLabel("               Edit Store");
+        JLabel titleLabel = new JLabel("          Choose a Store");
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
@@ -321,14 +346,29 @@ public class SellerPanel {
         confirmButton.setFont(new Font("Arial", Font.PLAIN, 18));
         confirmButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                // Handle confirmation action
-                // You can add your logic here
-
+//            public void actionPerformed(ActionEvent e) {
+//                // Handle confirmation action
+//                // You can add your logic here
+//
 //                System.out.println("Store Confirmed: " + editStoreName);
-                cardPanel.add(createEditStoreDetailsPanel(), "Edit Store Details");
-                cardLayout.show(cardPanel, "Edit Store Details");
-                frame.setSize(400, 300);
+//                System.out.println(editStoreFlag);
+//                cardPanel.add(createEditStoreDetailsPanel(), "Edit Store Details");
+//                cardLayout.show(cardPanel, "Edit Store Details");
+//                frame.setSize(400, 300);
+//
+//            }
+            public void actionPerformed(ActionEvent e) {
+                if (editStoreFlag) {
+                    cardPanel.add(createEditProductPanel(), "Edit Product");
+                    cardLayout.show(cardPanel, "Edit Product");
+                    frame.setSize(400, 500);
+                    editStoreFlag = false;
+                } else {
+                    cardPanel.add(createEditStoreDetailsPanel(), "Edit Store Details");
+                    cardLayout.show(cardPanel, "Edit Store Details");
+                    frame.setSize(400, 300);
+
+                }
 
             }
         });
@@ -347,6 +387,99 @@ public class SellerPanel {
 
         return editStorePanel;
     }
+
+    private JPanel createEditProductPanel() {
+        JPanel editProductPanel = new JPanel();
+        editProductPanel.setLayout(new BoxLayout(editProductPanel, BoxLayout.Y_AXIS));
+
+        // Back button
+        JButton backButtonProduct = createBackToMenuButton();
+        backButtonProduct.setMaximumSize(new Dimension(70, 10));
+
+        JLabel titleLabelProduct = new JLabel("      Choose a Product from");
+        titleLabelProduct.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titleLabelProduct.setFont(new Font("Arial", Font.BOLD, 18));
+
+        // Panel for back button and title
+        JPanel titlePanelProduct = new JPanel();
+        titlePanelProduct.setLayout(new BorderLayout());  // Use BorderLayout for the title panel
+        titlePanelProduct.add(backButtonProduct, BorderLayout.WEST);  // Align the back button to the left
+        titlePanelProduct.add(Box.createHorizontalStrut(10));  // Add space between back button and title
+        titlePanelProduct.add(titleLabelProduct, BorderLayout.CENTER);  // Center-align the title
+
+        JLabel titleLabelStore = new JLabel("      "+editStoreName);
+        titleLabelStore.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titleLabelStore.setFont(new Font("Arial", Font.BOLD, 18));
+
+        JPanel storeNamePanelProduct = new JPanel();
+        String[] dummyStoresItem = new String[]{"Item One", "Item Two", "Item Three", "Item Four", "Item Five",
+                "Item Six", "Item Seven", "Item Eight", "Item Nine", "Item Ten", "Item Eleven", "Item Twelve"};
+        storeNamePanelProduct.setLayout(new BoxLayout(storeNamePanelProduct, BoxLayout.Y_AXIS));
+
+        JLabel selectedStoreLabelProduct = new JLabel("Selected Product: ");
+        selectedStoreLabelProduct.setAlignmentX(Component.CENTER_ALIGNMENT);
+        selectedStoreLabelProduct.setFont(new Font("Arial", Font.PLAIN, 18));
+
+        for (String name : dummyStoresItem) {
+            JLabel label = new JLabel(name);
+            label.setAlignmentX(Component.CENTER_ALIGNMENT);
+            label.setFont(new Font("Arial", Font.PLAIN, 18));
+
+            label.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    // Handle click event
+                    editProductName = label.getText();
+                    // Update the display with the selected product's name
+                    selectedStoreLabelProduct.setText("Selected Product: " + editProductName);
+                }
+            });
+
+
+            storeNamePanelProduct.add(label);
+            storeNamePanelProduct.add(new JSeparator(JSeparator.HORIZONTAL));
+        }
+
+        // Remove the last separator to avoid an extra line at the end
+        storeNamePanelProduct.remove(storeNamePanelProduct.getComponentCount() - 1);
+
+        JScrollPane pspProduct = new JScrollPane(storeNamePanelProduct, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        pspProduct.setPreferredSize(new Dimension(300, 320));
+
+
+        // Confirm button
+        JButton confirmButtonProduct = new JButton("Confirm");
+        confirmButtonProduct.setAlignmentX(Component.CENTER_ALIGNMENT);
+        confirmButtonProduct.setFont(new Font("Arial", Font.PLAIN, 18));
+        confirmButtonProduct.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Handle confirmation action
+                // You can add your logic here
+
+                cardPanel.add(editProductDetailsPanel(), "Edit Product Detail");
+                cardLayout.show(cardPanel, "Edit Product Detail");
+                frame.setSize(400, 400);
+            }
+        });
+
+        editProductPanel.setLayout(new BoxLayout(editProductPanel, BoxLayout.Y_AXIS));
+
+        // Increase the height by adjusting the strut values
+        editProductPanel.add(Box.createVerticalStrut(20));
+        editProductPanel.add(titlePanelProduct);
+        editProductPanel.add(titleLabelStore);
+        editProductPanel.add(Box.createVerticalStrut(20));
+        editProductPanel.add(pspProduct);
+        editProductPanel.add(Box.createVerticalStrut(20));
+        editProductPanel.add(selectedStoreLabelProduct);
+        editProductPanel.add(Box.createVerticalStrut(10));
+        editProductPanel.add(confirmButtonProduct);
+
+        return editProductPanel;
+    }
+
 
 
     // method that creates the panel for the product listings page
@@ -778,6 +911,7 @@ public class SellerPanel {
         JSpinner quantitySpinner = new JSpinner(quantityModel);
         formPanel.add(createFieldWithLabel("Quantity:", quantitySpinner));
 
+
         // Store Dropdown
         String[] storeOptions = new String[]{"Store One", "Store Two", "Store Three", "Store Four", "Store Five",
                 "Store Six", "Store Seven", "Store Eight", "Store Nine", "Store Ten", "Store Eleven", "Store Twelve"};
@@ -825,22 +959,213 @@ public class SellerPanel {
                 return;
             }
 
-            // Process creation
+            // Confirm creation
             String selectedStore = (String) storeComboBox.getSelectedItem();
-            System.out.println("Product created:");
-            System.out.println("Name: " + name);
-            System.out.println("Description: " + description);
-            System.out.println("Price: " + price);
-            System.out.println("Quantity: " + quantity);
-            System.out.println("Store: " + selectedStore);
+            int confirmResult = JOptionPane.showConfirmDialog(createProductPanel,
+                    "Create the following product?\n\n" +
+                            "Name: " + name + "\n" +
+                            "Description: " + description + "\n" +
+                            "Price: " + price + "\n" +
+                            "Quantity: " + quantity + "\n" +
+                            "Store: " + selectedStore,
+                    "Confirm Product Creation", JOptionPane.YES_NO_OPTION);
+
+            if (confirmResult == JOptionPane.YES_OPTION) {
+                // User clicked 'Yes', process creation
+                System.out.println("Product created:");
+                System.out.println("Name: " + name);
+                System.out.println("Description: " + description);
+                System.out.println("Price: " + price);
+                System.out.println("Quantity: " + quantity);
+                System.out.println("Store: " + selectedStore);
+
+                // Reset the create product panel
+                nameTextField.setText("");
+                descriptionTextArea.setText("");
+                priceSpinner.setValue(0.0);
+                quantitySpinner.setValue(1);
+                storeComboBox.setSelectedIndex(0);
+            } else {
+                // User clicked 'No', do nothing or handle accordingly
+                System.out.println("Product creation cancelled by user.");
+            }
         });
+
 
         // Add components to the form panel
         formPanel.add(createProductButton);
         createProductPanel.add(formPanel);
+        createProductButton.add(Box.createVerticalStrut(10));
 
         return createProductPanel;
     }
+
+    private JPanel editProductDetailsPanel() {
+        frame.setResizable(true);
+        JPanel createProductPanel = new JPanel();
+        createProductPanel.setLayout(new BoxLayout(createProductPanel, BoxLayout.Y_AXIS));
+
+        // Title
+        JLabel titleLabel = new JLabel("    Edit Product: "+editProductName);
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+
+        // Back to Menu Button
+        JButton backToMenuButton = createBackToMenuButton();
+
+        // Top Panel
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+        topPanel.add(backToMenuButton);
+        topPanel.add(Box.createHorizontalStrut(10));
+        topPanel.add(titleLabel);
+        topPanel.add(Box.createHorizontalGlue()); // Add glue to push the title to the right
+
+        createProductPanel.add(topPanel);
+        createProductPanel.add(Box.createVerticalStrut(20));
+
+        // Form Panel
+        JPanel formPanel = new JPanel(new GridLayout(7, 1, 10, 10));
+
+        // Name
+        JTextField nameTextField = new JTextField(20);
+        formPanel.add(createFieldWithLabel("Name:", nameTextField));
+
+        // Description
+        JTextArea descriptionTextArea = new JTextArea(8, 20); // Increase the number of rows
+        JScrollPane descriptionScrollPane = new JScrollPane(descriptionTextArea);
+        descriptionScrollPane.setPreferredSize(new Dimension(250, 120)); // Adjust the size
+        formPanel.add(createFieldWithLabel("Description:", descriptionScrollPane));
+
+        // Price
+        DoubleSpinner priceSpinner = createDoubleSpinner();
+        formPanel.add(createFieldWithLabel("Price:", priceSpinner));
+
+        // Quantity
+        SpinnerModel quantityModel = new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1);
+        JSpinner quantitySpinner = new JSpinner(quantityModel);
+        formPanel.add(createFieldWithLabel("Quantity:", quantitySpinner));
+
+        // Store Label
+        JLabel storeLabel = new JLabel("Store:          " + editStoreName);
+        storeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        storeLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        formPanel.add(storeLabel);
+
+
+
+        // Create Product Button
+        JButton editProductButton = new JButton("Edit Product");
+        editProductButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        editProductButton.addActionListener(e -> {
+            // Handle the creation of the product here
+            String name = nameTextField.getText().trim();
+            String description = descriptionTextArea.getText().trim();
+
+            // Validate Name
+            if (name.isEmpty()) {
+                JOptionPane.showMessageDialog(createProductPanel, "Name cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Validate Description
+            if (description.isEmpty()) {
+                JOptionPane.showMessageDialog(createProductPanel, "Description cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Validate Price
+            double price;
+            try {
+                price = ((Double) priceSpinner.getValue()).doubleValue();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(createProductPanel, "Invalid price format", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Validate Quantity
+            int quantity;
+            try {
+                quantity = (int) quantitySpinner.getValue();
+                if (quantity < 1) {
+                    JOptionPane.showMessageDialog(createProductPanel, "Quantity must be at least 1", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(createProductPanel, "Invalid quantity format", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Confirm creation
+            int confirmResult = JOptionPane.showConfirmDialog(createProductPanel,
+                    "Create the following product?\n\n" +
+                            "Name: " + name + "\n" +
+                            "Description: " + description + "\n" +
+                            "Price: " + price + "\n" +
+                            "Quantity: " + quantity + "\n" +
+                            "Store: " + editStoreName,
+                    "Confirm Product Creation", JOptionPane.YES_NO_OPTION);
+
+            if (confirmResult == JOptionPane.YES_OPTION) {
+                // User clicked 'Yes', process creation
+                System.out.println("Product created:");
+                System.out.println("Name: " + name);
+                System.out.println("Description: " + description);
+                System.out.println("Price: " + price);
+                System.out.println("Quantity: " + quantity);
+                System.out.println("Store: " + editStoreName);
+
+                // Reset the create product panel
+                nameTextField.setText("");
+                descriptionTextArea.setText("");
+                priceSpinner.setValue(0.0);
+                quantitySpinner.setValue(1);
+            } else {
+                // User clicked 'No', do nothing or handle accordingly
+                System.out.println("Product creation cancelled by user.");
+            }
+        });
+
+        JButton deleteProductButton = new JButton("Delete Product");
+        deleteProductButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        deleteProductButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        deleteProductButton.addActionListener(e -> {
+            // Handle the deletion of the product here
+            int deleteResult = JOptionPane.showConfirmDialog(createProductPanel,
+                    "Are you sure you want to delete the product?\n\n" +
+                            "Name: " + editProductName + "\n" +
+                            "Store: " + editStoreName,
+                    "Confirm Product Deletion", JOptionPane.YES_NO_OPTION);
+
+            if (deleteResult == JOptionPane.YES_OPTION) {
+                // User clicked 'Yes', process deletion
+                String deletionMessage = "Product deleted:\n" +
+                        "Name: " + editProductName + "\n" +
+                        "Store: " + editStoreName;
+                JOptionPane.showMessageDialog(createProductPanel, deletionMessage, "Product Deletion", JOptionPane.INFORMATION_MESSAGE);
+
+                cardLayout.show(cardPanel, "Main Page");
+                frame.setSize(400,500);
+
+                // You can add logic to delete the product from your data structure
+                // and update the UI accordingly
+            } else {
+                // User clicked 'No', do nothing or handle accordingly
+                System.out.println("Product deletion cancelled by user.");
+            }
+        });
+
+
+        // Add components to the form panel
+        formPanel.add(editProductButton);
+        formPanel.add(deleteProductButton);
+        createProductPanel.add(formPanel);
+        deleteProductButton.add(Box.createVerticalStrut(10));
+        createProductPanel.add(Box.createVerticalStrut(10));
+
+        return createProductPanel;
+    }
+
 
 
 
@@ -881,6 +1206,15 @@ public class SellerPanel {
 
     private static Double getDouble(JSpinner doubleSpinner) {
         return (Double) doubleSpinner.getValue();
+    }
+
+    public JPanel getMainSellerPanel() {
+        return mainSellerPanel;
+    }
+
+    public void switchToAccountPanelButton(ActionListener actionListener) {
+        //Work here
+
     }
 
     private static class DoubleSpinner extends JSpinner {
