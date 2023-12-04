@@ -16,6 +16,8 @@ public class CustomersPanel {
     private JLabel selectedProductLabel;
     private String selectedProduct;
 
+    private String storeName;
+
     JFrame loginFrame; //probably delete this stuff below
     JFrame customerMainPageFrame;
     JButton nextButton;
@@ -496,6 +498,61 @@ public class CustomersPanel {
     // method that creates panel for the store listings page
     private JPanel createStoreListingsPagePanel() {
         JPanel storeListingsPanel = new JPanel();
+        JPanel allStoresPanel = new JPanel();
+        frame.setTitle("Store Listing Page");
+        storeListingsPanel.setLayout(new BoxLayout(storeListingsPanel, BoxLayout.Y_AXIS));
+        allStoresPanel.setLayout(new BoxLayout(allStoresPanel, BoxLayout.Y_AXIS));
+
+
+        JLabel selectStore = new JLabel("Select a Store");
+        selectStore.setAlignmentX(Component.CENTER_ALIGNMENT);
+        selectStore.setFont(new Font("Arial", Font.PLAIN, 18));
+
+        JButton backButton = createBackToMenuButton();
+        storeListingsPanel.add(backButton);
+
+        String [] dummyStores = new String[]{"Store One" ,"Store Two","Store Three","Store Four", "Store Five", "Store Six", "Store Seven", "Store Eight",
+                "Store Nine", "Store Ten", "Store Eleven", "Store Twelve","Store Thirst","Store Fourteen","Store Fifth-teener","Store Sixty"};
+
+        for (String name : dummyStores) {
+            JLabel label = new JLabel(name);
+            label.setAlignmentX(Component.CENTER_ALIGNMENT);
+            label.setFont(new Font("Arial", Font.PLAIN, 18));
+
+            label.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    // Handle click event
+                    storeName = label.getText();
+                    //System.out.println(storeName);
+                    // Update the display with the selected seller's name
+                    //selectedStoreLabel.setText("Selected Store: " + storeName);
+                    //cardLayout.show(cardPanel,"Selected Store Page");
+
+
+                }
+            });
+
+            allStoresPanel.add(label);
+            allStoresPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+
+        }
+
+        allStoresPanel.remove(allStoresPanel.getComponentCount() - 1);
+
+        JScrollPane jsp = new JScrollPane(allStoresPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        // Display selected Store name
+        //selectedStoreLabel = new JLabel("Selected Store: ");
+        //selectedStoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        //selectedStoreLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+
+        storeListingsPanel.add(selectStore);
+        storeListingsPanel.add(Box.createVerticalStrut(20));
+        storeListingsPanel.add(jsp);
+        storeListingsPanel.add(Box.createVerticalStrut(20));
+        //storeListingsPanel.add(selectedStoreLabel);
+
         return storeListingsPanel;
     }
 
