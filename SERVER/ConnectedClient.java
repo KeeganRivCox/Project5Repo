@@ -21,6 +21,8 @@ public class ConnectedClient {
     private static final int GET_ALL_CUSTOMERS = 9;
     private static final int UPDATE_CUSTOMER = 10;
 
+
+
     public ConnectedClient(Socket clientConnection) {
 
         connection = clientConnection;
@@ -439,5 +441,7 @@ public class ConnectedClient {
         getAccountHashMap();
 
     }
+
+
 
 }
