@@ -2,6 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class CustomersPanel {
     private JFrame frame;
@@ -15,6 +19,22 @@ public class CustomersPanel {
 
     private JLabel selectedProductLabel;
     private String selectedProduct;
+
+    private String searchInputProductName;
+    private String searchInputProductDescription;
+
+    private int customerShoppingCartQuantity = 0;
+
+    private Product bestSellerOne;
+    private Product bestSellerTwo;
+    private Product bestSellerThree;
+    private String storeName;
+
+    private JLabel selectedStoreLabel = new JLabel("");;
+
+    private String productName;
+
+    private Seller selectedSeller;
 
     JFrame loginFrame; //probably delete this stuff below
     JFrame customerMainPageFrame;
@@ -49,6 +69,7 @@ public class CustomersPanel {
     //};
 
     public static void main(String[] args) {
+
         SwingUtilities.invokeLater(() -> new CustomersPanel());
 
     }
@@ -119,6 +140,10 @@ public class CustomersPanel {
         cardPanel.add(createLogOutPanel(), "Log Out");
         cardPanel.add(createContactSellerPanel(), "Contact Sellers");
         cardPanel.add(createSellerListingsPanel(), "Seller Listings");
+        cardPanel.add(createStoreListingsPagePanel(), "Store Listings");
+        cardPanel.add(createSearchOptionsPanel(), "Search Options");
+        cardPanel.add(searchProductNamePanel(), "Search Product Input");
+        cardPanel.add(searchProductDescriptionPanel(), "Search Product Description Input");
 
         frame.add(cardPanel);
 
@@ -163,8 +188,10 @@ public class CustomersPanel {
         searchButton.setFont(new Font("Arial", Font.PLAIN, 30));
         searchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "No products were found.",
-                        "Customers", JOptionPane.ERROR_MESSAGE);
+
+                cardLayout.show(cardPanel, "Search Options");
+                frame.setSize(400,250);
+                frame.setLocationRelativeTo(null);
             }
         });
 
@@ -195,6 +222,13 @@ public class CustomersPanel {
         seeAllStoresButton.setPreferredSize(buttonDimension);
         //seeAllStoresButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         seeAllStoresButton.setFont(new Font("Arial", Font.PLAIN, 16));
+        seeAllStoresButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(cardPanel, "Store Listings");
+                frame.setSize(400,500);
+                frame.setLocationRelativeTo(null);
+            }
+        });
 
         JButton seeAllSellersButton = new JButton("Sellers");
         seeAllSellersButton.setPreferredSize(buttonDimension);
@@ -352,32 +386,24 @@ public class CustomersPanel {
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
         titlePanel.add(createBackToMenuButton());
-        //titlePanel.add(Box.createHorizontalStrut(20));
         titlePanel.add(titleLabel);
 
         JPanel allSellersPanel = new JPanel();
         allSellersPanel.setLayout(new BoxLayout(allSellersPanel, BoxLayout.Y_AXIS));
-        //method that returns all sellers in an arraylist
-        String[] dummySellers = new String[]{"Seller One", "Seller Two", "Seller Three", "Seller Four", "Seller Five",
-                "Seller Six", "Seller Seven", "Seller Eight", "Seller Nine", "Seller Ten", "Seller Eleven", "Seller Twelve", "Seller Thirteen", "Seller Fourteen", "Seller Fifteen", "Seller Sixteen"};
-        for (String name: dummySellers) {
-            JLabel label = new JLabel(name);
+
+        ArrayList<Seller> allSellers = new Request().getAllSellers();
+
+        for (Seller seller: allSellers) {
+            JLabel label = new JLabel(seller.getUsername());
             label.setAlignmentX(Component.CENTER_ALIGNMENT);
             label.setFont(new Font("Arial", Font.PLAIN, 18));
 
             label.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
-                    sellerName = label.getText();
-                    sellerSelectedLabel.setText("Selected Seller: " + sellerName);
-                    for (int i = 0; i < dummySellers.length; i++) {
-                        if (sellerName.equals(dummySellers[i])) {
-                            //selectedSeller = allSellers[i];
-                            //selectedSeller should be declared outside this method
-                        }
-                    }
-                    //match the name in the array list and gets it index
-                    //use a method that creates a panel with the index of the object that should match with the name
-                    // Update the display with the selected seller's name
+                    selectedSeller = seller;
+                    JPanel sellerPanel = createSellerPanel(seller);
+                    cardPanel.add(sellerPanel, "Seller Page");
+                    cardLayout.show(cardPanel, "Seller Page");
                 }
             });
             allSellersPanel.add(label);
@@ -389,53 +415,19 @@ public class CustomersPanel {
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new BoxLayout(bottomPanel,BoxLayout.Y_AXIS));
 
-        sellerSelectedLabel = new JLabel("Selected Seller: ");
-        sellerSelectedLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        sellerSelectedLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-
-        JButton goToSellerPageButton = new JButton("Go to Seller Page");
-        goToSellerPageButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        goToSellerPageButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JPanel panel = createSellerPanel();
-                //Jpanel panel = createSellerPanel(selectedSeller);
-                cardPanel.add(panel, "Seller Page");
-                cardLayout.show(cardPanel, "Seller Page");
-            }
-        });
-
-        bottomPanel.add(sellerSelectedLabel);
-
-
-
-
-
+        JLabel instructions = new JLabel("Click on a seller to view its page.");
+        instructions.setAlignmentX(Component.CENTER_ALIGNMENT);
+        instructions.setFont(new Font("Arial", Font.BOLD, 18));
+        bottomPanel.add(instructions);
 
         sellerListingsPanel.add(Box.createVerticalStrut(20));
         sellerListingsPanel.add(titlePanel);
         sellerListingsPanel.add(Box.createVerticalStrut(20));
         sellerListingsPanel.add(jsp);
         sellerListingsPanel.add(bottomPanel);
-        sellerListingsPanel.add(goToSellerPageButton);
         return sellerListingsPanel;
 
     }
-
-    private JPanel createProductPanel(Product product) {
-        JPanel productPanel = new JPanel();
-        productPanel.setLayout(new BoxLayout(productPanel, BoxLayout.Y_AXIS));
-
-
-        JPanel titlePanel = new JPanel();
-        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
-        JLabel productTitle = new JLabel(product.getName());
-        titlePanel.add(productTitle);
-        productPanel.add(titlePanel);
-
-
-        return productPanel;
-    }
-
 
 
     // method that creates the panel for the product listings page
@@ -464,17 +456,20 @@ public class CustomersPanel {
 
         JScrollPane jsp = new JScrollPane(productPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        //dummy data
-        String[] products = new String[]{"Product One", "Product Two", "Product Three", "Product Four", "Product Five", "Product Six", "Product Seven", "Product Eight", "Product Nine", "Product Ten", "Product Eleven", "Product Twelve", "Product Thirteen", "Product Fourteen", "Product Fifteen", "Product Sixteen",};
-        double[] prices = new double[]{3.99, 14.99, 5.99, 78.99, 100.99, 1450.99, 45.99, 2.99, 3.99, 14.99, 51.99, 46.99, 32.99, 40.99, 15.99, 14.99};
-        for (int i = 0; i < products.length; i++) {
-            JLabel label = new JLabel(products[i] + " $" + prices[i]);
+
+        ArrayList<Product> allProducts = getAllProducts();
+
+        for (Product product: allProducts) {
+            if (allProducts.isEmpty()) {
+                break;
+            }
+            JLabel label = new JLabel( product.getName()+ " $" + product.getPrice());
             label.setAlignmentX(Component.CENTER_ALIGNMENT);
             label.setFont(new Font("Arial", Font.PLAIN, 18));
             label.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
-                    //JPanel panel = createProductPanel();
-                    //cardPanel.add(panel, "Product Page");
+                    JPanel panel = createProductPanel(product);
+                    cardPanel.add(panel, "Product Page");
                     cardLayout.show(cardPanel, "Product Page");
                 }
             });
@@ -482,11 +477,15 @@ public class CustomersPanel {
             productPanel.add(new JSeparator(JSeparator.HORIZONTAL));
 
         }
-        productPanel.remove(productPanel.getComponentCount()-1);
+        if (!allProducts.isEmpty()) {
+            productPanel.remove(productPanel.getComponentCount() - 1);
+        }
 
+        /*
         selectedProductLabel = new JLabel("Selected Product: ");
         selectedProductLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         selectedProductLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+         */
 
         JLabel instructionLabel = new JLabel("Click a product to view its page.");
         instructionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -494,7 +493,7 @@ public class CustomersPanel {
 
 
         JPanel bottomPanel = new JPanel();
-        bottomPanel.add(selectedProductLabel);
+        //bottomPanel.add(selectedProductLabel);
 
 
         productsListingPanel.add(Box.createVerticalStrut(20));
@@ -512,13 +511,165 @@ public class CustomersPanel {
 
     // method that creates panel for the store listings page
     private JPanel createStoreListingsPagePanel() {
+
         JPanel storeListingsPanel = new JPanel();
+        JPanel allStoresPanel = new JPanel();
+        //JPanel topPanel = new JPanel();
+
+
+
+        //topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+        //topPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        storeListingsPanel.setLayout(new BoxLayout(storeListingsPanel, BoxLayout.Y_AXIS));
+        allStoresPanel.setLayout(new BoxLayout(allStoresPanel, BoxLayout.Y_AXIS));
+
+
+        JLabel selectStore = new JLabel("Select a Store");
+        selectStore.setAlignmentX(Component.CENTER_ALIGNMENT);
+        selectStore.setFont(new Font("Arial", Font.PLAIN, 18));
+
+        JButton backButton = createBackToMenuButton();
+        backButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        //topPanel.add(backButton);
+        storeListingsPanel.add(backButton);
+
+        ArrayList<Store> sellerStores = getAllStores();
+
+        String [] dummyStores = new String[]{"Store One" ,"Store Two","Store Three","Store Four", "Store Five", "Store Six", "Store Seven", "Store Eight",
+                "Store Nine", "Store Ten", "Store Eleven", "Store Twelve","Store Thirst","Store Fourteen","Store Fifth-teener","Store Sixty"};
+/*
+        for(int i =0; i < sellerStores.size();i++){
+
+            String name = sellerStores.get(i).getName();
+            JLabel label = new JLabel(name);
+            label.setAlignmentX(Component.CENTER_ALIGNMENT);
+            label.setFont(new Font("Arial", Font.PLAIN, 18));
+
+            label.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    // Handle click event
+                    storeName = label.getText();
+                    //System.out.println(storeName);
+                    // Update the display with the selected seller's name
+                    //selectedStoreLabel.setText("Selected Store: " + storeName);
+                    cardLayout.show(cardPanel,"Individual Store");
+
+
+                }
+            });
+
+            allStoresPanel.add(label);
+            allStoresPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+        }
+        */
+
+        for (String name : dummyStores) {
+            JLabel label = new JLabel(name);
+            label.setAlignmentX(Component.CENTER_ALIGNMENT);
+            label.setFont(new Font("Arial", Font.PLAIN, 18));
+
+            label.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    // Handle click event
+                    storeName = label.getText();
+                    selectedStoreLabel.setText(storeName);
+                    //currentStoreName = storeName;
+                    //currentName = label.getText();
+                    //System.out.println(storeName);
+                    // Update the display with the selected seller's name
+                    //selectedStoreLabel.setText("Selected Store: " + storeName);
+                    cardLayout.show(cardPanel,"Individual Store");
+                    //frame.setTitle(storeName +  " Page");
+
+
+                }
+            });
+
+            allStoresPanel.add(label);
+            allStoresPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+
+        }
+
+
+
+        allStoresPanel.remove(allStoresPanel.getComponentCount() - 1);
+
+        JScrollPane jsp = new JScrollPane(allStoresPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        // Display selected Store name
+        //selectedStoreLabel = new JLabel("Selected Store: ");
+        //selectedStoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        //selectedStoreLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+
+        storeListingsPanel.add(selectStore);
+        storeListingsPanel.add(Box.createVerticalStrut(20));
+        storeListingsPanel.add(jsp);
+        storeListingsPanel.add(Box.createVerticalStrut(20));
+        //storeListingsPanel.add(selectedStoreLabel);
+
+
         return storeListingsPanel;
     }
 
     // method that creates panel for the store listings page
-    private JPanel createIndividualStoreListingsPanel() {
+    private JPanel createIndividualStoreListingsPanel(Store store) {
+        //frame.setTitle("Store Page");
         JPanel individualStorePanel = new JPanel();
+        JPanel listStoreProductsPanel = new JPanel();
+        //frame.setTitle("Store Page");
+        //System.out.println(storeName);
+        JLabel sName = selectedStoreLabel;
+        sName.setFont(new Font("Arial", Font.PLAIN, 18));
+        //JLabel totalSales = new JLabel("TotalSales: ");
+        individualStorePanel.setLayout(new BoxLayout(individualStorePanel, BoxLayout.Y_AXIS));
+        listStoreProductsPanel.setLayout(new BoxLayout(listStoreProductsPanel, BoxLayout.Y_AXIS));
+        individualStorePanel.add(sName);
+        //individualStorePanel.add(totalSales);
+
+
+        JButton backButton = createBackToMenuButton();
+        individualStorePanel.add(backButton);
+
+        String [] dummyProducts = new String[]{"Product One" ,"Product Two","Product Three","Product Four", "Product Five", "Product Six", "Product Seven", "Product Eight",
+                "Product Nine", "Product Ten", "Product Eleven", "Product Twelve", "Product Thriteen", "Product Fourteen"};
+
+        for (String name : dummyProducts) {
+            JLabel label = new JLabel(name);
+            label.setAlignmentX(Component.CENTER_ALIGNMENT);
+            label.setFont(new Font("Arial", Font.PLAIN, 18));
+
+            label.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    // Handle click event
+                    productName = label.getText();
+                    //System.out.println(storeName);
+                    // Update the display with the selected seller's name
+                    //selectedStoreLabel.setText("Selected Store: " + storeName);
+                    //cardLayout.show(cardPanel,"Selected Store Page");
+
+
+                }
+            });
+
+            listStoreProductsPanel.add(label);
+            listStoreProductsPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+
+        }
+
+        listStoreProductsPanel.remove(listStoreProductsPanel.getComponentCount() - 1);
+        JScrollPane jsp = new JScrollPane(listStoreProductsPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        //individualStorePanel.add(selectStore);
+        individualStorePanel.add(Box.createVerticalStrut(20));
+        individualStorePanel.add(jsp);
+        individualStorePanel.add(Box.createVerticalStrut(20));
+
+
+
+
         return individualStorePanel;
     }
 
@@ -657,12 +808,12 @@ public class CustomersPanel {
         JPanel sellerNamePanel = new JPanel();
         //use a method that returns an arraylist of all sellers
         //make a mirror array of seller names that lines up with the arraylist of sellers
-        String[] dummySellerNames = new String[]{"Seller 1", "Seller 2", "Seller 3", "Seller 4", "Seller 5", "Seller 6", "Seller 7"
-                ,"Seller 8", "Seller 9", "Seller 10", "Seller 11", "Seller 12", "Seller 13", "Seller 14", "Seller 15", "Seller 16"};
+        ArrayList <Seller> allSellers = new Request().getAllSellers();
+
         sellerNamePanel.setLayout(new BoxLayout(sellerNamePanel, BoxLayout.Y_AXIS));
 
-        for (String name : dummySellerNames) {
-            JLabel label = new JLabel(name);
+        for (Seller seller : allSellers) {
+            JLabel label = new JLabel(seller.getUsername());
             label.setAlignmentX(Component.CENTER_ALIGNMENT);
             label.setFont(new Font("Arial", Font.PLAIN, 18));
             label.addMouseListener(new MouseAdapter() {
@@ -713,7 +864,7 @@ public class CustomersPanel {
                 // Handle sending the message
                 String message = messageTextArea.getText();
                 // You can use the message as needed
-                System.out.println("Sending message to " + messageSellerName + ": " + message);
+                JOptionPane.showMessageDialog(null,"Sending message to " + messageSellerName + ": " + message, "Customers", JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
@@ -735,18 +886,487 @@ public class CustomersPanel {
         return contactSellerPanel;
     }
 
-    private JPanel createSellerPanel() { //should have an object parameter that takes a Seller object
+    private JPanel createSellerPanel(Seller seller) { //should have an object parameter that takes a Seller object
         JPanel sellerPanel = new JPanel();
         sellerPanel.setLayout(new BoxLayout(sellerPanel, BoxLayout.Y_AXIS));
+
+        JPanel titlePanel = new JPanel();
+
+
+        JLabel sellerUsername = new JLabel(seller.getUsername());
+        sellerUsername.setAlignmentX(Component.CENTER_ALIGNMENT);
+        sellerUsername.setFont(new Font("Arial", Font.PLAIN, 18));
+
+        //titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+        titlePanel.setLayout(new FlowLayout());
+        titlePanel.setPreferredSize(new Dimension(400, 10));
+        titlePanel.add(createBackToMenuButton());
+        titlePanel.add(sellerUsername);
+        titlePanel.add(createBackToAccountPageButton());
+
+        ArrayList<Store> allStores = getAllStores();
+
+        JPanel storesPanel = new JPanel();
+        storesPanel.setLayout(new BoxLayout(storesPanel, BoxLayout.Y_AXIS));
+        for (Store store: allStores) {
+            JLabel storeLabel = new JLabel(store.getName() + ", " + store.getProductsSold());
+            storeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            storeLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+            storeLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    JPanel panel = createShopPanel(store);
+                    cardPanel.add(panel, "Store Page");
+                    cardLayout.show(cardPanel, "Store Page");
+
+                }
+            });
+
+
+
+
+            storesPanel.add(storeLabel);
+            storesPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+        }
+        if (!allStores.isEmpty()) {
+            storesPanel.remove(storesPanel.getComponentCount() - 1);
+        }
+
+        JScrollPane jsp = new JScrollPane(storesPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jsp.setPreferredSize(new Dimension(400, 250));
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setLayout(new BoxLayout(bottomPanel,BoxLayout.Y_AXIS));
+
+        JLabel instructions = new JLabel("Click on a store to view its page.");
+        instructions.setAlignmentX(Component.CENTER_ALIGNMENT);
+        instructions.setFont(new Font("Arial", Font.BOLD, 18));
+        bottomPanel.add(instructions);
+
+        JPanel dropdownPanel = new JPanel();
+        dropdownPanel.setPreferredSize(new Dimension(400, 40));
+        String[] options = new String[]{"Most Products", "Least Products"};
+        JComboBox sortDropdown = new JComboBox(options);
+        sortDropdown.setPreferredSize(new Dimension(200, 40));
+        sortDropdown.setAlignmentX(Component.CENTER_ALIGNMENT);
+        dropdownPanel.add(sortDropdown);
+
+        sellerPanel.add(titlePanel);
+        sellerPanel.add(sortDropdown);
+        sellerPanel.add(Box.createVerticalStrut(20));
+        sellerPanel.add(jsp);
+        sellerPanel.add(Box.createVerticalStrut(20));
+        sellerPanel.add(bottomPanel);
+
+
+
+
+
         return sellerPanel;
     }
+    private JPanel createProductPanel(Product product) {
+        JPanel productPanel = new JPanel();
+        productPanel.setLayout(new BoxLayout(productPanel, BoxLayout.Y_AXIS));
+        JLabel productName = new JLabel(product.getName());
+        productName.setAlignmentX(Component.CENTER_ALIGNMENT);
+        productName.setFont(new Font("Arial", Font.PLAIN, 18));
 
-    private JPanel createShopPanel() {
+
+        JLabel productDescription = new JLabel(product.getDescription());
+        productDescription.setAlignmentX(Component.CENTER_ALIGNMENT);
+        productDescription.setFont(new Font("Arial", Font.PLAIN, 18));
+
+        JLabel productStock = new JLabel(Integer.toString(product.getQuantity()));
+        productStock.setAlignmentX(Component.CENTER_ALIGNMENT);
+        productStock.setFont(new Font("Arial", Font.PLAIN, 18));
+
+        JButton goToStoreButton = new JButton("Go To Product's Store");
+        goToStoreButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        goToStoreButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        goToStoreButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JPanel panel = createIndividualStoreListingsPanel(product.getStore());
+                cardPanel.add(panel, "Individual Store");
+                cardLayout.show(cardPanel, "Individual Store");
+
+            }
+        });
+
+
+        JButton addToCartButton = new JButton("Add to Cart");
+        addToCartButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        addToCartButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        addToCartButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (customerShoppingCartQuantity > product.getQuantity()) {
+                    JOptionPane.showMessageDialog(null, "Please choose a smaller quantity.", "Customers", JOptionPane.ERROR_MESSAGE);
+                }
+                else {
+                    JOptionPane.showMessageDialog(null, "Added " + product.getName() + "x" + customerShoppingCartQuantity + "to your shopping cart!" , "Customers", JOptionPane.ERROR_MESSAGE);
+                }
+
+            }
+        });
+
+        JPanel quantityPanel = new JPanel();
+        JTextField quantityTextField = new JTextField("       0       ");
+        quantityTextField.setAlignmentX(Component.CENTER_ALIGNMENT);
+        quantityTextField.setFont(new Font("Arial", Font.PLAIN, 18));
+
+        quantityPanel.setLayout(new BoxLayout(quantityPanel, BoxLayout.Y_AXIS));
+        JButton addButton = new JButton("+");
+        addButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        addButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                customerShoppingCartQuantity = Integer.parseInt(quantityTextField.getText());
+                customerShoppingCartQuantity++;
+                quantityTextField.setText("       " + customerShoppingCartQuantity + "       ");
+
+            }
+        });
+
+        addButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JButton minusButton = new JButton("-");
+        minusButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        minusButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        minusButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                customerShoppingCartQuantity = Integer.parseInt(quantityTextField.getText());
+                customerShoppingCartQuantity--;
+                quantityTextField.setText("       " + customerShoppingCartQuantity + "       ");
+
+            }
+        });
+        quantityPanel.add(minusButton);
+        quantityPanel.add(quantityTextField);
+        quantityPanel.add(addButton);
+
+        productPanel.add(quantityPanel);
+        productPanel.add(addToCartButton);
+        return productPanel;
+    }
+
+    private JPanel createShopPanel(Store store) {
         JPanel shopPanel = new JPanel();
         shopPanel.setLayout(new BoxLayout(shopPanel, BoxLayout.Y_AXIS));
+        JLabel storeName = new JLabel(store.getName());
+        shopPanel.add(Box.createVerticalStrut(20));
+        shopPanel.add(storeName);
         return shopPanel;
     }
 
+    private JPanel createSearchOptionsPanel() {
+        JPanel searchOptionsPanel = new JPanel();
+        searchOptionsPanel.setLayout(new BoxLayout(searchOptionsPanel, BoxLayout.Y_AXIS));
+        searchOptionsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel questionLabel = new JLabel("What would you like to search by?");
+        questionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        questionLabel.setFont(new Font("Arial", Font.BOLD, 18));
+
+        Dimension buttonDimension = new Dimension(300, 40);
+        JButton productNamesButton = new JButton("Product Names");
+        productNamesButton.setPreferredSize(buttonDimension);
+        productNamesButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        productNamesButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        productNamesButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ArrayList<Product> products = getAllProducts();
+                /*
+                if (products.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "There are no currently no products.", "Customers", JOptionPane.ERROR_MESSAGE);
+
+                }
+                else {
+                    cardLayout.show(cardPanel, "Search Product Input");
+                    frame.setSize(400, 200);
+                    frame.setLocationRelativeTo(null);
+                }
+
+                 */
+                cardLayout.show(cardPanel, "Search Product Input");
+                frame.setSize(400, 200);
+                frame.setLocationRelativeTo(null);
+            }
+        });
+
+        JButton storeNamesButton = new JButton("Store Names");
+        storeNamesButton.setPreferredSize(buttonDimension);
+        storeNamesButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        storeNamesButton.setFont(new Font("Arial", Font.PLAIN, 18));
+
+
+        JButton productDescriptionsButton = new JButton("Product Descriptions");
+        productDescriptionsButton.setPreferredSize(buttonDimension);
+        productDescriptionsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        productDescriptionsButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        productDescriptionsButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ArrayList<Product> products = getAllProducts();
+                /*
+                if (products.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "There are no currently no products.", "Customers", JOptionPane.ERROR_MESSAGE);
+
+                }
+                else {
+                    cardLayout.show(cardPanel, "Search Product Description Input");
+                    frame.setSize(400, 200);
+                    frame.setLocationRelativeTo(null);
+                }
+
+                 */
+                cardLayout.show(cardPanel, "Search Product Description Input");
+                frame.setSize(400, 200);
+                frame.setLocationRelativeTo(null);
+            }
+        });
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
+        bottomPanel.add(createBackToMenuButton());
+        bottomPanel.add(Box.createHorizontalStrut(300));
+
+        searchOptionsPanel.add(Box.createVerticalStrut(10));
+        searchOptionsPanel.add(questionLabel);
+        searchOptionsPanel.add(Box.createVerticalStrut(5));
+        searchOptionsPanel.add(productNamesButton);
+        searchOptionsPanel.add(Box.createVerticalStrut(5));
+        searchOptionsPanel.add(storeNamesButton);
+        searchOptionsPanel.add(Box.createVerticalStrut(5));
+        searchOptionsPanel.add(productDescriptionsButton);
+        searchOptionsPanel.add(bottomPanel);
+
+        return searchOptionsPanel;
+    }
+
+    private JPanel searchProductNamePanel () {
+        JPanel searchedProductNameInput = new JPanel();
+        searchedProductNameInput.setLayout(new BoxLayout(searchedProductNameInput, BoxLayout.Y_AXIS));
+        searchedProductNameInput.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel title = new JLabel("Enter the name of the product.");
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        title.setFont(new Font("Arial", Font.BOLD, 18));
+
+        JTextField search = new JTextField();
+        search.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JButton searchButton = new JButton("Search");
+        searchButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        searchButton.setFont(new Font("Arial", Font.PLAIN, 18));
+
+        searchButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                boolean matchFound = false;
+                ArrayList<Product> products = getAllProducts();
+                for (Product product : products) {
+                    if (product.getName().equalsIgnoreCase(search.getText())) {
+                        matchFound = true;
+                    }
+                }
+                /*
+                if (matchFound) {
+                    searchInputProductName = search.getText();
+                    JPanel panel = createSearchProductsPanel(searchInputProductName);
+                    cardPanel.add(panel, "Search Results Product Name");
+                    cardLayout.show(cardPanel, "Search Results Product Name");
+                    frame.setSize(400, 500);
+                    frame.setLocationRelativeTo(null);
+                } else {
+                    JOptionPane.showMessageDialog(null, "There are no matching products", "Customers", JOptionPane.ERROR_MESSAGE);
+                }
+                */
+                searchInputProductName = search.getText();
+                JPanel panel = createSearchProductsPanel(searchInputProductName);
+                cardPanel.add(panel, "Search Results Product Name");
+                cardLayout.show(cardPanel, "Search Results Product Name");
+                frame.setSize(400, 500);
+                frame.setLocationRelativeTo(null);
+
+            }
+        });
+
+        searchedProductNameInput.add(Box.createVerticalStrut(20));
+        searchedProductNameInput.add(title);
+        searchedProductNameInput.add(Box.createVerticalStrut(20));
+        searchedProductNameInput.add(search);
+        searchedProductNameInput.add(Box.createVerticalStrut(20));
+        searchedProductNameInput.add(searchButton);
+        return searchedProductNameInput;
+
+    }
+    private JPanel createSearchProductsPanel (String productName) {
+        JPanel searchedProductsPanel = new JPanel();
+        searchedProductsPanel.setLayout(new BoxLayout(searchedProductsPanel, BoxLayout.Y_AXIS));
+        searchedProductsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+
+        JLabel title = new JLabel("Searched Products");
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        title.setFont(new Font("Arial", Font.BOLD, 18));
+
+        titlePanel.add(createBackToMenuButton());
+        titlePanel.add(title);
+        titlePanel.add(createBackToAccountPageButton());
+
+        JPanel allProductsPanel = new JPanel();
+        allProductsPanel.setLayout(new BoxLayout(allProductsPanel, BoxLayout.Y_AXIS));
+
+        ArrayList<Product> allProducts = getAllProducts();
+
+        for (Product product: allProducts) {
+            if (product.getName().equalsIgnoreCase(productName)) {
+                JLabel label = new JLabel(product.getName());
+                label.setAlignmentX(Component.CENTER_ALIGNMENT);
+                label.setFont(new Font("Arial", Font.PLAIN, 18));
+
+                label.addMouseListener(new MouseAdapter() {
+                    public void mouseClicked(MouseEvent e) {
+                        //code to go to product page
+                    }
+                });
+                allProductsPanel.add(label);
+                allProductsPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+            }
+        }
+        JScrollPane jsp = new JScrollPane(allProductsPanel,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        if (!allProducts.isEmpty()) {
+            allProductsPanel.remove(allProductsPanel.getComponentCount() - 1);
+        }
+
+
+        JPanel bottomPanel = new JPanel();
+        JLabel instructions = new JLabel("Select a product to view its page.");
+        instructions.setFont(new Font("Arial", Font.PLAIN, 18));
+        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
+        bottomPanel.add(instructions);
+
+
+
+
+
+        searchedProductsPanel.add(Box.createVerticalStrut(20));
+        searchedProductsPanel.add(titlePanel);
+        searchedProductsPanel.add(Box.createVerticalStrut(20));
+        searchedProductsPanel.add(jsp);
+        searchedProductsPanel.add(instructions);
+        searchedProductsPanel.add(Box.createVerticalStrut(20));
+        return searchedProductsPanel;
+    }
+
+    private JPanel searchProductDescriptionPanel() {
+        JPanel searchProductDescriptionPanel = new JPanel();
+        searchProductDescriptionPanel.setLayout(new BoxLayout(searchProductDescriptionPanel, BoxLayout.Y_AXIS));
+        searchProductDescriptionPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel title = new JLabel("Enter the product's description.");
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        title.setFont(new Font("Arial", Font.BOLD, 18));
+
+        JTextField searchDescription = new JTextField();
+        searchDescription.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JButton searchButton = new JButton("Search");
+        searchButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        searchButton.setFont(new Font("Arial", Font.PLAIN, 18));
+
+        searchButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                boolean matchFound = false;
+                ArrayList<Product> products = getAllProducts();
+                for (Product product : products) {
+                    if (product.getDescription().equalsIgnoreCase(searchDescription.getText())) {
+                        matchFound = true;
+                    }
+                }
+                /*
+                if (matchFound) {
+                    searchInputProductDescription = searchDescription.getText();
+                    JPanel panel = createSearchProductDescriptionsPanel(searchInputProductName);
+                    cardPanel.add(panel, "Search Results Product Description");
+                    cardLayout.show(cardPanel, "Search Results Product Description");
+                    frame.setSize(400, 500);
+                    frame.setLocationRelativeTo(null);
+                } else {
+                    JOptionPane.showMessageDialog(null, "There are no matching products", "Customers", JOptionPane.ERROR_MESSAGE);
+                }
+                */
+                searchInputProductDescription = searchDescription.getText();
+                JPanel panel = createSearchProductDescriptionsPanel(searchInputProductDescription);
+                cardPanel.add(panel, "Search Results Product Description");
+                cardLayout.show(cardPanel, "Search Results Product Description");
+                frame.setSize(400, 500);
+                frame.setLocationRelativeTo(null);
+
+            }
+        });
+        searchProductDescriptionPanel.add(Box.createVerticalStrut(20));
+        searchProductDescriptionPanel.add(title);
+        searchProductDescriptionPanel.add(Box.createVerticalStrut(20));
+        searchProductDescriptionPanel.add(searchDescription);
+        searchProductDescriptionPanel.add(Box.createVerticalStrut(20));
+        searchProductDescriptionPanel.add(searchButton);
+
+
+        return searchProductDescriptionPanel;
+    }
+
+    private JPanel createSearchProductDescriptionsPanel(String productDescription) {
+        JPanel productDescriptions = new JPanel();
+        productDescriptions.setLayout(new BoxLayout(productDescriptions, BoxLayout.Y_AXIS));
+        productDescriptions.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+
+        JLabel title = new JLabel("Searched Products");
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        title.setFont(new Font("Arial", Font.BOLD, 18));
+
+        titlePanel.add(createBackToMenuButton());
+        titlePanel.add(title);
+        titlePanel.add(createBackToAccountPageButton());
+
+        JPanel allProductsPanel = new JPanel();
+        allProductsPanel.setLayout(new BoxLayout(allProductsPanel, BoxLayout.Y_AXIS));
+
+        ArrayList<Product> allProducts = getAllProducts();
+
+        for (Product product: allProducts) {
+            if (product.getDescription().equalsIgnoreCase(productDescription)) {
+                JLabel label = new JLabel(product.getName());
+                label.setAlignmentX(Component.CENTER_ALIGNMENT);
+                label.setFont(new Font("Arial", Font.PLAIN, 18));
+
+                label.addMouseListener(new MouseAdapter() {
+                    public void mouseClicked(MouseEvent e) {
+                        //code to go to product page
+                    }
+                });
+                allProductsPanel.add(label);
+                allProductsPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+            }
+        }
+        JScrollPane jsp = new JScrollPane(allProductsPanel,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        if (!allProducts.isEmpty()) {
+            allProductsPanel.remove(allProductsPanel.getComponentCount() - 1);
+        }
+
+
+        JPanel bottomPanel = new JPanel();
+        JLabel instructions = new JLabel("Select a product to view more info.");
+        instructions.setFont(new Font("Arial", Font.PLAIN, 18));
+        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
+        bottomPanel.add(instructions);
+
+        productDescriptions.add(Box.createVerticalStrut(20));
+        productDescriptions.add(titlePanel);
+        productDescriptions.add(Box.createVerticalStrut(20));
+        productDescriptions.add(jsp);
+        productDescriptions.add(Box.createVerticalStrut(20));
+        productDescriptions.add(bottomPanel);
+        return productDescriptions;
+    }
 
 
 
@@ -767,4 +1387,61 @@ public class CustomersPanel {
         });
         return backButton;
     }
+
+    private JButton createBackToAccountPageButton() {
+        JButton accountButton = new JButton("Account");
+        accountButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        accountButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        accountButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(cardPanel, "Account Page");
+                frame.setSize(400, 500);
+                frame.setLocationRelativeTo(null);
+            }
+        });
+        return accountButton;
+    }
+    private static ArrayList<Store> getAllStores() {
+        ArrayList<Seller> allSellers = new Request().getAllSellers();
+        ArrayList<Store> allStores = new ArrayList<>();
+        for (Seller seller: allSellers) {
+            allStores.addAll(seller.getSellerStores());
+        }
+        return allStores;
+    }
+
+    private static ArrayList<Product> getAllProducts() {
+        ArrayList<Seller> allSellers = new Request().getAllSellers();
+        ArrayList<Product> allProducts = new ArrayList<>();
+        for (Seller seller : allSellers) {
+            for (Store store : seller.getSellerStores()) {
+                allProducts.addAll(store.getProducts());
+            }
+        }
+        return allProducts;
+    }
+
+    /*
+    private static Product getBestSellerOne() {
+        ArrayList<Integer> allProductsSoldCount = new ArrayList<>();
+        ArrayList<Store> allStores = getAllStores();
+        for (Store store : allStores) {
+            allProductsSoldCount.add(store.getProductsSold());
+        }
+        int[] listOfProductCounts = new int[allProductsSoldCount.size()];
+        for (int i = 0; i < listOfProductCounts.length; i++){
+            listOfProductCounts[i] = allProductsSoldCount.get(i);
+        }
+        int temp;
+        for (int i = 0; i < listOfProductCounts.length; i++) {
+            for (int j = i; j < listOfProductCounts.length; j++) {
+
+            }
+        }
+        return
+    }
+
+     */
+
+
 }
