@@ -508,6 +508,7 @@ public class CustomersPanel {
     }
 
 
+
     // method that creates panel for the store listings page
     private JPanel createStoreListingsPagePanel() {
 
@@ -714,6 +715,7 @@ public class CustomersPanel {
         yesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
+                new AccountsPanel().display();
             }
         });
 
