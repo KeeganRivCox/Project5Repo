@@ -9,11 +9,11 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class SellerPanel {
-    private JFrame frame;
-    private JPanel cardPanel;
+    private final JFrame frame;
+    private final JPanel cardPanel;
 
     private String editStoreName;
-    private CardLayout cardLayout;
+    private final CardLayout cardLayout;
 
     JFrame loginFrame; //probably delete this stuff below
     JFrame customerMainPageFrame;
@@ -46,6 +46,7 @@ public class SellerPanel {
     //};
 
     public static void main(String[] args) {
+
         SwingUtilities.invokeLater(() -> new SellerPanel());
 
     }
@@ -70,7 +71,7 @@ public class SellerPanel {
 
         frame.add(cardPanel);
 
-        cardLayout.show(cardPanel, "Seller");
+        cardLayout.show(cardPanel, "Main Page");
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
@@ -414,6 +415,7 @@ public class SellerPanel {
         yesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
+                new AccountsPanel().display();
             }
         });
 

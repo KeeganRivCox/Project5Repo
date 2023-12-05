@@ -421,6 +421,22 @@ public class CustomersPanel {
 
     }
 
+    private JPanel createProductPanel(Product product) {
+        JPanel productPanel = new JPanel();
+        productPanel.setLayout(new BoxLayout(productPanel, BoxLayout.Y_AXIS));
+
+
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
+        JLabel productTitle = new JLabel(product.getName());
+        titlePanel.add(productTitle);
+        productPanel.add(titlePanel);
+
+
+        return productPanel;
+    }
+
+
 
     // method that creates the panel for the product listings page
     private JPanel createProductListingsPanel() { //not entirely sure how to implement the refresh feature based on what is selected in the dropdown
@@ -457,8 +473,8 @@ public class CustomersPanel {
             label.setFont(new Font("Arial", Font.PLAIN, 18));
             label.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
-                    JPanel panel = createProductPanel();
-                    cardPanel.add(panel, "Product Page");
+                    //JPanel panel = createProductPanel();
+                    //cardPanel.add(panel, "Product Page");
                     cardLayout.show(cardPanel, "Product Page");
                 }
             });
@@ -491,6 +507,7 @@ public class CustomersPanel {
         productsListingPanel.add(Box.createVerticalStrut(20));
         return productsListingPanel;
     }
+
 
 
     // method that creates panel for the store listings page
@@ -547,6 +564,7 @@ public class CustomersPanel {
         yesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
+                new AccountsPanel().display();
             }
         });
 
@@ -721,50 +739,6 @@ public class CustomersPanel {
         JPanel sellerPanel = new JPanel();
         sellerPanel.setLayout(new BoxLayout(sellerPanel, BoxLayout.Y_AXIS));
         return sellerPanel;
-    }
-    private JPanel createProductPanel() {
-        JPanel productPanel = new JPanel();
-        productPanel.setLayout(new BoxLayout(productPanel, BoxLayout.Y_AXIS));
-        JButton addToCartButton = new JButton("Add to Cart");
-        addToCartButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        addToCartButton.setFont(new Font("Arial", Font.PLAIN, 18));
-        addToCartButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Added product to your shopping cart!", "Customers", JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
-
-        JPanel quantityPanel = new JPanel();
-        JLabel quantityLabel = new JLabel("Number");
-        quantityPanel.setLayout(new BoxLayout(quantityPanel, BoxLayout.Y_AXIS));
-        JButton addButton = new JButton("+");
-        addButton.setFont(new Font("Arial", Font.PLAIN, 18));
-        addButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                //quantity++
-                quantityLabel.setText("1");
-                //quantityLabel.setText(quantity)
-            }
-        });
-
-        addButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        JButton minusButton = new JButton("-");
-        minusButton.setFont(new Font("Arial", Font.PLAIN, 18));
-        minusButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        minusButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                //quantity++
-                quantityLabel.setText("0");
-                //quantityLabel.setText(quantity)
-            }
-        });
-        quantityPanel.add(minusButton);
-        quantityPanel.add(quantityLabel);
-        quantityPanel.add(addButton);
-
-        productPanel.add(quantityPanel);
-        productPanel.add(addToCartButton);
-        return productPanel;
     }
 
     private JPanel createShopPanel() {
