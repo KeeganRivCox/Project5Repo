@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.net.Socket;
 import java.util.ArrayList;
 
+
 public class Request {
 
     // Variables to be used when checking account creation
@@ -235,17 +236,20 @@ public class Request {
 
     public static void main(String[] args) {
 
-//        ArrayList<Account> allAccounts = new Request().getAllAccounts();
-//
-//        for (Account account : allAccounts) {
-//
-//            new Request().deleteAccount(account.getEmail());
-//
-//        }
+        ArrayList<Account> allAccounts = new Request().getAllAccounts();
 
+       for (Account account : allAccounts) {
+
+           new Request().deleteAccount(account.getEmail());
+
+        }
+
+    new Request().createAccount(new Account("Keegan", "nageekr@gmail.com", "AstroBoy@1", "Kyclon", "seller"));
 
 
 
     }
+
+
 
 }
