@@ -30,7 +30,11 @@ public class CustomersPanel {
     private Product bestSellerThree;
     private String storeName;
 
-    private JLabel selectedStoreLabel = new JLabel("");;
+    private Store selectedStore;
+
+    private int cStore = 0;
+
+    private JLabel selectedStoreLabel = new JLabel("");
 
     private String productName;
 
@@ -535,10 +539,15 @@ public class CustomersPanel {
 
         ArrayList<Store> sellerStores = getAllStores();
 
-        String [] dummyStores = new String[]{"Store One" ,"Store Two","Store Three","Store Four", "Store Five", "Store Six", "Store Seven", "Store Eight",
-                "Store Nine", "Store Ten", "Store Eleven", "Store Twelve","Store Thirst","Store Fourteen","Store Fifth-teener","Store Sixty"};
-/*
+
+       // String [] dummyStores = new String[]{"Store One" ,"Store Two","Store Three","Store Four", "Store Five", "Store Six", "Store Seven", "Store Eight",
+               // "Store Nine", "Store Ten", "Store Eleven", "Store Twelve","Store Thirst","Store Fourteen","Store Fifth-teener","Store Sixty"};
+
+
+
         for(int i =0; i < sellerStores.size();i++){
+
+            cStore = i;
 
             String name = sellerStores.get(i).getName();
             JLabel label = new JLabel(name);
@@ -549,11 +558,18 @@ public class CustomersPanel {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     // Handle click event
+                    selectedStore = sellerStores.get(cStore);
                     storeName = label.getText();
                     //System.out.println(storeName);
                     // Update the display with the selected seller's name
                     //selectedStoreLabel.setText("Selected Store: " + storeName);
-                    cardLayout.show(cardPanel,"Individual Store");
+
+                    //selectedStore = currentStore;
+                    JPanel storePanel = createIndividualStoreListingsPanel(selectedStore);
+                    cardPanel.add(storePanel, "Current Store");
+                    cardLayout.show(cardPanel, "Current Store");
+
+                    //cardLayout.show(cardPanel,"Individual Store");
 
 
                 }
@@ -562,8 +578,9 @@ public class CustomersPanel {
             allStoresPanel.add(label);
             allStoresPanel.add(new JSeparator(JSeparator.HORIZONTAL));
         }
-        */
 
+
+        /*
         for (String name : dummyStores) {
             JLabel label = new JLabel(name);
             label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -580,6 +597,9 @@ public class CustomersPanel {
                     //System.out.println(storeName);
                     // Update the display with the selected seller's name
                     //selectedStoreLabel.setText("Selected Store: " + storeName);
+
+
+
                     cardLayout.show(cardPanel,"Individual Store");
                     //frame.setTitle(storeName +  " Page");
 
@@ -591,11 +611,12 @@ public class CustomersPanel {
             allStoresPanel.add(new JSeparator(JSeparator.HORIZONTAL));
 
         }
+        */
 
 
-
-        allStoresPanel.remove(allStoresPanel.getComponentCount() - 1);
-
+        if(!(sellerStores.size()==0)) {
+            allStoresPanel.remove(allStoresPanel.getComponentCount() - 1);
+        }
         JScrollPane jsp = new JScrollPane(allStoresPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         // Display selected Store name
@@ -635,6 +656,46 @@ public class CustomersPanel {
         String [] dummyProducts = new String[]{"Product One" ,"Product Two","Product Three","Product Four", "Product Five", "Product Six", "Product Seven", "Product Eight",
                 "Product Nine", "Product Ten", "Product Eleven", "Product Twelve", "Product Thriteen", "Product Fourteen"};
 
+        ArrayList<Product> storeProducts = store.getProducts();
+
+        for(int i =0; i < storeProducts.size();i++){
+
+            cStore = i;
+
+            String name = storeProducts.get(i).getName();
+            JLabel label = new JLabel(name);
+            label.setAlignmentX(Component.CENTER_ALIGNMENT);
+            label.setFont(new Font("Arial", Font.PLAIN, 18));
+
+            label.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+
+                    productName = label.getText();
+                    /*
+                    // Handle click event
+                    selectedStore = sellerStores.get(cStore);
+                    storeName = label.getText();
+                    //System.out.println(storeName);
+                    // Update the display with the selected seller's name
+                    //selectedStoreLabel.setText("Selected Store: " + storeName);
+
+                    //selectedStore = currentStore;
+                    JPanel storePanel = createIndividualStoreListingsPanel(selectedStore);
+                    cardPanel.add(storePanel, "Current Store");
+                    cardLayout.show(cardPanel, "Current Store");
+
+                    //cardLayout.show(cardPanel,"Individual Store");
+                    */
+
+                }
+            });
+
+            listStoreProductsPanel.add(label);
+            listStoreProductsPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+        }
+
+        /*
         for (String name : dummyProducts) {
             JLabel label = new JLabel(name);
             label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -658,8 +719,10 @@ public class CustomersPanel {
             listStoreProductsPanel.add(new JSeparator(JSeparator.HORIZONTAL));
 
         }
-
-        listStoreProductsPanel.remove(listStoreProductsPanel.getComponentCount() - 1);
+*/
+        if(!(storeProducts.size()==0)) {
+            listStoreProductsPanel.remove(listStoreProductsPanel.getComponentCount() - 1);
+        }
         JScrollPane jsp = new JScrollPane(listStoreProductsPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         //individualStorePanel.add(selectStore);
