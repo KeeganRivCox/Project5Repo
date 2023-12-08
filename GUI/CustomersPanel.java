@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -20,26 +22,18 @@ public class CustomersPanel {
     private JLabel selectedProductLabel;
     private String selectedProduct;
 
-    private String custShoppingCartName;
-
     private String searchInputProductName;
 
     private String searchInputProductDescription;
 
     private int customerShoppingCartQuantity = 0;
 
-    private JPanel shoppingCartPanel;
-
     private Product bestSellerOne;
     private Product bestSellerTwo;
     private Product bestSellerThree;
     private String storeName;
 
-    private Store selectedStore;
-
-    private int cStore = 0;
-
-    private JLabel selectedStoreLabel = new JLabel("");
+    private JLabel selectedStoreLabel = new JLabel("");;
 
     private String productName;
 
@@ -71,7 +65,7 @@ public class CustomersPanel {
         cardPanel.add(createStoreListingsPagePanel(), "Store Listings");
         cardPanel.add(createSearchOptionsPanel(), "Search Options");
         cardPanel.add(searchProductNamePanel(), "Search Product Input");
-        cardPanel.add(createShoppingCartPanel(), "Shopping Cart");
+        cardPanel.add(searchProductDescriptionPanel(), "Search Product Description Input");
 
         frame.add(cardPanel);
 
@@ -93,7 +87,7 @@ public class CustomersPanel {
         applicationLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         applicationLabel.setFont(new Font("Arial", Font.BOLD, 24));
 
-        JButton switchToAccountPanelButton = new JButton("Account Page");
+        JButton switchToAccountPanelButton = new JButton("Account");
         switchToAccountPanelButton.setFont(new Font("Arial", Font.PLAIN, 10));
         switchToAccountPanelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -257,14 +251,6 @@ public class CustomersPanel {
         shoppingCartButton.setPreferredSize(buttonDimension);
         shoppingCartButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         shoppingCartButton.setFont(new Font("Arial", Font.PLAIN, 18));
-        shoppingCartButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-                cardLayout.show(cardPanel, "Shopping Cart");
-                frame.setSize(400,300);
-                frame.setLocationRelativeTo(null);
-            }
-        });
 
         JButton purchaseHistoryButton = new JButton(("My Purchase History"));
         purchaseHistoryButton.setPreferredSize(buttonDimension);
@@ -383,6 +369,14 @@ public class CustomersPanel {
 
         String [] dropdownOptions = new String[]{"Price High To Low", "Price Low to High", "Quantity Least to Greatest", "Quantity Greatest to Least"};
         JComboBox sortByDropdown = new JComboBox<>(dropdownOptions);
+
+        sortByDropdown.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (sortByDropdown.getSelectedItem().equals("Price High To Low")) {
+
+                }
+            }
+        });
         JPanel dropDownPanel = new JPanel();
         dropDownPanel.setPreferredSize(new Dimension(400, 40));
         dropDownPanel.add(sortByDropdown);
@@ -444,7 +438,6 @@ public class CustomersPanel {
     }
 
 
-
     // method that creates panel for the store listings page
     private JPanel createStoreListingsPagePanel() {
 
@@ -471,15 +464,10 @@ public class CustomersPanel {
 
         ArrayList<Store> sellerStores = getAllStores();
 
-
-       // String [] dummyStores = new String[]{"Store One" ,"Store Two","Store Three","Store Four", "Store Five", "Store Six", "Store Seven", "Store Eight",
-               // "Store Nine", "Store Ten", "Store Eleven", "Store Twelve","Store Thirst","Store Fourteen","Store Fifth-teener","Store Sixty"};
-
-
-
+        String [] dummyStores = new String[]{"Store One" ,"Store Two","Store Three","Store Four", "Store Five", "Store Six", "Store Seven", "Store Eight",
+                "Store Nine", "Store Ten", "Store Eleven", "Store Twelve","Store Thirst","Store Fourteen","Store Fifth-teener","Store Sixty"};
+/*
         for(int i =0; i < sellerStores.size();i++){
-
-            cStore = i;
 
             String name = sellerStores.get(i).getName();
             JLabel label = new JLabel(name);
@@ -490,18 +478,11 @@ public class CustomersPanel {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     // Handle click event
-                    selectedStore = sellerStores.get(cStore);
                     storeName = label.getText();
                     //System.out.println(storeName);
                     // Update the display with the selected seller's name
                     //selectedStoreLabel.setText("Selected Store: " + storeName);
-
-                    //selectedStore = currentStore;
-                    JPanel storePanel = createIndividualStoreListingsPanel(selectedStore);
-                    cardPanel.add(storePanel, "Current Store");
-                    cardLayout.show(cardPanel, "Current Store");
-
-                    //cardLayout.show(cardPanel,"Individual Store");
+                    cardLayout.show(cardPanel,"Individual Store");
 
 
                 }
@@ -510,9 +491,8 @@ public class CustomersPanel {
             allStoresPanel.add(label);
             allStoresPanel.add(new JSeparator(JSeparator.HORIZONTAL));
         }
+        */
 
-
-        /*
         for (String name : dummyStores) {
             JLabel label = new JLabel(name);
             label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -529,9 +509,6 @@ public class CustomersPanel {
                     //System.out.println(storeName);
                     // Update the display with the selected seller's name
                     //selectedStoreLabel.setText("Selected Store: " + storeName);
-
-
-
                     cardLayout.show(cardPanel,"Individual Store");
                     //frame.setTitle(storeName +  " Page");
 
@@ -543,12 +520,11 @@ public class CustomersPanel {
             allStoresPanel.add(new JSeparator(JSeparator.HORIZONTAL));
 
         }
-        */
 
 
-        if(!(sellerStores.size()==0)) {
-            allStoresPanel.remove(allStoresPanel.getComponentCount() - 1);
-        }
+
+        allStoresPanel.remove(allStoresPanel.getComponentCount() - 1);
+
         JScrollPane jsp = new JScrollPane(allStoresPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         // Display selected Store name
@@ -588,46 +564,6 @@ public class CustomersPanel {
         String [] dummyProducts = new String[]{"Product One" ,"Product Two","Product Three","Product Four", "Product Five", "Product Six", "Product Seven", "Product Eight",
                 "Product Nine", "Product Ten", "Product Eleven", "Product Twelve", "Product Thriteen", "Product Fourteen"};
 
-        ArrayList<Product> storeProducts = store.getProducts();
-
-        for(int i =0; i < storeProducts.size();i++){
-
-            cStore = i;
-
-            String name = storeProducts.get(i).getName();
-            JLabel label = new JLabel(name);
-            label.setAlignmentX(Component.CENTER_ALIGNMENT);
-            label.setFont(new Font("Arial", Font.PLAIN, 18));
-
-            label.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-
-                    productName = label.getText();
-                    /*
-                    // Handle click event
-                    selectedStore = sellerStores.get(cStore);
-                    storeName = label.getText();
-                    //System.out.println(storeName);
-                    // Update the display with the selected seller's name
-                    //selectedStoreLabel.setText("Selected Store: " + storeName);
-
-                    //selectedStore = currentStore;
-                    JPanel storePanel = createIndividualStoreListingsPanel(selectedStore);
-                    cardPanel.add(storePanel, "Current Store");
-                    cardLayout.show(cardPanel, "Current Store");
-
-                    //cardLayout.show(cardPanel,"Individual Store");
-                    */
-
-                }
-            });
-
-            listStoreProductsPanel.add(label);
-            listStoreProductsPanel.add(new JSeparator(JSeparator.HORIZONTAL));
-        }
-
-        /*
         for (String name : dummyProducts) {
             JLabel label = new JLabel(name);
             label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -651,10 +587,8 @@ public class CustomersPanel {
             listStoreProductsPanel.add(new JSeparator(JSeparator.HORIZONTAL));
 
         }
-*/
-        if(!(storeProducts.size()==0)) {
-            listStoreProductsPanel.remove(listStoreProductsPanel.getComponentCount() - 1);
-        }
+
+        listStoreProductsPanel.remove(listStoreProductsPanel.getComponentCount() - 1);
         JScrollPane jsp = new JScrollPane(listStoreProductsPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         //individualStorePanel.add(selectStore);
@@ -710,7 +644,6 @@ public class CustomersPanel {
         yesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
-                new AccountsPanel().display();
             }
         });
 
@@ -977,6 +910,20 @@ public class CustomersPanel {
         JButton goToStoreButton = new JButton("Go To Product's Store");
         goToStoreButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         goToStoreButton.setFont(new Font("Arial", Font.PLAIN, 18));
+
+        SpinnerModel quantityModel = new SpinnerNumberModel(0, 1, Integer.MAX_VALUE, 1);
+        JSpinner quantitySpinner = new JSpinner(quantityModel);
+        quantitySpinner.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+
+                customerShoppingCartQuantity = (int) quantitySpinner.getValue();
+            }
+        });
+
+
+
+        productPanel.add(createFieldWithLabel("Quantity", quantitySpinner));
+
         goToStoreButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JPanel panel = createIndividualStoreListingsPanel(product.getStore());
@@ -996,18 +943,27 @@ public class CustomersPanel {
                     JOptionPane.showMessageDialog(null, "Please choose a smaller quantity.", "Customers", JOptionPane.ERROR_MESSAGE);
                 }
                 else {
-                    JOptionPane.showMessageDialog(null, "Added " + product.getName() + "x" + customerShoppingCartQuantity + "to your shopping cart!" , "Customers", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Added " + product.getName() + "x" + customerShoppingCartQuantity + "to your shopping cart!" , "Customers", JOptionPane.INFORMATION_MESSAGE);
                 }
 
             }
         });
 
+        JButton viewStoreButton = new JButton("View Store");
+        viewStoreButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JPanel panel = createShopPanel(product.getStore());
+                cardPanel.add(panel, "Product Store");
+                cardLayout.show(cardPanel, "Product Store");
+            }
+        });
         JPanel quantityPanel = new JPanel();
         JTextField quantityTextField = new JTextField("       0       ");
         quantityTextField.setAlignmentX(Component.CENTER_ALIGNMENT);
         quantityTextField.setFont(new Font("Arial", Font.PLAIN, 18));
 
         quantityPanel.setLayout(new BoxLayout(quantityPanel, BoxLayout.Y_AXIS));
+        /*
         JButton addButton = new JButton("+");
         addButton.setFont(new Font("Arial", Font.PLAIN, 18));
         addButton.addActionListener(new ActionListener() {
@@ -1031,9 +987,11 @@ public class CustomersPanel {
 
             }
         });
-        quantityPanel.add(minusButton);
+
+         */
+        //quantityPanel.add(minusButton);
         quantityPanel.add(quantityTextField);
-        quantityPanel.add(addButton);
+        //quantityPanel.add(addButton);
 
         productPanel.add(quantityPanel);
         productPanel.add(addToCartButton);
@@ -1322,7 +1280,7 @@ public class CustomersPanel {
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
 
-        JLabel title = new JLabel("Searched Products");
+        JLabel title = new JLabel("Searched Products by Description");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         title.setFont(new Font("Arial", Font.BOLD, 18));
 
@@ -1371,166 +1329,6 @@ public class CustomersPanel {
         return productDescriptions;
     }
 
-    private JPanel createShoppingCartPanel() {
-        custShoppingCartName = "Robert";
-        JPanel shoppingCartPanel = new JPanel();
-        shoppingCartPanel.setLayout(new BoxLayout(shoppingCartPanel, BoxLayout.Y_AXIS));
-
-        // Customer Name Label
-
-
-        JButton backButton = createBackToMenuButton();
-
-        JLabel customerNameLabel = new JLabel(custShoppingCartName+"'s Shopping Cart");
-        customerNameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        customerNameLabel.setFont(new Font("Arial", Font.BOLD, 20));
-
-        // Panel for back button and title
-        JPanel titlePanel = new JPanel();
-        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
-        titlePanel.add(backButton);
-        titlePanel.add(Box.createHorizontalStrut(20)); // Add some spacing
-        titlePanel.add(customerNameLabel);
-
-        // Items Label
-        JLabel itemsLabel = new JLabel("Items currently in cart:");
-        itemsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        itemsLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-
-        // Sample Data (Replace with dynamic data)
-        String[] storeData = {"Store One", "Store Two", "Store Three"};
-        String[] productData = {"Product A", "Product B", "Product C"};
-        double[] priceData = {10.0, 20.0, 15.0};
-
-        // Create a JPanel to hold the cart items
-        JPanel cartItemsPanel = new JPanel();
-        cartItemsPanel.setLayout(new BoxLayout(cartItemsPanel, BoxLayout.Y_AXIS));
-
-        // Headers
-        JPanel headersPanel = new JPanel();
-        headersPanel.setLayout(new GridLayout(1, 5, 10, 5)); // 1 row, 5 columns
-        headersPanel.add(new JLabel("Store"));
-        headersPanel.add(new JLabel("Product"));
-        headersPanel.add(new JLabel("Price"));
-        headersPanel.add(new JLabel("Quantity"));
-        headersPanel.add(new JLabel("Delete"));
-
-        cartItemsPanel.add(headersPanel);
-
-        // Set a fixed height for each row
-        int rowHeight = 30;
-
-        // Populate the cart with sample data (replace with dynamic data)
-        for (int i = 0; i < storeData.length; i++) {
-            JPanel rowPanel = new JPanel();
-            rowPanel.setLayout(new GridLayout(1, 5, 10, 5)); // 1 row, 5 columns
-            rowPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, rowHeight));
-            rowPanel.setPreferredSize(new Dimension(0, rowHeight));
-            JLabel storeLabel = new JLabel(storeData[i]);
-            JLabel productLabel = new JLabel(productData[i]);
-            JLabel priceLabel = new JLabel(String.valueOf(priceData[i]));
-
-            SpinnerModel quantityModel = new SpinnerNumberModel(1, 0, Integer.MAX_VALUE, 1);
-            JSpinner quantitySpinner = new JSpinner(quantityModel);
-            Dimension spinnerSize = new Dimension(60, 20);
-            quantitySpinner.setMaximumSize(spinnerSize);
-            quantitySpinner.setMinimumSize(spinnerSize);
-
-            JButton deleteButton = new JButton("Delete");
-            deleteButton.addActionListener(e -> {
-                int deleteConfirmation = JOptionPane.showConfirmDialog(shoppingCartPanel,
-                        "Are you sure you want to delete this item?\n\n" +
-                                "Store: " + storeLabel.getText() + "\n" +
-                                "Product: " + productLabel.getText(),
-                        "Confirm Deletion", JOptionPane.YES_NO_OPTION);
-
-                if (deleteConfirmation == JOptionPane.YES_OPTION) {
-                    // User confirmed deletion, remove all components from the rowPanel
-                    rowPanel.removeAll();
-
-                    // Revalidate and repaint the panel
-                    cartItemsPanel.revalidate();
-                    cartItemsPanel.repaint();
-
-                    // Resize the frame by reducing its height by 80 pixels
-                    JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(shoppingCartPanel);
-                    Dimension currentSize = frame.getSize();
-                    frame.setSize(new Dimension(currentSize.width, currentSize.height - 80));
-                }
-            });
-
-            quantitySpinner.addChangeListener(e -> {
-                int quantity = (int) quantitySpinner.getValue();
-
-                if (quantity < 1) {
-                    int deleteConfirmation = JOptionPane.showConfirmDialog(shoppingCartPanel,
-                            "Are you sure you want to delete this item?\n\n" +
-                                    "Store: " + storeLabel.getText() + "\n" +
-                                    "Product: " + productLabel.getText(),
-                            "Confirm Deletion", JOptionPane.YES_NO_OPTION);
-
-                    if (deleteConfirmation == JOptionPane.YES_OPTION) {
-                        // User confirmed deletion, remove all components from the rowPanel
-                        rowPanel.removeAll();
-
-                        // Revalidate and repaint the panel
-                        cartItemsPanel.revalidate();
-                        cartItemsPanel.repaint();
-
-                        // Resize the frame by reducing its height by 80 pixels
-                        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(shoppingCartPanel);
-                        Dimension currentSize = frame.getSize();
-                        frame.setSize(new Dimension(currentSize.width, currentSize.height - 80));
-                    } else {
-                        // Reset quantity to 1 if the user chooses not to delete
-                        quantitySpinner.setValue(1);
-                    }
-                }
-            });
-
-            rowPanel.add(storeLabel);
-            rowPanel.add(productLabel);
-            rowPanel.add(priceLabel);
-            rowPanel.add(quantitySpinner);
-            rowPanel.add(deleteButton);
-
-            cartItemsPanel.add(rowPanel);
-        }
-
-        // Checkout Button
-        JButton checkoutButton = new JButton("Checkout");
-        checkoutButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        checkoutButton.setFont(new Font("Arial", Font.PLAIN, 16));
-        checkoutButton.setForeground(Color.RED);
-
-        checkoutButton.addActionListener(e -> {
-            int confirmCheckout = JOptionPane.showConfirmDialog(shoppingCartPanel,
-                    "Are you sure you want to proceed to checkout?",
-                    "Confirm Checkout", JOptionPane.YES_NO_OPTION);
-
-            if (confirmCheckout == JOptionPane.YES_OPTION) {
-                // Add checkout logic here
-                // ...
-            }
-        });
-
-        // Add components to the shopping cart panel
-        shoppingCartPanel.add(titlePanel);
-        shoppingCartPanel.add(Box.createVerticalStrut(10));
-        shoppingCartPanel.add(itemsLabel);
-        shoppingCartPanel.add(cartItemsPanel);
-        shoppingCartPanel.add(Box.createVerticalStrut(20));
-        shoppingCartPanel.add(checkoutButton);
-        shoppingCartPanel.add(Box.createVerticalStrut(20));
-
-        return shoppingCartPanel;
-    }
-
-
-
-
-
-
 
     private JLabel selectedSellerLabel;
 
@@ -1557,7 +1355,7 @@ public class CustomersPanel {
         accountButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         accountButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                cardLayout.show(cardPanel, "Account Page");
+                cardLayout.show(cardPanel, "Account Options");
                 frame.setSize(400, 500);
                 frame.setLocationRelativeTo(null);
             }
@@ -1582,6 +1380,16 @@ public class CustomersPanel {
             }
         }
         return allProducts;
+    }
+    private static JPanel createFieldWithLabel(String labelText, JComponent field) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Arial", Font.PLAIN, 18));
+        label.setPreferredSize(new Dimension(100, 20));
+        panel.add(label);
+        panel.add(field);
+        return panel;
     }
 
     private static ArrayList<String> getAllProductDescriptions() {
@@ -1619,6 +1427,64 @@ public class CustomersPanel {
     }
 
      */
+
+    private static ArrayList<Product> sortPriceHighToLow(ArrayList<Product> products) {
+        Product temp;
+        for (int i = 0; i < products.size(); i++) {
+            for (int j = i; j < products.size(); j++) {
+                if (products.get(i).getPrice() < products.get(j).getPrice()) {
+                    temp = products.get(i);
+                    products.set(i, products.get(j));
+                    products.set(j, temp);
+
+                }
+            }
+        }
+        return products;
+    }
+
+    private static ArrayList<Product> sortPriceLowToHigh(ArrayList<Product> products) {
+        Product temp;
+        for (int i = 0; i < products.size(); i++) {
+            for (int j = i; j < products.size(); j++) {
+                if (products.get(i).getPrice() > products.get(j).getPrice()) {
+                    temp = products.get(i);
+                    products.set(i, products.get(j));
+                    products.set(j, temp);
+
+                }
+            }
+        }
+        return products;
+    }
+    private static ArrayList<Product> sortQuantityHighToLow (ArrayList<Product> products) {
+        Product temp;
+        for (int i = 0; i < products.size(); i++) {
+            for (int j = i; j < products.size(); j++) {
+                if (products.get(i).getQuantity() < products.get(j).getQuantity()) {
+                    temp = products.get(i);
+                    products.set(i, products.get(j));
+                    products.set(j, temp);
+
+                }
+            }
+        }
+        return products;
+    }
+    private static ArrayList<Product> sortQuantityLowToHigh (ArrayList<Product> products) {
+        Product temp;
+        for (int i = 0; i < products.size(); i++) {
+            for (int j = i; j < products.size(); j++) {
+                if (products.get(i).getQuantity() > products.get(j).getQuantity()) {
+                    temp = products.get(i);
+                    products.set(i, products.get(j));
+                    products.set(j, temp);
+
+                }
+            }
+        }
+        return products;
+    }
 
 
 }
