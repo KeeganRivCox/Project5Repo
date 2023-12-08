@@ -13,6 +13,10 @@ public class CustomersPanel {
     private JFrame frame;
     private JPanel cardPanel;
 
+    private String pastPurchasesProductName;
+
+    private String pastPurchasesStoreName;
+
     private CardLayout cardLayout;
 
     private String sellerName;
@@ -256,6 +260,15 @@ public class CustomersPanel {
         purchaseHistoryButton.setPreferredSize(buttonDimension);
         purchaseHistoryButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         purchaseHistoryButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        purchaseHistoryButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+
+            cardPanel.add(createPastPurchasesPanel(), "Past Purchases");
+            cardLayout.show(cardPanel, "Past Purchases");
+            frame.setSize(400, 500);
+        }
+    });
+
 
         //JButton deleteAccountButton = new JButton(("Delete Account"));
         //deleteAccountButton.setPreferredSize(buttonDimension);
@@ -813,6 +826,134 @@ public class CustomersPanel {
 
         return contactSellerPanel;
     }
+
+    private JPanel createPastPurchasesPanel() {
+        JPanel pastPurchasesPanel = new JPanel();
+        pastPurchasesPanel.setLayout(new BoxLayout(pastPurchasesPanel, BoxLayout.Y_AXIS));
+
+        // Back button
+        JButton backButtonPastPurchases = createBackToMenuButton();
+        backButtonPastPurchases.setMaximumSize(new Dimension(45, 30));
+
+        Dimension titleDimension = new Dimension(400, 50);
+        JLabel titleLabelPastPurchases = new JLabel("Select a Product from " + pastPurchasesStoreName);
+        titleLabelPastPurchases.setMinimumSize(titleDimension);
+        titleLabelPastPurchases.setMaximumSize(titleDimension);
+        titleLabelPastPurchases.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titleLabelPastPurchases.setFont(new Font("Arial", Font.BOLD, 16));
+
+        // Panel for back button and title
+        JPanel titlePanelPastPurchases = new JPanel();
+        titlePanelPastPurchases.setLayout(new BoxLayout(titlePanelPastPurchases, BoxLayout.X_AXIS));
+        titlePanelPastPurchases.add(Box.createHorizontalStrut(15));
+        titlePanelPastPurchases.add(backButtonPastPurchases);
+        titlePanelPastPurchases.add(Box.createHorizontalStrut(20));
+        titlePanelPastPurchases.add(titleLabelPastPurchases);
+
+        // Column labels
+        JLabel productLabel = new JLabel("Product");
+        JLabel priceLabel = new JLabel("Price");
+        JLabel quantityLabel = new JLabel("Quantity");
+
+        JPanel columnLabelsPanel = new JPanel();
+        columnLabelsPanel.setLayout(new GridLayout(1, 3));
+        columnLabelsPanel.add(productLabel);
+        columnLabelsPanel.add(priceLabel);
+        columnLabelsPanel.add(quantityLabel);
+
+        JPanel storeNamePanelPastPurchases = new JPanel();
+        String[] dummyStoresItem = new String[]{"Pdt 1", "Price 1", "Qty 1",
+                "Pdt 2", "Price 2", "Qty 2",
+                "Pdt 3", "Price 3", "Qty 3",
+                "Pdt 4", "Price 4", "Qty 4",
+                "Pdt 5", "Price 5", "Qty 5",
+                "Pdt 6", "Price 6", "Qty 6",
+                "Pdt 7", "Price 7", "Qty 7",
+                "Pdt 8", "Price 8", "Qty 8",
+                "Pdt 9", "Price 9", "Qty 9",
+                "Pdt 10", "Price 10", "Qty 10",
+                "Pdt 11", "Price 11", "Qty 11",
+                "Pdt 12", "Price 12", "Qty 12",
+                "Pdt 13", "Price 13", "Qty 13",
+                "Pdt 14", "Price 14", "Qty 14",
+                "Pdt 15", "Price 15", "Qty 15"};
+
+        storeNamePanelPastPurchases.setLayout(new GridLayout(dummyStoresItem.length / 3, 3)); // 3 columns
+
+        JLabel selectedStoreLabelPastPurchases = new JLabel("Selected Product: ");
+        selectedStoreLabelPastPurchases.setAlignmentX(Component.CENTER_ALIGNMENT);
+        selectedStoreLabelPastPurchases.setFont(new Font("Arial", Font.PLAIN, 18));
+
+        for (int i = 0; i < dummyStoresItem.length; i += 3) {
+            JLabel productLabelItem = new JLabel(dummyStoresItem[i]);
+            JLabel priceLabelItem = new JLabel(dummyStoresItem[i + 1]);
+            JLabel quantityLabelItem = new JLabel(dummyStoresItem[i + 2]);
+
+            productLabelItem.setAlignmentX(Component.CENTER_ALIGNMENT);
+            productLabelItem.setFont(new Font("Arial", Font.PLAIN, 18));
+
+            priceLabelItem.setAlignmentX(Component.CENTER_ALIGNMENT);
+            priceLabelItem.setFont(new Font("Arial", Font.PLAIN, 18));
+
+            quantityLabelItem.setAlignmentX(Component.CENTER_ALIGNMENT);
+            quantityLabelItem.setFont(new Font("Arial", Font.PLAIN, 18));
+
+            productLabelItem.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    // Handle click event
+                    pastPurchasesProductName = productLabelItem.getText();
+                    // Update the display with the selected product's name
+                    selectedStoreLabelPastPurchases.setText("Selected Product: " + pastPurchasesProductName);
+                }
+            });
+
+            storeNamePanelPastPurchases.add(productLabelItem);
+            storeNamePanelPastPurchases.add(priceLabelItem);
+            storeNamePanelPastPurchases.add(quantityLabelItem);
+        }
+
+        // Add a line between columns
+        storeNamePanelPastPurchases.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.BLACK));
+
+        JScrollPane pspPastPurchases = new JScrollPane(storeNamePanelPastPurchases, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        pspPastPurchases.setPreferredSize(new Dimension(300, 320));
+
+        JButton confirmButtonPastPurchases = new JButton("Confirm");
+        confirmButtonPastPurchases.setAlignmentX(Component.CENTER_ALIGNMENT);
+        confirmButtonPastPurchases.setFont(new Font("Arial", Font.PLAIN, 18));
+        confirmButtonPastPurchases.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (pastPurchasesProductName == null) {
+                    JOptionPane.showMessageDialog(createPastPurchasesPanel(), "Please select a Product first.", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    // Handle confirmation action
+                    cardPanel.add(createPastPurchasesPanel(), "Past Purchases");
+                    cardLayout.show(cardPanel, "Past Purchases");
+                    frame.setSize(400, 400);
+                }
+            }
+        });
+
+        pastPurchasesPanel.setLayout(new BoxLayout(pastPurchasesPanel, BoxLayout.Y_AXIS));
+        pastPurchasesPanel.add(Box.createVerticalStrut(20));
+        pastPurchasesPanel.add(titlePanelPastPurchases);
+        pastPurchasesPanel.add(columnLabelsPanel);
+        pastPurchasesPanel.add(pspPastPurchases);
+        pastPurchasesPanel.add(Box.createVerticalStrut(20));
+        pastPurchasesPanel.add(selectedStoreLabelPastPurchases);
+        pastPurchasesPanel.add(Box.createVerticalStrut(20));
+        pastPurchasesPanel.add(confirmButtonPastPurchases);
+        pastPurchasesPanel.add(Box.createVerticalStrut(20));
+
+        return pastPurchasesPanel;
+    }
+
+
+
+
 
     private JPanel createSellerPanel(Seller seller) { //should have an object parameter that takes a Seller object
         JPanel sellerPanel = new JPanel();
