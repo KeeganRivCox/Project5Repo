@@ -232,6 +232,68 @@ public class Request {
 
     }
 
+    public Customer getCustomer(String customerEmail) {
+
+        try {
+
+            requestWriter.writeObject(String.valueOf(GET_CUSTOMER));
+
+            requestWriter.writeObject(customerEmail);
+
+            Customer retrievedCustomer = (Customer) requestReader.readObject();
+
+            requestReader.close();
+            requestWriter.close();
+
+            return retrievedCustomer;
+
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public ArrayList<Customer> getAllCustomers() {
+
+
+        try {
+
+            requestWriter.writeObject(String.valueOf(GET_ALL_CUSTOMERS));
+
+            ArrayList<Customer> allCustomers = (ArrayList<Customer>) requestReader.readObject();
+
+            requestReader.close();
+            requestWriter.close();
+
+            return allCustomers;
+
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public boolean updateCustomer(Customer customer) {
+
+        try {
+
+            requestWriter.writeObject(String.valueOf(UPDATE_CUSTOMER));
+
+            requestWriter.writeObject(customer);
+
+            Boolean response = (Boolean) requestReader.readObject();
+
+            requestReader.close();
+            requestWriter.close();
+
+            return response;
+
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     // Test account line: "Keegan", "nageekr@gmail.com", "AstroBoy@1", "Kyclon", "seller"
 
     public static void main(String[] args) {
