@@ -636,13 +636,13 @@ public class CustomersPanel {
             JLabel label = new JLabel(name);
             label.setAlignmentX(Component.CENTER_ALIGNMENT);
             label.setFont(new Font("Arial", Font.PLAIN, 18));
-            currentS = i;
+            currentP= i;
 
             label.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     // Handle click event
-                    storeName = label.getText();
+                    productName = label.getText();
                     pProduct = storeProducts.get(currentP);
                     //System.out.println(storeName);
                     // Update the display with the selected seller's name
