@@ -557,7 +557,11 @@ public class CustomersPanel {
 */
 
 
-        allStoresPanel.remove(allStoresPanel.getComponentCount() - 1);
+
+        if(!sellerStores.isEmpty()){
+            allStoresPanel.remove(allStoresPanel.getComponentCount() - 1);
+        }
+        //allStoresPanel.remove(allStoresPanel.getComponentCount() - 1);
 
         JScrollPane jsp = new JScrollPane(allStoresPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -655,7 +659,14 @@ public class CustomersPanel {
         }
 
 
-        listStoreProductsPanel.remove(listStoreProductsPanel.getComponentCount() - 1);
+
+
+        if(!storeProducts.isEmpty()){
+            listStoreProductsPanel.remove(listStoreProductsPanel.getComponentCount() - 1);
+        }
+        //listStoreProductsPanel.remove(listStoreProductsPanel.getComponentCount() - 1);
+
+
         JScrollPane jsp = new JScrollPane(listStoreProductsPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         //individualStorePanel.add(selectStore);
