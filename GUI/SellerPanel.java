@@ -238,6 +238,7 @@ public class SellerPanel {
         yesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
+                new AccountsPanel().display();
             }
         });
 
