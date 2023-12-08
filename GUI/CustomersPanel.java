@@ -470,7 +470,7 @@ public class CustomersPanel {
     }
 
 
-    // method that creates panel for the store listings page
+    // method that creates panel that lists all created stores
     private JPanel createStoreListingsPagePanel() {
 
         JPanel storeListingsPanel = new JPanel();
@@ -580,7 +580,7 @@ public class CustomersPanel {
         return storeListingsPanel;
     }
 
-    // method that creates panel for the store listings page
+    // method that creates panel that list the store with all of its products
     private JPanel createIndividualStoreListingsPanel(Store store) {
         //frame.setTitle("Store Page");
         JPanel individualStorePanel = new JPanel();
