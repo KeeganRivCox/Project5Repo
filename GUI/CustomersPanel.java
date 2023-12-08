@@ -31,6 +31,8 @@ public class CustomersPanel {
 
     private String searchInputProductName;
 
+    private String searchInputStoreName;
+
     private String searchInputProductDescription;
 
     private int customerShoppingCartQuantity = 0;
@@ -81,6 +83,7 @@ public class CustomersPanel {
         cardPanel.add(searchProductNamePanel(), "Search Product Input");
         cardPanel.add(searchStoreNamePanel(), "Search Store Input");
         cardPanel.add(searchProductDescriptionPanel(), "Search Product Description Input");
+
 
         frame.add(cardPanel);
 
@@ -1270,6 +1273,27 @@ public class CustomersPanel {
         storeNamesButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         storeNamesButton.setFont(new Font("Arial", Font.PLAIN, 18));
 
+        storeNamesButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ArrayList<Store> stores = getAllStores();
+                /*
+                if (products.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "There are no currently no products.", "Customers", JOptionPane.ERROR_MESSAGE);
+
+                }
+                else {
+                    cardLayout.show(cardPanel, "Search Product Input");
+                    frame.setSize(400, 200);
+                    frame.setLocationRelativeTo(null);
+                }
+
+                 */
+                cardLayout.show(cardPanel, "Search Store Input");
+                frame.setSize(400, 200);
+                frame.setLocationRelativeTo(null);
+            }
+        });
+
         JButton productDescriptionsButton = new JButton("Product Description");
         productDescriptionsButton.setMaximumSize(buttonDimension);
         productDescriptionsButton.setMinimumSize(buttonDimension);
@@ -1498,20 +1522,8 @@ public class CustomersPanel {
                         matchFound = true;
                     }
                 }
-                /*
-                if (matchFound) {
-                    searchInputProductName = search.getText();
-                    JPanel panel = createSearchProductsPanel(searchInputProductName);
-                    cardPanel.add(panel, "Search Results Product Name");
-                    cardLayout.show(cardPanel, "Search Results Product Name");
-                    frame.setSize(400, 500);
-                    frame.setLocationRelativeTo(null);
-                } else {
-                    JOptionPane.showMessageDialog(null, "There are no matching products", "Customers", JOptionPane.ERROR_MESSAGE);
-                }
-                */
                 searchInputProductName = search.getText();
-                JPanel panel = createSearchStoresPanel(searchInputProductName);
+                JPanel panel = createSearchStoresPanel(searchInputStoreName);
                 cardPanel.add(panel, "Search Results for Store Name");
                 cardLayout.show(cardPanel, "Search Results for Store Name");
                 frame.setSize(400, 500);
