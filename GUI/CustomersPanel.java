@@ -21,6 +21,8 @@ public class CustomersPanel {
     private String selectedProduct;
 
     private String searchInputProductName;
+    private String searchInputStoreName;
+    private String searchInputProductDescription;
 
     private Product bestSellerOne;
     private Product bestSellerTwo;
@@ -29,93 +31,12 @@ public class CustomersPanel {
 
     private Seller selectedSeller;
 
-    JFrame loginFrame; //probably delete this stuff below
-    JFrame customerMainPageFrame;
-    JButton nextButton;
-    JLabel customerNameLabel;
-    JLabel successfulLoginMessage;
-
-    // Customer Main page
-    JButton searchButton;
-    JButton seeAllProductsButton;
-    JButton seeAllStoresButton;
-    JButton seeAllSellersButton;
-    JButton viewAccountPageButton; // top right button
-
-    // Search By Page
-    JButton searchByNameButton;
-    JButton searchByStoreButton;
-    JButton searchByDescriptionButton;
-    JButton returnToMainPageButton;
-
-
-
-
-    //ActionListener actionListener = new ActionListener() {
-    //public void actionPerformed(ActionEvent e) {
-    // if (e.getSource() == nextButton) {
-    //loginFrame.dispose();
-    //customerMainPageFrame.setVisible(true);
-    //}
-
-    //}
-    //};
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new CustomersPanel());
 
     }
 
-    // public void run() {
-
-    //   loginFrame = new JFrame("Welcome!");
-    //   Container loginFrameContent = loginFrame.getContentPane();
-    //   BoxLayout boxLayout = new BoxLayout(loginFrameContent, BoxLayout.Y_AXIS);
-    //   loginFrameContent.setLayout(boxLayout);
-    //   loginFrame.setDefaultCloseOperation((JFrame.DISPOSE_ON_CLOSE));
-
-    //   JPanel formatPanel = new JPanel(new BorderLayout());
-    //   nextButton = new JButton("Next");
-    //   nextButton.addActionListener(actionListener);
-    //   formatPanel.add(nextButton, BorderLayout.SOUTH);
-
-    //   customerNameLabel = new JLabel("Customer"); // need implementation to return the name of the customer
-    //   // customerNameLabel = new JLabel("Customer " + account.getName());
-    //   customerNameLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-    //   customerNameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-    //   successfulLoginMessage = new JLabel("Successful Login!");
-    //   successfulLoginMessage.setFont(new Font("Arial", Font.PLAIN, 35));
-    //   successfulLoginMessage.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-    //   loginFrame.add(customerNameLabel);
-    //   loginFrame.add(Box.createVerticalStrut(20));
-    //   loginFrame.add(successfulLoginMessage);
-    //   loginFrame.add(Box.createVerticalStrut(30));
-    //   loginFrame.add(formatPanel);
-
-    //   loginFrame.setSize(400, 200);
-    //   loginFrame.setLocationRelativeTo(null);
-    //   loginFrame.setVisible(true);
-
-    //   customerMainPageFrame = new JFrame("Customer Main Page");
-    //   Container customerMainPageContent = customerMainPageFrame.getContentPane();
-    //   customerMainPageFrame.setLayout(new CardLayout());
-    //   JPanel mainPagePanel = new JPanel(new GridLayout(4, 0, 50, 50));
-    //   mainPagePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-    //   mainPagePanel.setSize(500, 500);
-
-    //   JPanel panelOne = new JPanel(new BorderLayout());
-    //   JLabel programTitle = new JLabel("Boiler Bay");
-    //   programTitle.setFont(new Font("Arial", Font.PLAIN, 20));
-    //   panelOne.add(programTitle, BorderLayout.CENTER);
-    //   mainPagePanel.add(panelOne);
-
-    //   customerMainPageFrame.add(mainPagePanel);
-    //   customerMainPageFrame.setSize(500, 500);
-    //   customerMainPageFrame.setLocationRelativeTo(null);
-    //   customerMainPageFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-    // }
 
     public CustomersPanel(){
         frame = new JFrame("Customers");
@@ -181,7 +102,7 @@ public class CustomersPanel {
             public void actionPerformed(ActionEvent e) {
 
                 cardLayout.show(cardPanel, "Search Options");
-                frame.setSize(400,250);
+                frame.setSize(400,300);
                 frame.setLocationRelativeTo(null);
             }
         });
@@ -911,9 +832,10 @@ public class CustomersPanel {
         questionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         questionLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
-        Dimension buttonDimension = new Dimension(300, 40);
-        JButton productNamesButton = new JButton("Product Names");
-        productNamesButton.setPreferredSize(buttonDimension);
+        Dimension buttonDimension = new Dimension(225, 40);
+        JButton productNamesButton = new JButton("Product");
+        productNamesButton.setMaximumSize(buttonDimension);
+        productNamesButton.setMinimumSize(buttonDimension);
         productNamesButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         productNamesButton.setFont(new Font("Arial", Font.PLAIN, 18));
         productNamesButton.addActionListener(new ActionListener() {
@@ -937,42 +859,49 @@ public class CustomersPanel {
             }
         });
 
-        JButton storeNamesButton = new JButton("Store Names");
-        storeNamesButton.setPreferredSize(buttonDimension);
+        JButton storeNamesButton = new JButton("Store");
+        storeNamesButton.setMaximumSize(buttonDimension);
+        storeNamesButton.setMinimumSize(buttonDimension);
         storeNamesButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         storeNamesButton.setFont(new Font("Arial", Font.PLAIN, 18));
         storeNamesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                cardLayout.show(cardPanel, "Search Store Input");
                 frame.setSize(400,500);
                 frame.setLocationRelativeTo(null);
             }
         });
 
-        JButton productDescriptionsButton = new JButton("Product Descriptions");
-        productDescriptionsButton.setPreferredSize(buttonDimension);
+        JButton productDescriptionsButton = new JButton("Product Description");
+        productDescriptionsButton.setMaximumSize(buttonDimension);
+        productDescriptionsButton.setMinimumSize(buttonDimension);
         productDescriptionsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         productDescriptionsButton.setFont(new Font("Arial", Font.PLAIN, 18));
         productDescriptionsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                cardLayout.show(cardPanel, "Search Product Description Input");
                 frame.setSize(400,500);
                 frame.setLocationRelativeTo(null);
             }
         });
+
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
         bottomPanel.add(createBackToMenuButton());
         bottomPanel.add(Box.createHorizontalStrut(300));
 
-        searchOptionsPanel.add(Box.createVerticalStrut(10));
+        searchOptionsPanel.add(Box.createVerticalStrut(20));
         searchOptionsPanel.add(questionLabel);
-        searchOptionsPanel.add(Box.createVerticalStrut(5));
+        searchOptionsPanel.add(Box.createVerticalStrut(20));
         searchOptionsPanel.add(productNamesButton);
-        searchOptionsPanel.add(Box.createVerticalStrut(5));
+        searchOptionsPanel.add(Box.createVerticalStrut(20));
         searchOptionsPanel.add(storeNamesButton);
-        searchOptionsPanel.add(Box.createVerticalStrut(5));
+        searchOptionsPanel.add(Box.createVerticalStrut(20));
         searchOptionsPanel.add(productDescriptionsButton);
+        searchOptionsPanel.add(Box.createVerticalStrut(10));
         searchOptionsPanel.add(bottomPanel);
+        searchOptionsPanel.add(Box.createVerticalStrut(20));
+
 
         return searchOptionsPanel;
     }
@@ -1016,8 +945,8 @@ public class CustomersPanel {
                 */
                 searchInputProductName = search.getText();
                 JPanel panel = createSearchProductsPanel(searchInputProductName);
-                cardPanel.add(panel, "Search Results Product Name");
-                cardLayout.show(cardPanel, "Search Results Product Name");
+                cardPanel.add(panel, "Search Results for Product Name");
+                cardLayout.show(cardPanel, "Search Results for Product Name");
                 frame.setSize(400, 500);
                 frame.setLocationRelativeTo(null);
 
@@ -1033,6 +962,7 @@ public class CustomersPanel {
         return searchedProductNameInput;
 
     }
+
     private JPanel createSearchProductsPanel (String productName) {
         JPanel searchedProductsPanel = new JPanel();
         searchedProductsPanel.setLayout(new BoxLayout(searchedProductsPanel, BoxLayout.Y_AXIS));
@@ -1083,7 +1013,6 @@ public class CustomersPanel {
 
 
 
-
     private JLabel selectedSellerLabel;
 
     private JButton createBackToMenuButton() {
@@ -1101,6 +1030,7 @@ public class CustomersPanel {
         });
         return backButton;
     }
+
 
     private JButton createBackToAccountPageButton() {
         JButton accountButton = new JButton("Account");
@@ -1133,6 +1063,20 @@ public class CustomersPanel {
             }
         }
         return allProducts;
+    }
+
+    private static ArrayList<String> getAllProductDescriptions() {
+        ArrayList<Seller> allSellers = new Request().getAllSellers();
+        ArrayList<String> allProductDescriptions = new ArrayList<>();
+        for (Seller seller : allSellers) {
+            for (Store store : seller.getSellerStores()) {
+                for (Product product : store.getProducts()) {
+
+                    allProductDescriptions.add(product.getDescription());
+                }
+            }
+        }
+        return allProductDescriptions;
     }
 
     /*
