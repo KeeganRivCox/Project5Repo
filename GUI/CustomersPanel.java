@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -165,7 +167,7 @@ public class CustomersPanel {
         applicationLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         applicationLabel.setFont(new Font("Arial", Font.BOLD, 24));
 
-        JButton switchToAccountPanelButton = new JButton("Account Page");
+        JButton switchToAccountPanelButton = new JButton("Account");
         switchToAccountPanelButton.setFont(new Font("Arial", Font.PLAIN, 10));
         switchToAccountPanelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -447,6 +449,14 @@ public class CustomersPanel {
 
         String [] dropdownOptions = new String[]{"Price High To Low", "Price Low to High", "Quantity Least to Greatest", "Quantity Greatest to Least"};
         JComboBox sortByDropdown = new JComboBox<>(dropdownOptions);
+
+        sortByDropdown.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               if (sortByDropdown.getSelectedItem().equals("Price High To Low")) {
+
+               }
+            }
+        });
         JPanel dropDownPanel = new JPanel();
         dropDownPanel.setPreferredSize(new Dimension(400, 40));
         dropDownPanel.add(sortByDropdown);
@@ -980,6 +990,20 @@ public class CustomersPanel {
         JButton goToStoreButton = new JButton("Go To Product's Store");
         goToStoreButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         goToStoreButton.setFont(new Font("Arial", Font.PLAIN, 18));
+
+        SpinnerModel quantityModel = new SpinnerNumberModel(0, 1, Integer.MAX_VALUE, 1);
+        JSpinner quantitySpinner = new JSpinner(quantityModel);
+        quantitySpinner.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+
+                customerShoppingCartQuantity = (int) quantitySpinner.getValue();
+            }
+        });
+
+
+
+        productPanel.add(createFieldWithLabel("Quantity", quantitySpinner));
+
         goToStoreButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JPanel panel = createIndividualStoreListingsPanel(product.getStore());
@@ -999,18 +1023,27 @@ public class CustomersPanel {
                     JOptionPane.showMessageDialog(null, "Please choose a smaller quantity.", "Customers", JOptionPane.ERROR_MESSAGE);
                 }
                 else {
-                    JOptionPane.showMessageDialog(null, "Added " + product.getName() + "x" + customerShoppingCartQuantity + "to your shopping cart!" , "Customers", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Added " + product.getName() + "x" + customerShoppingCartQuantity + "to your shopping cart!" , "Customers", JOptionPane.INFORMATION_MESSAGE);
                 }
 
             }
         });
 
+        JButton viewStoreButton = new JButton("View Store");
+        viewStoreButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JPanel panel = createShopPanel(product.getStore());
+                cardPanel.add(panel, "Product Store");
+                cardLayout.show(cardPanel, "Product Store");
+            }
+        });
         JPanel quantityPanel = new JPanel();
         JTextField quantityTextField = new JTextField("       0       ");
         quantityTextField.setAlignmentX(Component.CENTER_ALIGNMENT);
         quantityTextField.setFont(new Font("Arial", Font.PLAIN, 18));
 
         quantityPanel.setLayout(new BoxLayout(quantityPanel, BoxLayout.Y_AXIS));
+        /*
         JButton addButton = new JButton("+");
         addButton.setFont(new Font("Arial", Font.PLAIN, 18));
         addButton.addActionListener(new ActionListener() {
@@ -1034,9 +1067,11 @@ public class CustomersPanel {
 
             }
         });
-        quantityPanel.add(minusButton);
+
+         */
+        //quantityPanel.add(minusButton);
         quantityPanel.add(quantityTextField);
-        quantityPanel.add(addButton);
+        //quantityPanel.add(addButton);
 
         productPanel.add(quantityPanel);
         productPanel.add(addToCartButton);
@@ -1317,7 +1352,7 @@ public class CustomersPanel {
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
 
-        JLabel title = new JLabel("Searched Products");
+        JLabel title = new JLabel("Searched Products by Description");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         title.setFont(new Font("Arial", Font.BOLD, 18));
 
@@ -1392,7 +1427,7 @@ public class CustomersPanel {
         accountButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         accountButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                cardLayout.show(cardPanel, "Account Page");
+                cardLayout.show(cardPanel, "Account Options");
                 frame.setSize(400, 500);
                 frame.setLocationRelativeTo(null);
             }
@@ -1418,6 +1453,16 @@ public class CustomersPanel {
         }
         return allProducts;
     }
+    private static JPanel createFieldWithLabel(String labelText, JComponent field) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Arial", Font.PLAIN, 18));
+        label.setPreferredSize(new Dimension(100, 20));
+        panel.add(label);
+        panel.add(field);
+        return panel;
+    }
 
     /*
     private static Product getBestSellerOne() {
@@ -1440,6 +1485,64 @@ public class CustomersPanel {
     }
 
      */
+
+    private static ArrayList<Product> sortPriceHighToLow(ArrayList<Product> products) {
+        Product temp;
+        for (int i = 0; i < products.size(); i++) {
+            for (int j = i; j < products.size(); j++) {
+                if (products.get(i).getPrice() < products.get(j).getPrice()) {
+                    temp = products.get(i);
+                    products.set(i, products.get(j));
+                    products.set(j, temp);
+
+                }
+            }
+        }
+        return products;
+    }
+
+    private static ArrayList<Product> sortPriceLowToHigh(ArrayList<Product> products) {
+        Product temp;
+        for (int i = 0; i < products.size(); i++) {
+            for (int j = i; j < products.size(); j++) {
+                if (products.get(i).getPrice() > products.get(j).getPrice()) {
+                    temp = products.get(i);
+                    products.set(i, products.get(j));
+                    products.set(j, temp);
+
+                }
+            }
+        }
+        return products;
+    }
+    private static ArrayList<Product> sortQuantityHighToLow (ArrayList<Product> products) {
+        Product temp;
+        for (int i = 0; i < products.size(); i++) {
+            for (int j = i; j < products.size(); j++) {
+                if (products.get(i).getQuantity() < products.get(j).getQuantity()) {
+                    temp = products.get(i);
+                    products.set(i, products.get(j));
+                    products.set(j, temp);
+
+                }
+            }
+        }
+        return products;
+    }
+    private static ArrayList<Product> sortQuantityLowToHigh (ArrayList<Product> products) {
+        Product temp;
+        for (int i = 0; i < products.size(); i++) {
+            for (int j = i; j < products.size(); j++) {
+                if (products.get(i).getQuantity() > products.get(j).getQuantity()) {
+                    temp = products.get(i);
+                    products.set(i, products.get(j));
+                    products.set(j, temp);
+
+                }
+            }
+        }
+        return products;
+    }
 
 
 }
