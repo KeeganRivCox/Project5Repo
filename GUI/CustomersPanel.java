@@ -7,11 +7,14 @@ import java.io.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Collections;
 
 public class CustomersPanel {
     private JFrame frame;
     private JPanel cardPanel;
+
+    private String custShoppingCartName;
 
     private String pastPurchasesProductName;
 
@@ -255,6 +258,15 @@ public class CustomersPanel {
         shoppingCartButton.setPreferredSize(buttonDimension);
         shoppingCartButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         shoppingCartButton.setFont(new Font("Arial", Font.PLAIN, 18));
+
+        shoppingCartButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                cardPanel.add(createShoppingCartPanel(), "Shopping Cart");
+                cardLayout.show(cardPanel, "Shopping Cart");
+                frame.setSize(400, 300);
+            }
+        });
 
         JButton purchaseHistoryButton = new JButton(("My Purchase History"));
         purchaseHistoryButton.setPreferredSize(buttonDimension);
@@ -920,7 +932,7 @@ public class CustomersPanel {
 
         pspPastPurchases.setPreferredSize(new Dimension(300, 320));
 
-        JButton confirmButtonPastPurchases = new JButton("Confirm");
+        JButton confirmButtonPastPurchases = new JButton("Export");
         confirmButtonPastPurchases.setAlignmentX(Component.CENTER_ALIGNMENT);
         confirmButtonPastPurchases.setFont(new Font("Arial", Font.PLAIN, 18));
         confirmButtonPastPurchases.addActionListener(new ActionListener() {
@@ -930,9 +942,23 @@ public class CustomersPanel {
                     JOptionPane.showMessageDialog(createPastPurchasesPanel(), "Please select a Product first.", "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
                     // Handle confirmation action
-                    cardPanel.add(createPastPurchasesPanel(), "Past Purchases");
-                    cardLayout.show(cardPanel, "Past Purchases");
-                    frame.setSize(400, 400);
+                    List<String[]> data = new ArrayList<>();
+                    data.add(new String[]{"Product", "Price", "Quantity"});
+
+                    for (int i = 0; i < dummyStoresItem.length; i += 3) {
+                        String[] row = new String[]{dummyStoresItem[i], dummyStoresItem[i + 1], dummyStoresItem[i + 2]};
+                        data.add(row);
+                    }
+
+                    try (FileWriter writer = new FileWriter("exported_data.csv")) {
+                        for (String[] rowData : data) {
+                            writer.write(String.join(",", rowData) + "\n");
+                        }
+                        JOptionPane.showMessageDialog(createPastPurchasesPanel(), "Export successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(createPastPurchasesPanel(), "Error exporting to CSV.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });
@@ -1236,6 +1262,161 @@ public class CustomersPanel {
 
 
         return searchOptionsPanel;
+    }
+
+    private JPanel createShoppingCartPanel() {
+        custShoppingCartName = "Robert";
+        JPanel shoppingCartPanel = new JPanel();
+        shoppingCartPanel.setLayout(new BoxLayout(shoppingCartPanel, BoxLayout.Y_AXIS));
+
+        // Customer Name Label
+
+
+        JButton backButton = createBackToMenuButton();
+
+        JLabel customerNameLabel = new JLabel(custShoppingCartName+"'s Shopping Cart");
+        customerNameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        customerNameLabel.setFont(new Font("Arial", Font.BOLD, 20));
+
+        // Panel for back button and title
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
+        titlePanel.add(backButton);
+        titlePanel.add(Box.createHorizontalStrut(20)); // Add some spacing
+        titlePanel.add(customerNameLabel);
+
+        // Items Label
+        JLabel itemsLabel = new JLabel("Items currently in cart:");
+        itemsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        itemsLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+
+        // Sample Data (Replace with dynamic data)
+        String[] storeData = {"Store One", "Store Two", "Store Three"};
+        String[] productData = {"Product A", "Product B", "Product C"};
+        double[] priceData = {10.0, 20.0, 15.0};
+
+        // Create a JPanel to hold the cart items
+        JPanel cartItemsPanel = new JPanel();
+        cartItemsPanel.setLayout(new BoxLayout(cartItemsPanel, BoxLayout.Y_AXIS));
+
+        // Headers
+        JPanel headersPanel = new JPanel();
+        headersPanel.setLayout(new GridLayout(1, 5, 10, 5)); // 1 row, 5 columns
+        headersPanel.add(new JLabel("Store"));
+        headersPanel.add(new JLabel("Product"));
+        headersPanel.add(new JLabel("Price"));
+        headersPanel.add(new JLabel("Quantity"));
+        headersPanel.add(new JLabel("Delete"));
+
+        cartItemsPanel.add(headersPanel);
+
+        // Set a fixed height for each row
+        int rowHeight = 30;
+
+        // Populate the cart with sample data (replace with dynamic data)
+        for (int i = 0; i < storeData.length; i++) {
+            JPanel rowPanel = new JPanel();
+            rowPanel.setLayout(new GridLayout(1, 5, 10, 5)); // 1 row, 5 columns
+            rowPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, rowHeight));
+            rowPanel.setPreferredSize(new Dimension(0, rowHeight));
+            JLabel storeLabel = new JLabel(storeData[i]);
+            JLabel productLabel = new JLabel(productData[i]);
+            JLabel priceLabel = new JLabel(String.valueOf(priceData[i]));
+
+            SpinnerModel quantityModel = new SpinnerNumberModel(1, 0, Integer.MAX_VALUE, 1);
+            JSpinner quantitySpinner = new JSpinner(quantityModel);
+            Dimension spinnerSize = new Dimension(60, 20);
+            quantitySpinner.setMaximumSize(spinnerSize);
+            quantitySpinner.setMinimumSize(spinnerSize);
+
+            JButton deleteButton = new JButton("Delete");
+            deleteButton.addActionListener(e -> {
+                int deleteConfirmation = JOptionPane.showConfirmDialog(shoppingCartPanel,
+                        "Are you sure you want to delete this item?\n\n" +
+                                "Store: " + storeLabel.getText() + "\n" +
+                                "Product: " + productLabel.getText(),
+                        "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+
+                if (deleteConfirmation == JOptionPane.YES_OPTION) {
+                    // User confirmed deletion, remove all components from the rowPanel
+                    rowPanel.removeAll();
+
+                    // Revalidate and repaint the panel
+                    cartItemsPanel.revalidate();
+                    cartItemsPanel.repaint();
+
+                    // Resize the frame by reducing its height by 80 pixels
+                    JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(shoppingCartPanel);
+                    Dimension currentSize = frame.getSize();
+                    frame.setSize(new Dimension(currentSize.width, currentSize.height - 80));
+                }
+            });
+
+            quantitySpinner.addChangeListener(e -> {
+                int quantity = (int) quantitySpinner.getValue();
+
+                if (quantity < 1) {
+                    int deleteConfirmation = JOptionPane.showConfirmDialog(shoppingCartPanel,
+                            "Are you sure you want to delete this item?\n\n" +
+                                    "Store: " + storeLabel.getText() + "\n" +
+                                    "Product: " + productLabel.getText(),
+                            "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+
+                    if (deleteConfirmation == JOptionPane.YES_OPTION) {
+                        // User confirmed deletion, remove all components from the rowPanel
+                        rowPanel.removeAll();
+
+                        // Revalidate and repaint the panel
+                        cartItemsPanel.revalidate();
+                        cartItemsPanel.repaint();
+
+                        // Resize the frame by reducing its height by 80 pixels
+                        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(shoppingCartPanel);
+                        Dimension currentSize = frame.getSize();
+                        frame.setSize(new Dimension(currentSize.width, currentSize.height - 80));
+                    } else {
+                        // Reset quantity to 1 if the user chooses not to delete
+                        quantitySpinner.setValue(1);
+                    }
+                }
+            });
+
+            rowPanel.add(storeLabel);
+            rowPanel.add(productLabel);
+            rowPanel.add(priceLabel);
+            rowPanel.add(quantitySpinner);
+            rowPanel.add(deleteButton);
+
+            cartItemsPanel.add(rowPanel);
+        }
+
+        // Checkout Button
+        JButton checkoutButton = new JButton("Checkout");
+        checkoutButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        checkoutButton.setFont(new Font("Arial", Font.PLAIN, 16));
+        checkoutButton.setForeground(Color.RED);
+
+        checkoutButton.addActionListener(e -> {
+            int confirmCheckout = JOptionPane.showConfirmDialog(shoppingCartPanel,
+                    "Are you sure you want to proceed to checkout?",
+                    "Confirm Checkout", JOptionPane.YES_NO_OPTION);
+
+            if (confirmCheckout == JOptionPane.YES_OPTION) {
+                // Add checkout logic here
+                // ...
+            }
+        });
+
+        // Add components to the shopping cart panel
+        shoppingCartPanel.add(titlePanel);
+        shoppingCartPanel.add(Box.createVerticalStrut(10));
+        shoppingCartPanel.add(itemsLabel);
+        shoppingCartPanel.add(cartItemsPanel);
+        shoppingCartPanel.add(Box.createVerticalStrut(20));
+        shoppingCartPanel.add(checkoutButton);
+        shoppingCartPanel.add(Box.createVerticalStrut(20));
+
+        return shoppingCartPanel;
     }
 
     private JPanel searchProductNamePanel () {
