@@ -46,6 +46,13 @@ public class CustomersPanel {
 
     private Seller selectedSeller;
 
+    private Store sStore;
+
+    private Product pProduct;
+
+    private int currentS = 0;
+
+    private int currentP = 0;
 
     public static void main(String[] args) {
 
@@ -469,9 +476,6 @@ public class CustomersPanel {
         JPanel storeListingsPanel = new JPanel();
         JPanel allStoresPanel = new JPanel();
         //JPanel topPanel = new JPanel();
-
-
-
         //topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
         //topPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         storeListingsPanel.setLayout(new BoxLayout(storeListingsPanel, BoxLayout.Y_AXIS));
@@ -491,23 +495,28 @@ public class CustomersPanel {
 
         String [] dummyStores = new String[]{"Store One" ,"Store Two","Store Three","Store Four", "Store Five", "Store Six", "Store Seven", "Store Eight",
                 "Store Nine", "Store Ten", "Store Eleven", "Store Twelve","Store Thirst","Store Fourteen","Store Fifth-teener","Store Sixty"};
-/*
+
+
+
         for(int i =0; i < sellerStores.size();i++){
 
             String name = sellerStores.get(i).getName();
             JLabel label = new JLabel(name);
             label.setAlignmentX(Component.CENTER_ALIGNMENT);
             label.setFont(new Font("Arial", Font.PLAIN, 18));
+            currentS = i;
 
             label.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     // Handle click event
                     storeName = label.getText();
+                    sStore = sellerStores.get(currentS);
                     //System.out.println(storeName);
                     // Update the display with the selected seller's name
                     //selectedStoreLabel.setText("Selected Store: " + storeName);
-                    cardLayout.show(cardPanel,"Individual Store");
+                   // cardLayout.show(cardPanel,"Individual Store");
+                    createIndividualStoreListingsPanel(sStore);
 
 
                 }
@@ -516,8 +525,8 @@ public class CustomersPanel {
             allStoresPanel.add(label);
             allStoresPanel.add(new JSeparator(JSeparator.HORIZONTAL));
         }
-        */
 
+        /*
         for (String name : dummyStores) {
             JLabel label = new JLabel(name);
             label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -545,7 +554,7 @@ public class CustomersPanel {
             allStoresPanel.add(new JSeparator(JSeparator.HORIZONTAL));
 
         }
-
+*/
 
 
         allStoresPanel.remove(allStoresPanel.getComponentCount() - 1);
@@ -586,9 +595,12 @@ public class CustomersPanel {
         JButton backButton = createBackToMenuButton();
         individualStorePanel.add(backButton);
 
+        ArrayList<Product> storeProducts = store.getProducts();
+
         String [] dummyProducts = new String[]{"Product One" ,"Product Two","Product Three","Product Four", "Product Five", "Product Six", "Product Seven", "Product Eight",
                 "Product Nine", "Product Ten", "Product Eleven", "Product Twelve", "Product Thriteen", "Product Fourteen"};
 
+        /*
         for (String name : dummyProducts) {
             JLabel label = new JLabel(name);
             label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -603,6 +615,7 @@ public class CustomersPanel {
                     // Update the display with the selected seller's name
                     //selectedStoreLabel.setText("Selected Store: " + storeName);
                     //cardLayout.show(cardPanel,"Selected Store Page");
+                    createProductPanel();
 
 
                 }
@@ -612,6 +625,35 @@ public class CustomersPanel {
             listStoreProductsPanel.add(new JSeparator(JSeparator.HORIZONTAL));
 
         }
+*/
+        for(int i =0; i < storeProducts.size();i++){
+
+            String name = storeProducts.get(i).getName();
+            JLabel label = new JLabel(name);
+            label.setAlignmentX(Component.CENTER_ALIGNMENT);
+            label.setFont(new Font("Arial", Font.PLAIN, 18));
+            currentS = i;
+
+            label.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    // Handle click event
+                    storeName = label.getText();
+                    pProduct = storeProducts.get(currentP);
+                    //System.out.println(storeName);
+                    // Update the display with the selected seller's name
+                    //selectedStoreLabel.setText("Selected Store: " + storeName);
+                    // cardLayout.show(cardPanel,"Individual Store");
+                    createProductPanel(pProduct);
+
+
+                }
+            });
+
+            listStoreProductsPanel.add(label);
+            listStoreProductsPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+        }
+
 
         listStoreProductsPanel.remove(listStoreProductsPanel.getComponentCount() - 1);
         JScrollPane jsp = new JScrollPane(listStoreProductsPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
