@@ -319,6 +319,13 @@ public class SellerPanel {
     }
 
 
+    //method that creates the panel for the search by .... page
+    private JPanel createSearchByPanel() {
+        JPanel createSearchByPanel = new JPanel();
+        return createSearchByPanel;
+
+    }
+
     private JPanel createListStorePanel() {
         JPanel listStorePanel = new JPanel();
         listStorePanel.setBackground(goldColor);
