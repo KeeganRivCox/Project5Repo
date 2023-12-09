@@ -174,7 +174,7 @@ Expected Result: The first feature should demonstrate the automatic reconnection
 3. Enter your email "customer@purdue.edu" and username "PurdueCustomer" to confirm your identity.
 4. Follow the on-screen instructions to enter your current password ("Purdue@123") twice.
 5. Confirm the deletion.
-6. Upon success, your account will be deleted, and you will be redirected to the "Sign In" panel.
+6. Upon success, your account will be deleted, and you will be redirected to the "Sign In" panel. The Customer/Seller will no longer be able to access their account.
 
    **Expected Outcome:** 
    - Successful account deletion redirects the user to the "Sign In" panel.
