@@ -5,10 +5,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Collections;
 
 public class CustomersPanel {
     private JFrame frame;
@@ -475,6 +473,22 @@ public class CustomersPanel {
                         }
                     }
                     default -> {
+
+
+                        for (int i = 0; i < allProducts.size(); i++) {
+                            for (int j = i; j < allProducts.size(); j++) {
+                                if (allProducts.get(i).getPrice() < allProducts.get(j).getPrice()) {
+                                    temp = allProducts.get(i);
+                                    allProducts.set(i, allProducts.get(j));
+                                    allProducts.set(j, temp);
+                                }
+                            }
+                        }
+                        for (Product product : allProducts) {
+                            System.out.println(product.getName() + " " + product.getPrice());
+                        }
+
+
                     }
                 }
                 productPanel.removeAll();
@@ -582,8 +596,86 @@ public class CustomersPanel {
         backButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         //topPanel.add(backButton);
         storeListingsPanel.add(backButton);
-
         ArrayList<Store> sellerStores = getAllStores();
+        String [] dropdownOptions = new String[]{"Most Products Sold", "Least Products Sold"};
+        JComboBox sortByDropdown = new JComboBox<>(dropdownOptions);
+        sortByDropdown.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String selection = sortByDropdown.getSelectedItem().toString();
+                System.out.println(selection);
+                Store temp;
+                switch (selection) {
+                    case "Most Products Sold" -> {
+                        for (int i = 0; i < sellerStores.size(); i++) {
+                            for (int j = i; j < sellerStores.size(); j++) {
+                                if (sellerStores.get(i).getProductsSold()< sellerStores.get(j).getProductsSold()) {
+                                    temp = sellerStores.get(i);
+                                    sellerStores.set(i, sellerStores.get(j));
+                                    sellerStores.set(j, temp);
+                                }
+                            }
+                        }
+                        for (Store store : sellerStores) {
+                            System.out.println(store.getName() + " " + store.getProductsSold());
+                        }
+                    }
+                    case "Least Products SOld" -> {
+                        System.out.println("reached");
+                        for (int i = 0; i < sellerStores.size(); i++) {
+                            for (int j = i; j < sellerStores.size(); j++) {
+                                if (sellerStores.get(i).getProductsSold() > sellerStores.get(j).getProductsSold()) {
+                                    temp = sellerStores.get(i);
+                                    sellerStores.set(i, sellerStores.get(j));
+                                    sellerStores.set(j, temp);
+                                }
+                            }
+                        }
+                        for (Store store : sellerStores) {
+                            System.out.println(store.getName() + store.getProductsSold());
+                        }
+                    }
+                    default -> {
+                        for (int i = 0; i < sellerStores.size(); i++) {
+                            for (int j = i; j < sellerStores.size(); j++) {
+                                if (sellerStores.get(i).getProductsSold()< sellerStores.get(j).getProductsSold()) {
+                                    temp = sellerStores.get(i);
+                                    sellerStores.set(i, sellerStores.get(j));
+                                    sellerStores.set(j, temp);
+                                }
+                            }
+                        }
+                        for (Store store : sellerStores) {
+                            System.out.println(store.getName() + " " + store.getProductsSold());
+                        }
+                    }
+                }
+                allStoresPanel.removeAll();
+                for (Store store: sellerStores) {
+                    if (sellerStores.isEmpty()) {
+                        break;
+                    }
+                    JLabel label = new JLabel(store.getName());
+                    label.setAlignmentX(Component.CENTER_ALIGNMENT);
+                    label.setFont(new Font("Arial", Font.PLAIN, 18));
+                    label.addMouseListener(new MouseAdapter() {
+                        public void mouseClicked(MouseEvent e) {
+                            JPanel panel = createIndividualStoreListingsPanel(store);
+                            cardPanel.add(panel, "Store Page");
+                            cardLayout.show(cardPanel, "Store Page");
+                        }
+                    });
+                    allStoresPanel.add(label);
+                    allStoresPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+                }
+                if (!sellerStores.isEmpty()) {
+                    allStoresPanel.remove(allStoresPanel.getComponentCount() - 1);
+                }
+                allStoresPanel.revalidate();
+                allStoresPanel.repaint();
+            }
+        });
+
+
 
         for(int i =0; i < sellerStores.size();i++){
 
@@ -664,6 +756,7 @@ public class CustomersPanel {
         storeListingsPanel.add(Box.createVerticalStrut(20));
         storeListingsPanel.add(jsp);
         storeListingsPanel.add(Box.createVerticalStrut(20));
+        storeListingsPanel.add(sortByDropdown);
         //storeListingsPanel.add(selectedStoreLabel);
 
 
@@ -1255,6 +1348,10 @@ public class CustomersPanel {
                     JOptionPane.showMessageDialog(null, "Please choose a smaller quantity.", "Customers", JOptionPane.ERROR_MESSAGE);
                 }
                 else {
+                    //add product to shopping cart array list
+                    //set the product quantitySold to customerShoppingCartQuantity
+                    //set store productsSold to ???
+
                     JOptionPane.showMessageDialog(null, "Added " + product.getName() + "x" + customerShoppingCartQuantity + "to your shopping cart!" , "Customers", JOptionPane.INFORMATION_MESSAGE);
                 }
 
@@ -1391,7 +1488,7 @@ public class CustomersPanel {
             public void actionPerformed(ActionEvent e) {
 
                 ArrayList<Product> products = getAllProducts();
-                /*
+
                 if (products.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "There are no currently no products.", "Customers", JOptionPane.ERROR_MESSAGE);
 
@@ -1402,10 +1499,7 @@ public class CustomersPanel {
                     frame.setLocationRelativeTo(null);
                 }
 
-                 */
-                cardLayout.show(cardPanel, "Search Product Description Input");
-                frame.setSize(400, 200);
-                frame.setLocationRelativeTo(null);
+
             }
         });
 
@@ -1605,29 +1699,31 @@ public class CustomersPanel {
             public void actionPerformed(ActionEvent e) {
                 boolean matchFound = false;
                 ArrayList<Store> stores = getAllStores();
-                for (Store store : stores) {
-                    if (store.getName().equalsIgnoreCase(search.getText())) {
-                        matchFound = true;
+                if (search.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "I hate this project.", "Customers", JOptionPane.ERROR_MESSAGE);
+                } else if (!search.getText().isEmpty()) {
+                    for (Store store : stores) {
+                        if (store.getName().contains(search.getText())) {
+                            matchFound = true;
+                            break;
+                        }
+                    }
+                    if (matchFound) {
+
+                        JPanel panel = createSearchStoresPanel( search.getText());
+                        cardPanel.add(panel, "Search Results for Store Name");
+                        cardLayout.show(cardPanel, "Search Results for Store Name");
+                        frame.setSize(400, 500);
+                        frame.setLocationRelativeTo(null);
+
+                    } else {
+                        JOptionPane.showMessageDialog(null, "There are no matching stores", "Customers", JOptionPane.ERROR_MESSAGE);
+
                     }
 
-                }
-                if(matchFound){
-
-                    searchInputStoreName = search.getText();
-                    JPanel panel = createSearchStoresPanel(searchInputStoreName);
-                    cardPanel.add(panel, "Search Results for Store Name");
-                    cardLayout.show(cardPanel, "Search Results for Store Name");
-                    frame.setSize(400, 500);
-                    frame.setLocationRelativeTo(null);
+                    search.setText("");
 
                 }
-                else{
-                    JOptionPane.showMessageDialog(null, "There are no matching stores", "Customers", JOptionPane.ERROR_MESSAGE);
-
-                }
-
-                search.setText("");
-
             }
         });
 
@@ -1660,33 +1756,27 @@ public class CustomersPanel {
             public void actionPerformed(ActionEvent e) {
                 boolean matchFound = false;
                 ArrayList<Product> products = getAllProducts();
-                for (Product product : products) {
-                    if (product.getName().contains(search.getText())) {
-                        matchFound = true;
+                //String searchString = search.getText().toLowerCase(); <- throws ArrayIndexOutOfBoundsException
+                if (search.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "I hate this project.", "Customers", JOptionPane.ERROR_MESSAGE);
+                } else if (!search.getText().isEmpty()) {
+                    for (Product product : products) {
+                        if (product.getName().contains(search.getText())) {
+                            matchFound = true;
+                            break;
+                        }
                     }
-                }
-
-                if (matchFound) {
-                    searchInputProductName = search.getText();
-                    JPanel panel = createSearchProductsPanel(searchInputProductName);
-                    cardPanel.add(panel, "Search Results Product Name");
-                    cardLayout.show(cardPanel, "Search Results Product Name");
-                    frame.setSize(400, 500);
-                    frame.setLocationRelativeTo(null);
-                } else {
+                    if (matchFound) {
+                        searchInputProductName = search.getText();
+                        JPanel panel = createSearchProductsPanel(searchInputProductName);
+                        cardPanel.add(panel, "Search Results Product Name");
+                        cardLayout.show(cardPanel, "Search Results Product Name");
+                        frame.setSize(400, 500);
+                        frame.setLocationRelativeTo(null);
+                    } else {
                     JOptionPane.showMessageDialog(null, "There are no matching products", "Customers", JOptionPane.ERROR_MESSAGE);
                 }
-
-                /*
-                searchInputProductName = search.getText();
-                JPanel panel = createSearchProductsPanel(searchInputProductName);
-                cardPanel.add(panel, "Search Results for Product Name");
-                cardLayout.show(cardPanel, "Search Results for Product Name");
-                frame.setSize(400, 500);
-                frame.setLocationRelativeTo(null);
-
-                 */
-
+            }
                 search.setText("");
             }
         });
@@ -1724,7 +1814,7 @@ public class CustomersPanel {
         ArrayList<Store> allStores = getAllStores();
 
         for (Store store: allStores) {
-            if (store.getName().equalsIgnoreCase(storeName)) {
+            if (store.getName().contains(storeName)) {
                 JLabel label = new JLabel(store.getName());
                 label.setAlignmentX(Component.CENTER_ALIGNMENT);
                 label.setFont(new Font("Arial", Font.PLAIN, 18));
@@ -1732,7 +1822,7 @@ public class CustomersPanel {
                 label.addMouseListener(new MouseAdapter() {
                     public void mouseClicked(MouseEvent e) {
                         //code to go to store page
-                        searchStoreName = label.getText();
+                        //searchStoreName = label.getText();
                         //sStore = allStores.get(currentS);
                         //System.out.println(storeName);
                         // Update the display with the selected seller's name
@@ -1852,29 +1942,31 @@ public class CustomersPanel {
             public void actionPerformed(ActionEvent e) {
                 boolean matchFound = false;
                 ArrayList<Product> products = getAllProducts();
-                for (Product product : products) {
-                    if (product.getDescription().equalsIgnoreCase(searchDescription.getText())) {
-                        matchFound = true;
+                if (searchDescription.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Please enter your search words", "Customers", JOptionPane.ERROR_MESSAGE);
+                }
+                else if (!searchDescription.getText().isEmpty()) {
+
+                    for (Product product : products) {
+                        if (product.getDescription().contains(searchDescription.getText())) {
+                            matchFound = true;
+                            break;
+                        }
                     }
+
+                    if (matchFound) {
+
+                        JPanel panel = createSearchProductDescriptionsPanel(searchDescription.getText());
+                        cardPanel.add(panel, "Search Results Product Description");
+                        cardLayout.show(cardPanel, "Search Results Product Description");
+                        frame.setSize(400, 500);
+                        frame.setLocationRelativeTo(null);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "There are no matching products", "Customers", JOptionPane.ERROR_MESSAGE);
+                    }
+                    searchDescription.setText("");
+
                 }
-                /*
-                if (matchFound) {
-                    searchInputProductDescription = searchDescription.getText();
-                    JPanel panel = createSearchProductDescriptionsPanel(searchInputProductName);
-                    cardPanel.add(panel, "Search Results Product Description");
-                    cardLayout.show(cardPanel, "Search Results Product Description");
-                    frame.setSize(400, 500);
-                    frame.setLocationRelativeTo(null);
-                } else {
-                    JOptionPane.showMessageDialog(null, "There are no matching products", "Customers", JOptionPane.ERROR_MESSAGE);
-                }
-                */
-                searchInputProductDescription = searchDescription.getText();
-                JPanel panel = createSearchProductDescriptionsPanel(searchInputProductDescription);
-                cardPanel.add(panel, "Search Results Product Description");
-                cardLayout.show(cardPanel, "Search Results Product Description");
-                frame.setSize(400, 500);
-                frame.setLocationRelativeTo(null);
 
             }
         });
@@ -1911,14 +2003,16 @@ public class CustomersPanel {
         ArrayList<Product> allProducts = getAllProducts();
 
         for (Product product: allProducts) {
-            if (product.getDescription().equalsIgnoreCase(productDescription)) {
+            if (product.getDescription().contains(productDescription)) {
                 JLabel label = new JLabel(product.getName());
                 label.setAlignmentX(Component.CENTER_ALIGNMENT);
                 label.setFont(new Font("Arial", Font.PLAIN, 18));
 
                 label.addMouseListener(new MouseAdapter() {
                     public void mouseClicked(MouseEvent e) {
-                        //code to go to product page
+                        JPanel panel = createProductPanel(product);
+                        cardPanel.add(panel, "Product Page");
+                        cardLayout.show(cardPanel, "Product Page");
                     }
                 });
                 allProductsPanel.add(label);

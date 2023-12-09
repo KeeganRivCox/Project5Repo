@@ -247,10 +247,20 @@ public class Request {
     new Request().createAccount(new Account("Keegan", "nageekr@gmail.com", "AstroBoy@1", "Kyclon", "seller"));
 
         //new Request().createAccount(new Account("Keegan", "nageekr@gmail.com", "AstroBoy@1", "Kyclon", "seller"));
-        ArrayList<Purchaser> purchasers = new ArrayList<>();
-        ArrayList<Product> products = new ArrayList<>();
-        Store storeOne = new Store("Store One", new Request().getSeller("nageekr@gmail.com"), purchasers, products);
-        //Store storeTwo = new Store("Store Two", new Request().getSeller("nageekr@gmail.com"), purchasers, products);
+        ArrayList<Purchaser> purchasersOne = new ArrayList<>();
+        ArrayList<Product> productsOne = new ArrayList<>();
+
+        ArrayList<Purchaser> purchaserTwo = new ArrayList<>();
+        ArrayList<Product> productsTwo = new ArrayList<>();
+
+        ArrayList<Purchaser> purchaserThree = new ArrayList<>();
+        ArrayList<Product> productsThree = new ArrayList<>();
+
+        Store storeOne = new Store("Store One", new Request().getSeller("nageekr@gmail.com"), purchasersOne, productsOne);
+        Store storeTwo = new Store("Store Two", new Request().getSeller("nageekr@gmail.com"), purchaserTwo, productsTwo);
+        Store storeThree = new Store("Store Three", new Request().getSeller("nageekr@gmail.com"), purchaserThree, productsThree);
+
+
 
         Product productOne = new Product("Product One", 3.99, 10, "description", storeOne);
         Product productTwo = new Product("Product Two", 4.99, 8, "description", storeOne);
@@ -262,6 +272,22 @@ public class Request {
         Product productEight = new Product("Product Eight", 7.99, 2, "description", storeOne);
         Product productNine = new Product("Product Nine", 8.99, 1, "description", storeOne);
         Product productTen = new Product("Product Ten", 9.99, 4, "description", storeOne);
+
+
+
+        Product productEleven = new Product("Product Eleven", 3.99, 10, "description", storeTwo);
+        Product productTwelve = new Product("Product Twelve", 4.99, 8, "description", storeTwo);
+        Product productThirteen = new Product("Product Thirteen", 5.99, 9, "description", storeTwo);
+        Product productFourteen = new Product("Product Fourteen", 2.99, 7, "description", storeTwo);
+
+
+        Product productFifteen = new Product("Product Fifteen", 1.99, 6, "description", storeThree);
+        Product productSixteen = new Product("Product Sixteen", 0.99, 6, "description", storeThree);
+        Product productSeventeen = new Product("Product Seventeen", 6.99, 3, "description", storeThree);
+        Product productEighteen = new Product("Product Eighteen", 7.99, 2, "description", storeThree);
+        Product productNineteen = new Product("Product Nineteen", 8.99, 1, "description", storeThree);
+        Product productTwenty = new Product("Product Twenty", 9.99, 4, "description", storeThree);
+
 
         //Product productEleven = new Product("Product Eleven", 10.99, 4, "description", storeTwo);
 
@@ -278,11 +304,28 @@ public class Request {
         storeOne.getProducts().add(productNine);
         storeOne.getProducts().add(productTen);
 
+
+        storeTwo.getProducts().add(productEleven);
+        storeTwo.getProducts().add(productTwelve);
+        storeTwo.getProducts().add(productThirteen);
+        storeTwo.getProducts().add(productFourteen);
+
+        storeThree.getProducts().add(productFifteen);
+        storeThree.getProducts().add(productSixteen);
+        storeThree.getProducts().add(productSeventeen);
+        storeThree.getProducts().add(productEighteen);
+        storeThree.getProducts().add( productNineteen);
+        storeThree.getProducts().add(productTwenty);
+
         //storeTwo.getProducts().add(productEleven);
+
+
 
         Seller seller = new Request().getSeller("nageekr@gmail.com");
 
         seller.getSellerStores().add(storeOne);
+        seller.getSellerStores().add(storeTwo);
+        seller.getSellerStores().add(storeThree);
 
         new Request().updateSeller(seller);
 
