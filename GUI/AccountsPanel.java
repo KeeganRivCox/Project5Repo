@@ -161,12 +161,12 @@ public class AccountsPanel {
 
                             case "seller" -> {
 
-                                new SellerPanel();
+                                new SellerPanel(accountRetrieved.getEmail());
 
                             }
                             case "customer" -> {
 
-                                new CustomersPanel();
+                                new CustomersPanel(accountRetrieved.getEmail());
 
                             }
 

@@ -93,5 +93,11 @@ public class Store implements Serializable {
         return this.getName().equals(store.getName()) && this.getSellerOwner().equals(store.getSellerOwner());
     }
 
+    public String toString() {
+
+        return this.name;
+
+    }
+
 }
 
