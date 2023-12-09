@@ -42,6 +42,8 @@ public class CustomersPanel {
     private Product bestSellerThree;
     private String storeName;
 
+    private String searchStoreName;
+
     private JLabel selectedStoreLabel = new JLabel("");;
 
     private String productName;
@@ -497,8 +499,8 @@ public class CustomersPanel {
 
         ArrayList<Store> sellerStores = getAllStores();
 
-        String [] dummyStores = new String[]{"Store One" ,"Store Two","Store Three","Store Four", "Store Five", "Store Six", "Store Seven", "Store Eight",
-                "Store Nine", "Store Ten", "Store Eleven", "Store Twelve","Store Thirst","Store Fourteen","Store Fifth-teener","Store Sixty"};
+        //String [] dummyStores = new String[]{"Store One" ,"Store Two","Store Three","Store Four", "Store Five", "Store Six", "Store Seven", "Store Eight",
+               // "Store Nine", "Store Ten", "Store Eleven", "Store Twelve","Store Thirst","Store Fourteen","Store Fifth-teener","Store Sixty"};
 
 
 
@@ -520,7 +522,10 @@ public class CustomersPanel {
                     // Update the display with the selected seller's name
                     //selectedStoreLabel.setText("Selected Store: " + storeName);
                    // cardLayout.show(cardPanel,"Individual Store");
-                    createIndividualStoreListingsPanel(sStore);
+                    JPanel panel = createIndividualStoreListingsPanel(sStore);
+                    cardPanel.add(panel, "Store Page");
+                    cardLayout.show(cardPanel, "Store Page");
+
 
 
                 }
@@ -1521,13 +1526,24 @@ public class CustomersPanel {
                     if (store.getName().equalsIgnoreCase(search.getText())) {
                         matchFound = true;
                     }
+
                 }
-                searchInputProductName = search.getText();
-                JPanel panel = createSearchStoresPanel(searchInputStoreName);
-                cardPanel.add(panel, "Search Results for Store Name");
-                cardLayout.show(cardPanel, "Search Results for Store Name");
-                frame.setSize(400, 500);
-                frame.setLocationRelativeTo(null);
+                if(matchFound){
+
+                    searchInputStoreName = search.getText();
+                    JPanel panel = createSearchStoresPanel(searchInputStoreName);
+                    cardPanel.add(panel, "Search Results for Store Name");
+                    cardLayout.show(cardPanel, "Search Results for Store Name");
+                    frame.setSize(400, 500);
+                    frame.setLocationRelativeTo(null);
+
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "There are no matching stores", "Customers", JOptionPane.ERROR_MESSAGE);
+
+                }
+
+                search.setText("");
 
             }
         });
@@ -1562,11 +1578,11 @@ public class CustomersPanel {
                 boolean matchFound = false;
                 ArrayList<Product> products = getAllProducts();
                 for (Product product : products) {
-                    if (product.getName().equalsIgnoreCase(search.getText())) {
+                    if (product.getName().contains(search.getText())) {
                         matchFound = true;
                     }
                 }
-                /*
+
                 if (matchFound) {
                     searchInputProductName = search.getText();
                     JPanel panel = createSearchProductsPanel(searchInputProductName);
@@ -1577,7 +1593,8 @@ public class CustomersPanel {
                 } else {
                     JOptionPane.showMessageDialog(null, "There are no matching products", "Customers", JOptionPane.ERROR_MESSAGE);
                 }
-                */
+
+                /*
                 searchInputProductName = search.getText();
                 JPanel panel = createSearchProductsPanel(searchInputProductName);
                 cardPanel.add(panel, "Search Results for Product Name");
@@ -1585,6 +1602,9 @@ public class CustomersPanel {
                 frame.setSize(400, 500);
                 frame.setLocationRelativeTo(null);
 
+                 */
+
+                search.setText("");
             }
         });
 
@@ -1621,14 +1641,24 @@ public class CustomersPanel {
         ArrayList<Store> allStores = getAllStores();
 
         for (Store store: allStores) {
-            if (store.getName().equalsIgnoreCase(productName)) {
+            if (store.getName().equalsIgnoreCase(storeName)) {
                 JLabel label = new JLabel(store.getName());
                 label.setAlignmentX(Component.CENTER_ALIGNMENT);
                 label.setFont(new Font("Arial", Font.PLAIN, 18));
 
                 label.addMouseListener(new MouseAdapter() {
                     public void mouseClicked(MouseEvent e) {
-                        //code to go to product page
+                        //code to go to store page
+                        searchStoreName = label.getText();
+                        //sStore = allStores.get(currentS);
+                        //System.out.println(storeName);
+                        // Update the display with the selected seller's name
+                        //selectedStoreLabel.setText("Selected Store: " + storeName);
+                        // cardLayout.show(cardPanel,"Individual Store");
+                        JPanel panel = createIndividualStoreListingsPanel(store);
+                        cardPanel.add(panel, "Store Page");
+                        cardLayout.show(cardPanel, "Store Page");
+
                     }
                 });
                 allStoresPanel.add(label);
@@ -1645,10 +1675,6 @@ public class CustomersPanel {
         instructions.setFont(new Font("Arial", Font.PLAIN, 18));
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
         bottomPanel.add(instructions);
-
-
-
-
 
         searchedStoresPanel.add(Box.createVerticalStrut(20));
         searchedStoresPanel.add(titlePanel);
@@ -1682,7 +1708,7 @@ public class CustomersPanel {
         ArrayList<Product> allProducts = getAllProducts();
 
         for (Product product: allProducts) {
-            if (product.getName().equalsIgnoreCase(productName)) {
+            if (product.getName().contains(productName)) {
                 JLabel label = new JLabel(product.getName());
                 label.setAlignmentX(Component.CENTER_ALIGNMENT);
                 label.setFont(new Font("Arial", Font.PLAIN, 18));
