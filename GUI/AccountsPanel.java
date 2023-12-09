@@ -795,7 +795,7 @@ public class AccountsPanel {
         SwingUtilities.invokeLater(() -> new AccountsPanel().display());
     }
 
-    private void display() {
+    public void display() {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
