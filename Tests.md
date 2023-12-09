@@ -166,7 +166,7 @@ Expected Result: The first feature should demonstrate the automatic reconnection
 6. Follow the instructions to reset your password, and upon success, you'll be redirected to the "Sign In" panel.
 
    **Expected Outcome:** 
-   - Successful password reset redirects the user to the "Sign In" panel.
+   - Successful password reset redirects the user to the "Sign In" panel, and the Customer/Seller can sign in with the new password.
 
 ## Deleting Account:
 1. Access the application and go to the "Sign In" panel.
