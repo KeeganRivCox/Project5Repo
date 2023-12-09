@@ -4,8 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.Scanner;
+import java.util.concurrent.CountDownLatch;
 
 public class AccountsPanel {
+    public static CountDownLatch countDownLatch = new CountDownLatch(1); // made for redirecting
+
     private JFrame frame;
     private JPanel cardPanel;
     private CardLayout cardLayout;
@@ -17,11 +20,7 @@ public class AccountsPanel {
     private String resetUsername;
     private JPasswordField passwordField; // Moved the password field to the class level
 
-    // File path for user data
-    private static final String USER_DATA_FILE = "user_data.txt";
-
-    private boolean authenticatedCustomer = false;
-    private boolean authenticatedSeller = false;
+    public String accountRole = "";
 
     public AccountsPanel() {
         frame = new JFrame("Boiler Bay Login");
@@ -127,33 +126,63 @@ public class AccountsPanel {
         submitEmailButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                String accountEmail = emailField.getText();
                 char[] passwordChars = passwordField.getPassword();
-                String password = new String(passwordChars);
+                String accountPassword = new String(passwordChars);
 
-                try {
-                    String userRole = authenticateUser(emailField.getText().trim(), password);
+                // Returns null if no account found under email
+                // Returns account object if found from account hash map
+                Account accountRetrieved = new Request().getAccount(accountEmail);
 
-                    if (userRole != null) {
-                        // If authenticated, set the appropriate flag based on the role
-                        if ("Customer".equalsIgnoreCase(userRole)) {
-                            authenticatedCustomer = true;
-                        } else if ("Seller".equalsIgnoreCase(userRole)) {
-                            authenticatedSeller = true;
-                        }
+                if (accountRetrieved == null) {
+
+                    showMessage("Authentication failed. Please check your email and password.", "Error","");
+                    // Clear the password field on authentication failure
+                    passwordField.setText("");
+
+                } else {
+
+                    String retrievedAccountPassword = accountRetrieved.getPassword();
+
+                    if (retrievedAccountPassword.equals(accountPassword)) {
 
                         showMessage("Authentication successful. Redirecting...", "Success","");
+                        emailField.setText("");
+                        passwordField.setText("");
                         // Add logic to redirect to the appropriate panel based on the role
-                        // For now, let's redirect to a common panel
+                        // Keegan - In progress...
+
+                        accountRole = accountRetrieved.getRole().toLowerCase();
+
+                        frame.dispose();
+
+                        switch (accountRole) {
+
+                            case "seller" -> {
+
+                                new SellerPanel();
+
+                            }
+                            case "customer" -> {
+
+                                new CustomersPanel();
+
+                            }
+
+                        }
+
+
                     } else {
+
                         showMessage("Authentication failed. Please check your email and password.", "Error","");
                         // Clear the password field on authentication failure
                         passwordField.setText("");
-                        // Add logic to handle authentication failure (e.g., show an error message)
+
                     }
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    showMessage("Error authenticating user. Please try again later.", "Error","");
+
                 }
+
             }
         });
 
@@ -209,33 +238,6 @@ public class AccountsPanel {
         return panel;
     }
 
-
-    private String authenticateUser(String email, String password) throws IOException {
-        try (Scanner scanner = new Scanner(new FileReader(USER_DATA_FILE))) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                String[] userData = line.split(",");
-                if (userData.length >= 4 && userData[1].equalsIgnoreCase(email) && userData[3].equals(password)) {
-                    return userData[4]; // Email and password match found, return the role
-                }
-            }
-        }
-        return null; // No match found, return null
-    }
-
-
-    private String getUserRole(String email) throws IOException {
-        try (Scanner scanner = new Scanner(new FileReader(USER_DATA_FILE))) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                String[] userData = line.split(",");
-                if (userData.length >= 5 && userData[1].equalsIgnoreCase(email)) {
-                    return userData[4]; // Return the role associated with the email
-                }
-            }
-        }
-        return null; // No role found
-    }
     private JPanel createNewAccountPanel() {
         JPanel newAccountPanel = new JPanel(new GridLayout(0, 2, 10, 10)); // GridLayout with 2 columns and 10x10 spacing
         newAccountPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -270,48 +272,66 @@ public class AccountsPanel {
         submitButton.setFont(largeFont);
         submitButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                String name = nameField.getText().trim();
-                String username = usernameField.getText().trim();
-                String email = emailField.getText().trim();
-                char[] passwordChars = passwordField.getPassword();
-                String password = new String(passwordChars);
-                String role = (String) roleDropdown.getSelectedItem();
 
-                if (name.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+            // Implementing server methods: finished - Keegan
+
+            public void actionPerformed(ActionEvent e) {
+                String accountName = nameField.getText().trim();
+                String accountUsername = usernameField.getText().trim();
+                String accountEmail = emailField.getText().trim();
+                char[] passwordChars = passwordField.getPassword();
+                String accountPassword = new String(passwordChars);
+                String accountRole = (String) roleDropdown.getSelectedItem();
+
+                if (accountName.isEmpty() || accountUsername.isEmpty() || accountEmail.isEmpty() || accountPassword.isEmpty()) {
                     JOptionPane.showMessageDialog(frame, "All fields must be filled out.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                if (!email.endsWith("@purdue.edu")) {
+                if (!accountEmail.endsWith("@purdue.edu")) {
                     JOptionPane.showMessageDialog(frame, "Email must end with @purdue.edu.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                if (password.length() < 8 || !password.matches(".*\\d.*") || !password.matches(".*[!@#$%^&*()-_=+\\[\\]{};:'\",.<>/?].*")) {
+                if (accountPassword.length() < 8 || !accountPassword.matches(".*\\d.*") || !accountPassword.matches(".*[!@#$%^&*()-_=+\\[\\]{};:'\",.<>/?].*")) {
                     JOptionPane.showMessageDialog(frame, "Password must be at least 8 characters long, include 1 digit, and 1 special character.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                try {
-                    if (isDuplicateEmailOrUsername(username, email)) {
-                        showMessage("An account with the same email or username already exists.", "Error","NewAccount");
-                    } else {
-                        if (writeAccountDataToFile(name, email, username, password, role)) {
-                            showMessage("Account created successfully. Redirecting to Sign In.", "Success","");
-                            cardLayout.show(cardPanel, "SignIn");
-                            frame.setSize(400, 500);
-                        } else {
-                            showMessage("Failed to create the account.", "Error","NewAccount");
-                        }
+                int response = new Request().createAccount(new Account(accountName, accountEmail, accountPassword, accountUsername, accountRole));
+
+                // Returns 0 if account successfully created
+                // Returns 1 if email is already taken
+                // Returns 2 if username is already taken
+                // Returns 3 if an unexpected error occurred
+
+                switch (response) {
+
+                    case 0 -> { // Account created successfully
+
+                        showMessage("Account created successfully. Redirecting to Sign In.", "Success","");
+                        cardLayout.show(cardPanel, "SignIn");
+                        frame.setSize(400, 500);
+
                     }
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    showMessage("Error saving user data. Please try again later.", "Error","NewAccount");
-                    cardLayout.show(cardPanel, "SignIn");
-                    frame.setSize(400, 500);
+                    case 1 -> { // Email already taken
+
+                        showMessage("An account with the same email already exists.", "Error","NewAccount");
+
+                    }
+                    case 2 -> {
+
+                        showMessage("An account with the same username already exists.", "Error","NewAccount");
+
+                    }
+                    case 3 -> { // Unexpected error
+
+                        showMessage("Failed to create the account.", "Error","NewAccount");
+
+                    }
 
                 }
+
             }
 
 
@@ -344,6 +364,7 @@ public class AccountsPanel {
         return newAccountPanel;
     }
 
+    // Implementing server methods: In progress... - Keegan
     private JPanel createResetPasswordPanel() {
         JPanel resetPasswordPanel = new JPanel();
         resetPasswordPanel.setLayout(new BoxLayout(resetPasswordPanel, BoxLayout.Y_AXIS));
@@ -369,20 +390,28 @@ public class AccountsPanel {
         resetSubmitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 resetEmail = resetEmailField.getText().trim();
                 resetUsername = resetUsernameField.getText().trim();
 
-                try {
-                    if (isMatchingEmailAndUsername(resetEmail, resetUsername)) {
-                        // If email and username match, show the PasswordPanel
-                        showMessage("Email and username found!", "Message", "PasswordPanel");
-                    } else {
-                        showMessage("Email and username do not match.", "Error", "ResetPassword");
-                    }
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    showMessage("Error checking email and username. Please try again later.", "Error", "ResetPassword");
+                Account accountRetrieved = new Request().getAccount(resetEmail);
+
+                if (accountRetrieved == null) {
+
+                    showMessage("Email not found.", "Error", "ResetPassword");
+
+                } else if (!accountRetrieved.getUsername().equals(resetUsername)) {
+
+                    showMessage("Email and username do not match.", "Error", "ResetPassword");
+
+                } else {
+
+                    showMessage("Email and username found!", "Message", "PasswordPanel");
+                    resetEmailField.setText("");
+                    resetUsernameField.setText("");
+
                 }
+
             }
         });
 
@@ -390,7 +419,7 @@ public class AccountsPanel {
         resetPasswordPanel.add(resetPasswordLabel);
         resetPasswordPanel.add(Box.createVerticalStrut(15));
 
-        resetPasswordPanel.add(createFieldWithLabel("        Email", resetEmailField));
+        resetPasswordPanel.add(createFieldWithLabel("Email", resetEmailField));
         resetPasswordPanel.add(Box.createVerticalStrut(10));
         resetPasswordPanel.add(createFieldWithLabel("Username", resetUsernameField));
         resetPasswordPanel.add(Box.createVerticalStrut(10));
@@ -439,23 +468,36 @@ public class AccountsPanel {
                 char[] confirmNewPasswordChars = confirmNewPasswordField.getPassword();
                 String confirmNewPassword = new String(confirmNewPasswordChars);
 
-                if (newPassword.equals(confirmNewPassword)) {
+                if (!newPassword.equals(confirmNewPassword)) {
+
+                    showMessage("Passwords do not match. Please try again.", "Error", "PasswordPanel");
+                    return;
+
+                } else {
+
                     // Check for password complexity requirements
                     if (newPassword.length() < 8 || !newPassword.matches(".*\\d.*") || !newPassword.matches(".*[!@#$%^&*()-_=+\\[\\]{};:'\",.<>/?].*")) {
                         showMessage("Password must be at least 8 characters long, include 1 digit, and 1 special character.", "Error", "PasswordPanel");
                         return;
+
                     }
 
-                    // Passwords match and meet complexity requirements, update the password in the file
-                    if (updatePasswordInFile(resetEmail, resetUsername, newPassword)) {
-                        showMessage("Password reset successfully. Redirecting to Sign In.", "Success", "SignIn");
-                    } else {
-//                        System.out.println(resetEmail+" "+resetUsername);
-                        showMessage("Failed to update the password.", "Error", "PasswordPanel");
-                    }
-                } else {
-                    showMessage("Passwords do not match. Please try again.", "Error", "PasswordPanel");
                 }
+
+                boolean response = new Request().updateAccountPassword(resetEmail, newPassword);
+
+                if (response) {
+
+                    showMessage("Password reset successfully. Redirecting to Sign In.", "Success", "SignIn");
+                    newPasswordField.setText("");
+                    confirmNewPasswordField.setText("");
+
+                } else {
+
+                    showMessage("Failed to update the password.", "Error", "PasswordPanel");
+
+                }
+
             }
         });
 
@@ -480,43 +522,6 @@ public class AccountsPanel {
 
         return passwordPanel;
     }
-
-    private boolean updatePasswordInFile(String email, String username, String newPassword) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(USER_DATA_FILE))) {
-            StringBuilder updatedData = new StringBuilder();
-            String line;
-            boolean userUpdated = false;
-
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-                if (data.length == 5) {
-                    String storedUsername = data[2];
-                    String storedEmail = data[1];
-
-                    if (storedUsername.equalsIgnoreCase(username) && storedEmail.equalsIgnoreCase(email)) {
-                        data[3] = newPassword;  // Update the password
-                        userUpdated = true;
-                    }
-                    updatedData.append(String.join(",", data)).append("\n");
-                } else {
-                    updatedData.append(line).append("\n");
-                }
-            }
-
-            if (userUpdated) {
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(USER_DATA_FILE, false))) {
-                    writer.write(updatedData.toString());
-                }
-                resetEmail = null;
-                resetUsername = null;  // Reset the email and username fields
-                return true;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
 
     private JPanel createDeleteAccountRequestPanel() {
         JPanel deleteAccountRequestPanel = new JPanel();
@@ -549,18 +554,26 @@ public class AccountsPanel {
                 resetEmail = deleteAccountEmailField.getText().trim();
                 resetUsername = deleteAccountUsernameField.getText().trim();
 
-                try {
-                    if (isMatchingEmailAndUsername(resetEmail, resetUsername)) {
-                        // If email and username match, show the Delete Password Panel
-                        showMessage("Email and username found!", "Message", "DeleteAccount");
-                    } else {
-                        showMessage("Email and username do not match.", "Error", "DeleteAccountRequest");
-                    }
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    showMessage("Error checking email and username. Please try again later.", "Error", "DeleteAccountRequest");
+                Account accountRetrieved = new Request().getAccount(resetEmail);
+
+                if (accountRetrieved == null) {
+
+                    showMessage("Email not found.", "Error", "DeleteAccountRequest");
+
+
+                } else if (!accountRetrieved.getUsername().equals(resetUsername)) {
+
+                    showMessage("Email and username do not match.", "Error", "DeleteAccountRequest");
+
+                } else {
+
+                    showMessage("Email and username found!", "Message", "DeleteAccount");
+                    deleteAccountEmailField.setText("");
+                    deleteAccountUsernameField.setText("");
+
                 }
-            }
+
+              }
         });
 
         deleteAccountRequestPanel.add(Box.createVerticalStrut(20));
@@ -622,14 +635,25 @@ public class AccountsPanel {
                         return;
                     }
 
+                    boolean deleteResponse = new Request().deleteAccount(resetEmail);
+
                     // Passwords match and meet complexity requirements, proceed with account deletion
-                    if (deleteAccount(resetEmail, deleteAccountPassword)) {
+                    if (deleteResponse) {
+
                         showMessage("Account deleted successfully. Redirecting to Sign In.", "Success", "SignIn");
+                        deleteAccountPasswordField.setText("");
+                        confirmDeleteAccountPasswordField.setText("");
+
                     } else {
+
                         showMessage("Failed to delete the account.", "Error", "DeleteAccount");
+
                     }
+
                 } else {
+
                     showMessage("Passwords do not match. Please try again.", "Error", "DeleteAccount");
+
                 }
             }
         });
@@ -655,59 +679,6 @@ public class AccountsPanel {
         return deleteAccountPasswordPanel;
     }
 
-    private boolean deleteAccount(String email, String password) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(USER_DATA_FILE))) {
-            StringBuilder updatedData = new StringBuilder();
-            String line;
-            boolean userDeleted = false;
-
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-                if (data.length == 5) {
-                    String storedUsername = data[2];
-                    String storedEmail = data[1];
-
-                    // Check if email, username, and password match
-                    if (storedUsername.equalsIgnoreCase(resetUsername)
-                            && storedEmail.equalsIgnoreCase(resetEmail)
-                            && data[3].equals(password)) {
-                        userDeleted = true;
-                    } else {
-                        updatedData.append(line).append("\n");
-                    }
-                } else {
-                    updatedData.append(line).append("\n");
-                }
-            }
-
-            if (userDeleted) {
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(USER_DATA_FILE, false))) {
-                    writer.write(updatedData.toString());
-                }
-                resetEmail = null;
-                resetUsername = null;  // Reset the email and username fields
-                return true;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-
-    private boolean isMatchingEmailAndUsername(String email, String username) throws IOException {
-        try (Scanner scanner = new Scanner(new FileReader(USER_DATA_FILE))) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                String[] userData = line.split(",");
-                if (userData.length >= 3 && userData[1].equalsIgnoreCase(email) && userData[2].equalsIgnoreCase(username)) {
-                    return true; // Email and username match found
-                }
-            }
-        }
-        return false; // No match found
-    }
-
     // Helper method to add text labels before fields
     private void addFieldWithLabel(JPanel panel, String labelText, JComponent field) {
         JLabel label = new JLabel(labelText);
@@ -715,33 +686,6 @@ public class AccountsPanel {
         panel.add(label);
         panel.add(field);
     }
-
-
-
-    private boolean isDuplicateEmailOrUsername(String username, String email) throws IOException {
-        try (Scanner scanner = new Scanner(new FileReader(USER_DATA_FILE))) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                String[] userData = line.split(",");
-                if (userData.length >= 3 && (userData[1].equalsIgnoreCase(email) || userData[2].equalsIgnoreCase(username))) {
-                    return true; // Duplicate email or username found
-                }
-            }
-        }
-        return false; // No duplicate found
-    }
-
-
-    private boolean writeAccountDataToFile(String name, String email, String username, String password, String role) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(USER_DATA_FILE, true))) {
-            // Append the new account data to the file using a comma as the delimiter
-            writer.write(name + "," + email + "," + username + "," + password + "," + role);
-            writer.newLine();
-            return true;
-        }
-    }
-
-
 
     private void showMessage(String message, String title, String redirectToPanel) {
         messageLabel.setText(message);
@@ -799,4 +743,5 @@ public class AccountsPanel {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
+
 }
