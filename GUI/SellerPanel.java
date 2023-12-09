@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SellerPanel {
 
@@ -57,6 +58,7 @@ public class SellerPanel {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new SellerPanel("cox442@purdue.edu"));
+
 
     }
 
@@ -129,12 +131,15 @@ public class SellerPanel {
         toDoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         toDoLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
+        JPanel testPanel = createListStorePanel();
+
+
         JButton listStoreButton = createButton("List\nStores");
         listStoreButton.addActionListener(e -> {
-            cardPanel.removeAll();
+//            cardPanel.removeAll();
             cardPanel.add(createListStorePanel(), "List Store");
             cardLayout.show(cardPanel, "List Store");
-            frame.setSize(400, 400);
+            frame.setSize(400, 500);
         });
 
         JButton createProductButton = createButton("Create\nProduct");
@@ -288,6 +293,7 @@ public class SellerPanel {
 
     }
 
+
     private JPanel createListStorePanel() {
         JPanel listStorePanel = new JPanel();
         listStorePanel.setLayout(new BoxLayout(listStorePanel, BoxLayout.Y_AXIS));
@@ -310,9 +316,22 @@ public class SellerPanel {
         topPanel.add(Box.createHorizontalStrut(40));
         topPanel.add(titleLabel);
 
-        Dimension scrollPaneDimension = new Dimension(300,300);
+        // Increase the size of the JScrollPane
+        Dimension scrollPaneDimension = new Dimension(320, 320); // Increase the height to 400 or your desired value
 
         ArrayList<Store> sellerStores = new Request().getSeller(userEmail).getSellerStores();
+
+        // Convert ArrayList<Store> to String[]
+        String[] storeNames = new String[sellerStores.size()];
+        for (int i = 0; i < sellerStores.size(); i++) {
+            storeNames[i] = sellerStores.get(i).getName();
+        }
+
+
+        while (storeNames.length < 10) {
+            storeNames = Arrays.copyOf(storeNames, storeNames.length + 1);
+            storeNames[storeNames.length - 1] = " ";
+        }
 
         // Create a JPanel to hold vertically listed JLabels
         JPanel panel = new JPanel();
@@ -324,8 +343,8 @@ public class SellerPanel {
         helperPanel.setLayout(new BorderLayout());
         helperPanel.setSize(new Dimension(280, 300));
 
-        for (Store store : sellerStores) {
-            JLabel storeLabel = new JLabel(store.getName());
+        for (String storeName : storeNames) {
+            JLabel storeLabel = new JLabel(storeName);
             storeLabel.setFont(new Font("Arial", Font.PLAIN, 18));
             storeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             storeLabel.setAlignmentY(Component.CENTER_ALIGNMENT);
@@ -333,7 +352,7 @@ public class SellerPanel {
             panel.add(new JSeparator(SwingConstants.HORIZONTAL));
         }
 
-        if (!sellerStores.isEmpty()) {
+        if (storeNames.length > 0) {
             panel.remove(panel.getComponentCount() - 1);
         }
 
@@ -354,6 +373,11 @@ public class SellerPanel {
 
         return listStorePanel;
     }
+
+
+
+
+
 
     //method that creates the panel for seller listings page
     private JPanel createEditStorePanel() {
