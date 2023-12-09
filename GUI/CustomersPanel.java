@@ -579,6 +579,8 @@ public class CustomersPanel {
         dropDownPanel.setMinimumSize(new Dimension(400, 40));
         dropDownPanel.add(sortByDropdown);
 
+
+
         JScrollPane jsp = new JScrollPane(productPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jsp.setAlignmentX(Component.CENTER_ALIGNMENT);
         jsp.setMaximumSize(new Dimension(340, 300));
@@ -592,7 +594,8 @@ public class CustomersPanel {
 //        viewport.setBackground(Color.WHITE);
 //        jsp.setViewport(viewport);
 
-        for (Product product : allProducts) {
+
+        for (Product product: allProducts) {
             if (allProducts.isEmpty()) {
                 break;
             }
@@ -624,6 +627,9 @@ public class CustomersPanel {
         instructionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         instructionLabel.setFont(new Font("Arial", Font.PLAIN, 18));
 
+
+        JPanel bottomPanel = new JPanel();
+        //bottomPanel.add(selectedProductLabel);
 
         productsListingPanel.add(Box.createVerticalStrut(20));
         productsListingPanel.add(titlePanel);
@@ -658,6 +664,7 @@ public class CustomersPanel {
         allStoresPanel.setMinimumSize(new Dimension(325, 250));
         allStoresPanel.setOpaque(false);
         allStoresPanel.setLayout(new BoxLayout(allStoresPanel, BoxLayout.Y_AXIS));
+
 
         JLabel selectStore = new JLabel("Select a Store");
         selectStore.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -700,6 +707,7 @@ public class CustomersPanel {
                     JPanel panel = createIndividualStoreListingsPanel(sStore);
                     cardPanel.add(panel, "Store Page");
                     cardLayout.show(cardPanel, "Store Page");
+
 
 
                 }
@@ -745,6 +753,8 @@ public class CustomersPanel {
         if (!sellerStores.isEmpty()) {
             allStoresPanel.remove(allStoresPanel.getComponentCount() - 1);
         }
+        //allStoresPanel.remove(allStoresPanel.getComponentCount() - 1);
+
 
         JScrollPane jsp = new JScrollPane(allStoresPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jsp.setMinimumSize(new Dimension(325, 200));
@@ -763,6 +773,7 @@ public class CustomersPanel {
         storeListingsPanel.add(Box.createVerticalStrut(20));
         storeListingsPanel.add(jsp);
         storeListingsPanel.add(Box.createVerticalStrut(20));
+        //storeListingsPanel.add(selectedStoreLabel);
 
 
         return storeListingsPanel;
@@ -823,7 +834,6 @@ public class CustomersPanel {
 
         }
         */
-
         for (int i = 0; i < storeProducts.size(); i++) {
 
             String name = storeProducts.get(i).getName();
@@ -860,12 +870,15 @@ public class CustomersPanel {
         }
         //listStoreProductsPanel.remove(listStoreProductsPanel.getComponentCount() - 1);
 
+
         JScrollPane jsp = new JScrollPane(listStoreProductsPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         //individualStorePanel.add(selectStore);
         individualStorePanel.add(Box.createVerticalStrut(20));
         individualStorePanel.add(jsp);
         individualStorePanel.add(Box.createVerticalStrut(20));
+
+
 
 
         return individualStorePanel;
