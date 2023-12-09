@@ -2182,5 +2182,4 @@ public class CustomersPanel {
         return products;
     }
 
-
 }
