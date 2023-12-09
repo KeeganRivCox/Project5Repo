@@ -89,12 +89,100 @@ public class ConnectedClient {
 
                  }
 
+                 case GET_CUSTOMER -> {
+
+                    serverGetCustomer();
+
+                 }
+
+                 case GET_ALL_CUSTOMERS -> {
+
+                    serverGetAllCustomers();
+
+                 }
+
+                 case UPDATE_CUSTOMER -> {
+
+                    serverUpdateCustomer();
+
+                 }
+
             }
 
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
 
+
+    }
+
+    //    private static final int GET_CUSTOMER = 8;
+//    private static final int GET_ALL_CUSTOMERS = 9;
+//    private static final int UPDATE_CUSTOMER = 10;
+
+    private void serverUpdateCustomer() throws IOException, ClassNotFoundException {
+
+        HashMap<String, Customer> customerHashMap = getCustomerHashMap();
+
+        Customer retrievedCustomer = (Customer) requestReader.readObject();
+
+        String customerEmail = retrievedCustomer.getEmail();
+
+        if (customerHashMap.containsKey(customerEmail)) {
+
+            customerHashMap.replace(customerEmail, retrievedCustomer);
+
+            updateCustomerHashMap(customerHashMap);
+
+            requestWriter.writeObject(Boolean.TRUE);
+
+        } else {
+
+            requestWriter.writeObject(Boolean.FALSE);
+
+        }
+
+        requestWriter.close();
+        requestReader.close();
+
+    }
+
+    private void serverGetAllCustomers() throws IOException {
+
+        HashMap<String, Customer> customerHashMap = getCustomerHashMap();
+
+        ArrayList<Customer> allCustomers = new ArrayList<>(customerHashMap.values());
+
+        requestWriter.writeObject(allCustomers);
+
+        requestWriter.close();
+        requestReader.close();
+
+    }
+
+    private void serverGetCustomer() throws IOException, ClassNotFoundException {
+
+        HashMap<String, Customer> customerHashMap = getCustomerHashMap();
+
+        String customerEmail = (String) requestReader.readObject();
+
+        if(!customerHashMap.containsKey(customerEmail)) {
+
+            requestWriter.writeObject(null);
+
+            requestWriter.close();
+            requestReader.close();
+
+            return;
+
+        }
+
+        Customer retrievedCustomer = customerHashMap.get(customerEmail);
+
+        requestWriter.writeObject(retrievedCustomer);
+
+        requestReader.close();
+        requestWriter.close();
 
     }
 
