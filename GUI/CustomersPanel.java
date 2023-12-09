@@ -552,7 +552,6 @@ public class CustomersPanel {
         JPanel topPanel = new JPanel();
         topPanel.setMaximumSize(new Dimension(400,50));
         topPanel.setMinimumSize(new Dimension(400,50));
-        topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
 
@@ -561,7 +560,6 @@ public class CustomersPanel {
         allStoresPanel.setMinimumSize(new Dimension(325,250));
         allStoresPanel.setOpaque(false);
         allStoresPanel.setLayout(new BoxLayout(allStoresPanel, BoxLayout.Y_AXIS));
-        allStoresPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel selectStore = new JLabel("All Stores");
         selectStore.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -2181,5 +2179,6 @@ public class CustomersPanel {
         }
         return products;
     }
+
 
 }
