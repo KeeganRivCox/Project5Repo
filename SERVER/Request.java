@@ -29,7 +29,6 @@ public class Request {
     private ObjectOutputStream requestWriter;
     private ObjectInputStream requestReader;
 
-    // POST object for sending an account to store to server
     public Request() {
 
         try {
@@ -298,17 +297,11 @@ public class Request {
 
     public static void main(String[] args) {
 
-        ArrayList<Account> allAccounts = new Request().getAllAccounts();
+        Seller seller = new Request().getSeller("cox442@purdue.edu");
 
-       for (Account account : allAccounts) {
+        seller.getSellerStores().get(0).getPurchasers().add(new Purchaser("User", "Shoes", 100, 989.10));
 
-           new Request().deleteAccount(account.getEmail());
-
-        }
-
-    new Request().createAccount(new Account("Keegan", "nageekr@gmail.com", "AstroBoy@1", "Kyclon", "seller"));
-
-
+        new Request().updateSeller(seller);
 
     }
 

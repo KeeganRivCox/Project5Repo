@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Collections;
 
 public class CustomersPanel {
+    String userEmail;
+
     private JFrame frame;
     private JPanel cardPanel;
 
@@ -56,12 +58,14 @@ public class CustomersPanel {
 
     public static void main(String[] args) {
 
-        SwingUtilities.invokeLater(() -> new CustomersPanel());
+        SwingUtilities.invokeLater(() -> new CustomersPanel("noEmail"));
 
     }
 
 
-    public CustomersPanel(){
+    public CustomersPanel(String userEmail){
+        this.userEmail = userEmail;
+
         frame = new JFrame("Customers");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
