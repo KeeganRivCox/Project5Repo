@@ -2351,7 +2351,3 @@ public class SellerPanel {
         return backButton;
     }
 }
-
-
-
-

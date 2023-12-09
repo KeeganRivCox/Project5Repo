@@ -312,13 +312,11 @@ public class CustomersPanel {
         purchaseHistoryButton.setBorder(customBorder);
         purchaseHistoryButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
                 cardPanel.add(createPastPurchasesPanel(), "Past Purchases");
                 cardLayout.show(cardPanel, "Past Purchases");
                 frame.setSize(400, 500);
             }
         });
-
 
         JButton logOutButton = new JButton(("Log Out"));
         logOutButton.setMaximumSize(buttonDimension);
@@ -580,7 +578,6 @@ public class CustomersPanel {
         dropDownPanel.add(sortByDropdown);
 
 
-
         JScrollPane jsp = new JScrollPane(productPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jsp.setAlignmentX(Component.CENTER_ALIGNMENT);
         jsp.setMaximumSize(new Dimension(340, 300));
@@ -595,7 +592,7 @@ public class CustomersPanel {
 //        jsp.setViewport(viewport);
 
 
-        for (Product product: allProducts) {
+        for (Product product : allProducts) {
             if (allProducts.isEmpty()) {
                 break;
             }
@@ -709,7 +706,6 @@ public class CustomersPanel {
                     cardLayout.show(cardPanel, "Store Page");
 
 
-
                 }
             });
 
@@ -750,7 +746,7 @@ public class CustomersPanel {
         allStoresPanel.remove(allStoresPanel.getComponentCount() - 1);
         allStoresPanel.setBackground(greyButtonColor);
 
-        if (!sellerStores.isEmpty()) {
+        if (!sellerStores.isEmpty()){
             allStoresPanel.remove(allStoresPanel.getComponentCount() - 1);
         }
         //allStoresPanel.remove(allStoresPanel.getComponentCount() - 1);
@@ -877,8 +873,6 @@ public class CustomersPanel {
         individualStorePanel.add(Box.createVerticalStrut(20));
         individualStorePanel.add(jsp);
         individualStorePanel.add(Box.createVerticalStrut(20));
-
-
 
 
         return individualStorePanel;
@@ -1443,7 +1437,7 @@ public class CustomersPanel {
         goToStoreButton.setForeground(Color.BLACK);
         goToStoreButton.setBorder(customBorder);
 
-        SpinnerModel quantityModel = new SpinnerNumberModel(0, 1, Integer.MAX_VALUE, 1);
+        SpinnerModel quantityModel = new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1);
         JSpinner quantitySpinner = new JSpinner(quantityModel);
 
         quantitySpinner.addChangeListener(new ChangeListener() {
@@ -1963,11 +1957,11 @@ public class CustomersPanel {
                 boolean matchFound = false;
                 ArrayList<Product> products = getAllProducts();
                 for (Product product : products) {
-                    if (product.getName().equalsIgnoreCase(search.getText())) {
+                    if (product.getName().contains(search.getText())) {
                         matchFound = true;
                     }
                 }
-                /*
+
                 if (matchFound) {
                     searchInputProductName = search.getText();
                     JPanel panel = createSearchProductsPanel(searchInputProductName);
@@ -1978,7 +1972,8 @@ public class CustomersPanel {
                 } else {
                     JOptionPane.showMessageDialog(null, "There are no matching products", "Customers", JOptionPane.ERROR_MESSAGE);
                 }
-                */
+
+ 				/*
                 searchInputProductName = search.getText();
                 JPanel panel = createSearchProductsPanel(searchInputProductName);
                 cardPanel.add(panel, "Search Results for Product Name");
@@ -1986,6 +1981,9 @@ public class CustomersPanel {
                 frame.setSize(400, 500);
                 frame.setLocationRelativeTo(null);
 
+                 */
+
+                search.setText("");
             }
         });
 
@@ -2102,14 +2100,16 @@ public class CustomersPanel {
         ArrayList<Product> allProducts = getAllProducts();
 
         for (Product product : allProducts) {
-            if (product.getName().equalsIgnoreCase(productName)) {
+            if (product.getName().contains(productName)) {
                 JLabel label = new JLabel(product.getName());
                 label.setAlignmentX(Component.CENTER_ALIGNMENT);
                 label.setFont(new Font("Arial", Font.PLAIN, 18));
 
                 label.addMouseListener(new MouseAdapter() {
                     public void mouseClicked(MouseEvent e) {
-                        //code to go to product page
+                        JPanel panel = createProductPanel(product);
+                        cardPanel.add(panel, "Product Page");
+                        cardLayout.show(cardPanel, "Product Page");
                     }
                 });
                 allProductsPanel.add(label);
@@ -2146,6 +2146,7 @@ public class CustomersPanel {
         bottomPanel.add(Box.createHorizontalStrut(20));
         bottomPanel.add(instructions);
         bottomPanel.add(Box.createHorizontalStrut(20));
+
 
 
         searchedProductsPanel.add(Box.createVerticalStrut(20));
@@ -2240,6 +2241,7 @@ public class CustomersPanel {
                 frame.setSize(475, 500);
                 frame.setLocationRelativeTo(null);
 
+
             }
         });
 
@@ -2250,6 +2252,7 @@ public class CustomersPanel {
         searchProductDescriptionPanel.add(Box.createVerticalStrut(20));
         searchProductDescriptionPanel.add(searchButton);
         searchProductDescriptionPanel.add(Box.createVerticalStrut(20));
+
 
         return searchProductDescriptionPanel;
     }
@@ -2429,6 +2432,28 @@ public class CustomersPanel {
         return allProductDescriptions;
     }
 
+    /*
+    private static Product getBestSellerOne() {
+        ArrayList<Integer> allProductsSoldCount = new ArrayList<>();
+        ArrayList<Store> allStores = getAllStores();
+        for (Store store : allStores) {
+            allProductsSoldCount.add(store.getProductsSold());
+        }
+        int[] listOfProductCounts = new int[allProductsSoldCount.size()];
+        for (int i = 0; i < listOfProductCounts.length; i++){
+            listOfProductCounts[i] = allProductsSoldCount.get(i);
+        }
+        int temp;
+        for (int i = 0; i < listOfProductCounts.length; i++) {
+            for (int j = i; j < listOfProductCounts.length; j++) {
+
+            }
+        }
+        return
+    }
+
+     */
+
     private static ArrayList<Product> sortPriceHighToLow(ArrayList<Product> products) {
         Product temp;
         for (int i = 0; i < products.size(); i++) {
@@ -2458,7 +2483,6 @@ public class CustomersPanel {
         }
         return products;
     }
-
     private static ArrayList<Product> sortQuantityHighToLow(ArrayList<Product> products) {
         Product temp;
         for (int i = 0; i < products.size(); i++) {
@@ -2473,7 +2497,6 @@ public class CustomersPanel {
         }
         return products;
     }
-
     private static ArrayList<Product> sortQuantityLowToHigh(ArrayList<Product> products) {
         Product temp;
         for (int i = 0; i < products.size(); i++) {
@@ -2489,4 +2512,6 @@ public class CustomersPanel {
         return products;
     }
 }
+
+
 
