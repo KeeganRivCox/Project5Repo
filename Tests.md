@@ -125,23 +125,34 @@ Expected Result: The first feature should demonstrate the automatic reconnection
 
 # Manage Account
 
+## User Log In:
+1. Launch the application.
+2. Navigate to the "Sign In" panel.
+3. Select the username textbox.
+4. Enter the username "customer@purdue.edu" via the keyboard.
+5. Select the password textbox.
+6. Enter the password "Purdue@123" via the keyboard.
+7. Select the "Log in" button.
+
 ## Creating an Account (Selecting Seller/Customer):
 1. Launch the application and navigate to the "Sign In" panel.
 2. Click on the "Create a New Account" button.
-3. Fill in the required information, including name, username, email, and password.
-4. Choose the account role as either "Customer" or "Seller" from the dropdown menu, and click the "Submit" button to create the new account.
-## Logging In:
-1. Open the application and access the "Sign In" panel.
-2. Enter your registered email and password in the respective fields.
-3. Click the "Submit" button to authenticate the provided credentials.
-4. Upon successful login, you will be redirected to the appropriate panel based on your role as a "Customer" or "Seller."
+3. Fill in the required information, including name ("Customer"), username ("customer@purdue.edu"), email ("customer@purdue.edu"), and password ("Purdue@123").
+4. Choose the account role as "Customer" from the dropdown menu.
+5. Click the "Submit" button to create the new account.
+
 ## Forgetting Password:
 1. From the "Sign In" panel, click on the "Forgot Password" button.
-2. Enter the email associated with your account and click the "Submit" button.
-3. If the email and username match, you will be prompted to enter a new password.
-4. Follow the instructions to reset your password, and upon success, you'll be redirected to the "Sign In" panel.
+2. Enter the email "customer@purdue.edu" associated with your account.
+3. Click the "Submit" button.
+4. If the email and username match, you will be prompted to enter a new password.
+5. Follow the instructions to reset your password, and upon success, you'll be redirected to the "Sign In" panel.
+
 ## Deleting Account:
-1. Open the application and access the "Sign In" panel.
+1. Access the application and go to the "Sign In" panel.
 2. Click on the "Delete Account" button.
-3. Enter your email and username to confirm your identity.
-4. Follow the on-screen instructions to enter your current password, confirm the deletion, and upon success, your account will be deleted, and you will be redirected to the "Sign In" panel.
+3. Enter your email "customer@purdue.edu" and username "customer@purdue.edu" to confirm your identity.
+4. Follow the on-screen instructions to enter your current password ("Purdue@123") twice.
+5. Confirm the deletion.
+6. Upon success, your account will be deleted, and you will be redirected to the "Sign In" panel.
+
