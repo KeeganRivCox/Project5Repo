@@ -20,6 +20,8 @@ public class ConnectedClient {
     private static final int GET_CUSTOMER = 8;
     private static final int GET_ALL_CUSTOMERS = 9;
     private static final int UPDATE_CUSTOMER = 10;
+    private static final int UPDATE_MESSAGES = 11;
+    private static final int GET_MESSAGES = 12;
 
 
 
@@ -106,6 +108,16 @@ public class ConnectedClient {
                     serverUpdateCustomer();
 
                  }
+                 case UPDATE_MESSAGES -> {
+
+                    serverUpdateMessages();
+
+                 }
+                 case GET_MESSAGES -> {
+
+                    serverGetMessages();
+
+                 }
 
             }
 
@@ -113,6 +125,51 @@ public class ConnectedClient {
             throw new RuntimeException(e);
         }
 
+
+    }
+
+    private void serverGetMessages() throws IOException {
+
+        HashMap<String, ArrayList<String>> accountMessages = getAccountMessagesHashMap();
+
+        requestWriter.writeObject(accountMessages);
+
+        requestWriter.close();
+        requestReader.close();
+
+    }
+
+    private void serverUpdateMessages() throws IOException, ClassNotFoundException {
+
+        HashMap<String, ArrayList<String>> accountMessagesHashMap = getAccountMessagesHashMap();
+
+        Account sender = (Account) requestReader.readObject();
+
+        Account receiver = (Account) requestReader.readObject();
+
+        String sentMessage = (String) requestReader.readObject();
+
+        if (accountMessagesHashMap.containsKey(sender.getEmail()) && accountMessagesHashMap.containsKey(receiver.getEmail())) {
+
+            String senderFormattedMessage = String.format("s,%s,%s,%s", receiver.getRole().toUpperCase(), receiver.getUsername(), sentMessage);
+
+            String recieverFormattedMessage = String.format("r,%s,%s,%s", sender.getRole().toUpperCase(), sender.getUsername(), sentMessage);
+
+            accountMessagesHashMap.get(sender.getEmail()).add(0,senderFormattedMessage);
+            accountMessagesHashMap.get(receiver.getEmail()).add(0, recieverFormattedMessage);
+
+            updateAccountMessagesHashMap(accountMessagesHashMap);
+
+            requestWriter.writeObject(Boolean.TRUE);
+
+        } else {
+
+            requestWriter.writeObject(Boolean.FALSE);
+
+        }
+
+        requestWriter.close();
+        requestReader.close();
 
     }
 
@@ -252,6 +309,9 @@ public class ConnectedClient {
        if (removedAccount != null) {
 
            String accountRole = removedAccount.getRole().toLowerCase();
+           HashMap<String, ArrayList<String>> accountMessages = getAccountMessagesHashMap();
+           accountMessages.remove(accountEmail);
+           updateAccountMessagesHashMap(accountMessages);
 
            switch (accountRole) {
 
@@ -347,6 +407,8 @@ public class ConnectedClient {
     private void serverCreateAccount() throws IOException, ClassNotFoundException {
 
        HashMap<String, Account> accountHashMap = getAccountHashMap();
+       HashMap<String, ArrayList<String>> messagesMap = getAccountMessagesHashMap();
+
 
        Account accountToCreate = (Account) requestReader.readObject();
 
@@ -367,9 +429,11 @@ public class ConnectedClient {
 
        } else {
 
-
            accountHashMap.put(accountEmail, accountToCreate);
            updateAccountHashMap(accountHashMap);
+
+           messagesMap.put(accountEmail, new ArrayList<String>());
+           updateAccountMessagesHashMap(messagesMap);
 
            switch (accountRole) {
 
@@ -514,6 +578,39 @@ public class ConnectedClient {
 
     }
 
+    private static HashMap<String, ArrayList<String>> getAccountMessagesHashMap() {
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Server.MESSAGES_HASH_MAP))) {
+
+            HashMap<String, ArrayList<String>> accountMessagesHashMap = (HashMap<String, ArrayList<String>>) ois.readObject();
+
+            System.out.println("return found map");
+            return accountMessagesHashMap;
+
+        } catch (EOFException e) {
+
+            System.out.println("return new map");
+            return new HashMap<>();
+
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private static void updateAccountMessagesHashMap(HashMap<String, ArrayList<String>> messagesHashMap) {
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Server.MESSAGES_HASH_MAP))) {
+
+            oos.writeObject(messagesHashMap);
+            System.out.println("updated");
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     public void close() {
 
         try {
@@ -526,7 +623,11 @@ public class ConnectedClient {
 
     public static void main(String[] args) {
 
-        getAccountHashMap();
+        HashMap<String, ArrayList<String>> messagesMap = getAccountMessagesHashMap();
+        //messagesMap.remove("nageekr@gmail.com");
+        System.out.println(messagesMap);
+        updateAccountMessagesHashMap(messagesMap);
+        System.out.println(getAccountHashMap());
 
     }
 

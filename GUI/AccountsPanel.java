@@ -310,6 +310,10 @@ public class AccountsPanel {
                     case 0 -> { // Account created successfully
 
                         showMessage("Account created successfully. Redirecting to Sign In.", "Success","");
+                        nameField.setText("");
+                        usernameField.setText("");
+                        emailField.setText("");
+                        passwordField.setText("");
                         cardLayout.show(cardPanel, "SignIn");
                         frame.setSize(400, 500);
 
