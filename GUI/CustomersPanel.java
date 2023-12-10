@@ -1325,7 +1325,7 @@ public class CustomersPanel {
             }
         });
 
-        //different
+        //differents
 
         productPanel.add(createFieldWithLabel("Quantity", quantitySpinner));
 
