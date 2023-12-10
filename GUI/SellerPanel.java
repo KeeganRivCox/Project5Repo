@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SellerPanel {
 
@@ -58,6 +59,7 @@ public class SellerPanel {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new SellerPanel("cox442@purdue.edu"));
+
 
     }
 
@@ -132,9 +134,10 @@ public class SellerPanel {
 
         JButton listStoreButton = createButton("List\nStores");
         listStoreButton.addActionListener(e -> {
-            cardPanel.removeAll();
+//            cardPanel.removeAll();
             cardPanel.add(createListStorePanel(), "List Store");
             cardLayout.show(cardPanel, "List Store");
+            frame.setSize(400, 500);
         });
 
         JButton createProductButton = createButton("Create\nProduct");
@@ -286,6 +289,7 @@ public class SellerPanel {
 
     }
 
+
     private JPanel createListStorePanel() {
         frame.setSize(400, 400);
         frame.setLocationRelativeTo(null);
@@ -310,7 +314,8 @@ public class SellerPanel {
         topPanel.add(Box.createHorizontalStrut(40));
         topPanel.add(titleLabel);
 
-        Dimension scrollPaneDimension = new Dimension(300,300);
+        // Increase the size of the JScrollPane
+        Dimension scrollPaneDimension = new Dimension(320, 320); // Increase the height to 400 or your desired value
 
         ArrayList<Store> sellerStores = new Request().getSeller(userEmail).getSellerStores();
 
@@ -353,6 +358,11 @@ public class SellerPanel {
 
         return listStorePanel;
     }
+
+
+
+
+
 
     //method that creates the panel for seller listings page
     private JPanel createEditStorePanel() {
