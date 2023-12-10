@@ -3,6 +3,7 @@ import java.io.*;
 import java.lang.reflect.Array;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class Request {
@@ -24,6 +25,8 @@ public class Request {
     private static final int GET_CUSTOMER = 8;
     private static final int GET_ALL_CUSTOMERS = 9;
     private static final int UPDATE_CUSTOMER = 10;
+    private static final int UPDATE_MESSAGES = 11;
+    private static final int GET_MESSAGES = 12;
 
     private Socket serverConnection;
     private ObjectOutputStream requestWriter;
@@ -294,64 +297,64 @@ public class Request {
 
     }
 
+    public boolean updateMessages(Account sender, Account receiver, String sentMessage) {
+
+        try {
+
+            requestWriter.writeObject(String.valueOf(UPDATE_MESSAGES));
+
+            requestWriter.writeObject(sender);
+
+            requestWriter.writeObject(receiver);
+
+            requestWriter.writeObject(sentMessage);
+
+            Boolean response = (Boolean) requestReader.readObject();
+
+            requestReader.close();
+            requestWriter.close();
+
+            return response;
+
+        } catch (IOException | ClassNotFoundException e) {
+            throw  new RuntimeException(e);
+        }
+
+    }
+
+
+    public ArrayList<String> getMessages(Account account) {
+
+        try {
+            requestWriter.writeObject(String.valueOf(GET_MESSAGES));
+
+            HashMap<String, ArrayList<String>> allMessages = (HashMap<String, ArrayList<String>>) requestReader.readObject();
+
+            ArrayList<String> accountMessages = allMessages.get(account.getEmail());
+
+            return accountMessages;
+
+        } catch (IOException | ClassNotFoundException e) {
+            return new ArrayList<>();
+        }
+
+    }
+
+
     // Test account line: "Keegan", "nageekr@gmail.com", "AstroBoy@1", "Kyclon", "seller"
 
     public static void main(String[] args) {
 
-        ArrayList<Account> allAccounts = new Request().getAllAccounts();
+        System.out.println(new Request().deleteAccount("nageekr@gmail.com"));
+//        System.out.println(new Request().deleteAccount("cox442@purdue.edu"));
+//        System.out.println(new Request().deleteAccount("cox44@purdue.edu"));
+//        System.out.println(new Request().createAccount(new Account("Keegan", "nageekr@gmail.com", "AstroBoy@1", "Kyclon", "seller")));
 
-       for (Account account : allAccounts) {
+        ArrayList<String> messages = new Request().getMessages(new Request().getAccount("cox442@purdue.edu"));
 
-           new Request().deleteAccount(account.getEmail());
-
+        if (messages.isEmpty()) {
+            System.out.println("empty");
         }
-
-    new Request().createAccount(new Account("Keegan", "nageekr@gmail.com", "AstroBoy@1", "Kyclon", "seller"));
-
-        //new Request().createAccount(new Account("Keegan", "nageekr@gmail.com", "AstroBoy@1", "Kyclon", "seller"));
-        ArrayList<Purchaser> purchasers = new ArrayList<>();
-        ArrayList<Product> products = new ArrayList<>();
-        Store storeOne = new Store("Store One", new Request().getSeller("nageekr@gmail.com"), purchasers, products);
-        //Store storeTwo = new Store("Store Two", new Request().getSeller("nageekr@gmail.com"), purchasers, products);
-
-        Product productOne = new Product("Product One", 3.99, 10, "description", storeOne);
-        Product productTwo = new Product("Product Two", 4.99, 8, "description", storeOne);
-        Product productThree = new Product("Product Three", 5.99, 9, "description", storeOne);
-        Product productFour = new Product("Product Four", 2.99, 7, "description", storeOne);
-        Product productFive = new Product("Product Five", 1.99, 6, "description", storeOne);
-        Product productSix = new Product("Product Six", 0.99, 6, "description", storeOne);
-        Product productSeven = new Product("Product Seven", 6.99, 3, "description", storeOne);
-        Product productEight = new Product("Product Eight", 7.99, 2, "description", storeOne);
-        Product productNine = new Product("Product Nine", 8.99, 1, "description", storeOne);
-        Product productTen = new Product("Product Ten", 9.99, 4, "description", storeOne);
-
-        //Product productEleven = new Product("Product Eleven", 10.99, 4, "description", storeTwo);
-
-
-
-        storeOne.getProducts().add(productOne);
-        storeOne.getProducts().add(productTwo);
-        storeOne.getProducts().add(productThree);
-        storeOne.getProducts().add(productFour);
-        storeOne.getProducts().add(productFive);
-        storeOne.getProducts().add(productSix);
-        storeOne.getProducts().add(productSeven);
-        storeOne.getProducts().add(productEight);
-        storeOne.getProducts().add(productNine);
-        storeOne.getProducts().add(productTen);
-
-        //storeTwo.getProducts().add(productEleven);
-
-        Seller seller = new Request().getSeller("nageekr@gmail.com");
-
-        seller.getSellerStores().add(storeOne);
-
-        new Request().updateSeller(seller);
-
-        //Seller seller = new Request().getSeller("nageekr@gmail.com");
-        ArrayList<Seller> allSellers = new Request().getAllSellers();
-        System.out.println(allSellers.get(0).getSellerStores().get(0).getProducts().get(0).getName());
-
 
     }
 
