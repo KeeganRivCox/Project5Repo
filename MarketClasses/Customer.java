@@ -13,6 +13,12 @@ public class Customer extends Account implements Serializable {
         this.shoppingCart = shoppingCart;
     }
 
+    public Account getAccount() {
+
+        return new Account(this.getName(), this.getEmail(), this.getPassword(), this.getUsername(), this.getRole());
+
+    }
+
     public ArrayList<PurchasedProduct> getPreviouslyPurchasedProducts() {
         return previouslyPurchasedProducts;
     }
