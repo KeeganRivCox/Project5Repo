@@ -681,13 +681,13 @@ public class SellerPanel {
 
         JPanel titlePanel = new JPanel();
         titlePanel.setMaximumSize(new Dimension(400, 100));
+        titlePanel.setPreferredSize(new Dimension(400, 100));
         GridBagLayout layout = new GridBagLayout();
         titlePanel.setLayout(layout);
         GridBagConstraints gbc = new GridBagConstraints();
 
         Insets insets = new Insets(20,10,10,10);
         gbc.insets = insets;
-
 
         gbc.gridx = 0;
         //gbc.weightx = 10;
