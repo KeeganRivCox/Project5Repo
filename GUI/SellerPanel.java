@@ -64,7 +64,6 @@ public class SellerPanel {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new SellerPanel("cox442@purdue.edu"));
 
-
     }
 
     public SellerPanel(String userEmail) {
