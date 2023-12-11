@@ -229,7 +229,7 @@ public class Product implements Serializable {
 
     // Keegan - A method to return if two products are equal
     public boolean equals(Product product) {
-        return this.getStore().equals(product.getStore()) && this.getDescription().equals(product.getDescription()) && this.getPrice() == product.getPrice() && this.getQuantity() == product.getQuantity();
+        return this.getName().equals(product.getName()) && this.getStore().equals(product.getStore()) && this.getDescription().equals(product.getDescription());
     }
 }
 

@@ -17,6 +17,12 @@ public class Seller extends Account implements Serializable {
 
     }
 
+    public boolean equals(Seller seller) {
+
+        return seller.getEmail().equals(this.getEmail());
+
+    }
+
     public ArrayList<Store> getSellerStores() {
         return sellerStores;
     }
