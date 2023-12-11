@@ -168,7 +168,7 @@ public class CustomersPanel {
         });
 
 
-        //JTextField searchField = new JTextField();
+        //JTextField searchField = new JTextField()
         //searchField.setPreferredSize(new Dimension(300, 30));
 
         JPanel searchPanel = new JPanel(new FlowLayout());
