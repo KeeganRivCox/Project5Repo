@@ -601,7 +601,7 @@ public class SellerPanel {
         titlePanelProduct.add(titleLabelProduct);  // Center-align the title
 
         JPanel storeNamePanelProduct = new JPanel();
-        ArrayList<Product> storeProducts = selectedStore.getProducts();
+        ArrayList<Product> storeProducts = new Request().getSeller(userEmail).getStore(selectedStore).getProducts();
         storeNamePanelProduct.setLayout(new BoxLayout(storeNamePanelProduct, BoxLayout.Y_AXIS));
 
         JLabel selectedStoreLabelProduct = new JLabel("Selected Product: ");
@@ -650,7 +650,6 @@ public class SellerPanel {
 
                 } else {
                     // Handle confirmation action
-                    cardPanel.removeAll();
                     cardPanel.add(editProductDetailsPanel(), "Edit Product Detail");
                     cardLayout.show(cardPanel, "Edit Product Detail");
                     frame.setSize(400, 400);
@@ -1251,7 +1250,7 @@ public class SellerPanel {
                 // testing purposes
 
                 Product newProudct = new Product(name, price, quantity, description, selectedStore);
-                selectedStore.getProducts().add(newProudct);
+                selectedStore.addProduct(newProudct);
                 new Request().updateSeller(selectedStore.getSellerOwner());
 
                 // Reset the create product panel
@@ -1387,12 +1386,14 @@ public class SellerPanel {
                 priceSpinner.setValue(0.0);
                 quantitySpinner.setValue(1);
 
-                selectedProduct.setName(name);
-                selectedProduct.setDescription(description);
-                selectedProduct.setPrice(price);
-                selectedProduct.setQuantity(quantity);
+                Product productToUpdate = new Request().getSeller(userEmail).getStore(selectedStore).getProduct(selectedProduct);
 
-                new Request().updateSeller(selectedProduct.getStore().getSellerOwner());
+                productToUpdate.setName(name);
+                productToUpdate.setDescription(description);
+                productToUpdate.setPrice(price);
+                productToUpdate.setQuantity(quantity);
+
+                new Request().updateSeller(productToUpdate.getStore().getSellerOwner());
 
             } else {
                 // User clicked 'No', do nothing or handle accordingly
@@ -1417,7 +1418,7 @@ public class SellerPanel {
                         "Store: " + selectedStore.getName();
                 JOptionPane.showMessageDialog(createProductPanel, deletionMessage, "Product Deletion", JOptionPane.INFORMATION_MESSAGE);
 
-                selectedStore.getProducts().remove(selectedProduct);
+                selectedStore.removeProduct(selectedProduct);
 
                 new Request().updateSeller(selectedStore.getSellerOwner());
 
@@ -1456,6 +1457,7 @@ public class SellerPanel {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                cardPanel.removeAll();
                 cardPanel.add(createEditProductPanel(), "Edit Product");
                 cardLayout.show(cardPanel,"Edit Product");
             }
