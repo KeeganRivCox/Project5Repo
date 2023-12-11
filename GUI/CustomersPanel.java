@@ -127,7 +127,7 @@ public class CustomersPanel {
         mainPagePanel.setLayout(new BoxLayout(mainPagePanel, BoxLayout.Y_AXIS));
         //mainPagePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        ImageIcon imageIcon = new ImageIcon("images/boilerBayLogo.png");
+        ImageIcon imageIcon = new ImageIcon("images/boilerBayLogo.jpeg");
         JLabel imageLabel = new JLabel();
         imageLabel.setMinimumSize(new Dimension(100, 100));
         imageLabel.setMaximumSize(new Dimension(100, 100));
@@ -241,7 +241,7 @@ public class CustomersPanel {
         buttonPanel.add(seeAllSellersButton);
 
 
-        ImageIcon imageIconBottom = new ImageIcon("images/boilerTrain.png");
+        ImageIcon imageIconBottom = new ImageIcon("images/boilerTrain.jpeg");
         JLabel imageBottomLabel = new JLabel();
         imageBottomLabel.setMinimumSize(new Dimension(100, 100));
         imageBottomLabel.setMaximumSize(new Dimension(100, 100));
