@@ -657,7 +657,6 @@ public class SellerPanel {
         return individualStorePanel;
     }
 
-    // method that creates panel for the customer shopping cart page
 
 
 
