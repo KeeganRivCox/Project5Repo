@@ -1,10 +1,12 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +21,10 @@ public class CustomersPanel {
     private JFrame frame;
     private JPanel cardPanel;
     private JPanel productPanel;
+
+    Color customColor = new Color(206, 184, 136);
+    Color greyButtonColor = new Color(196, 191, 192);
+    Border customBorder = BorderFactory.createLineBorder(Color.BLACK, 3);
 
     private String custShoppingCartName;
     private String pastPurchasesProductName;
@@ -564,13 +570,13 @@ public class CustomersPanel {
         storeListingsPanel.add(backButton);
 
 
-        topPanel.add(Box.createHorizontalStrut(30));
-        topPanel.add(backButton);
-        topPanel.add(Box.createHorizontalStrut(50));
-        topPanel.add(selectStore);
-        topPanel.add(Box.createHorizontalStrut(50));
-        topPanel.add(accountPageButton);
-        topPanel.add(Box.createHorizontalStrut(20));
+//        topPanel.add(Box.createHorizontalStrut(30));
+//        topPanel.add(backButton);
+//        topPanel.add(Box.createHorizontalStrut(50));
+//        topPanel.add(selectStore);
+//        topPanel.add(Box.createHorizontalStrut(50));
+//        topPanel.add(accountPageButton);
+//        topPanel.add(Box.createHorizontalStrut(20));
 
         ArrayList<Store> sellerStores = getAllStores();
 
@@ -714,7 +720,7 @@ public class CustomersPanel {
 
 
         storeListingsPanel.add(Box.createVerticalStrut(20));
-        storeListingsPanel.add(topPanel);
+        //storeListingsPanel.add(topPanel);
         storeListingsPanel.add(Box.createVerticalStrut(10));
         storeListingsPanel.add(dropDownPanel);
         storeListingsPanel.add(Box.createVerticalStrut(10));
@@ -1176,7 +1182,7 @@ public class CustomersPanel {
         pastPurchasesPanel.add(columnLabelsPanel);
         pastPurchasesPanel.add(pspPastPurchases);
         pastPurchasesPanel.add(Box.createVerticalStrut(20));
-        pastPurchasesPanel.add(exportButton);
+        //pastPurchasesPanel.add(exportButton);
 
         pastPurchasesPanel.add(Box.createVerticalStrut(20));
 
@@ -2195,7 +2201,7 @@ public class CustomersPanel {
 
                 label.addMouseListener(new MouseAdapter() {
                     public void mouseClicked(MouseEvent e) {
-                        JPanel panel = createProductPanel(product);
+                        JPanel panel = createProductPanel();
                         cardPanel.add(panel, "Product Page");
                         cardLayout.show(cardPanel, "Product Page");
                     }
