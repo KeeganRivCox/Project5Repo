@@ -11,6 +11,18 @@ public class Seller extends Account implements Serializable {
         this.sellerStores = sellerStores;
     }
 
+    public Account getAccount() {
+
+        return new Account(this.getName(), this.getEmail(), this.getPassword(), this.getUsername(), this.getRole());
+
+    }
+
+    public boolean equals(Seller seller) {
+
+        return seller.getEmail().equals(this.getEmail());
+
+    }
+
     public ArrayList<Store> getSellerStores() {
         return sellerStores;
     }
