@@ -10,6 +10,7 @@ public class Server{
     public static final String ACCOUNT_HASH_MAP = new File("accountHashMapData").getAbsolutePath();
     public static final String SELLER_HASH_MAP = new File("sellerHashMapData").getAbsolutePath();
     public static final String CUSTOMER_HASH_MAP = new File("customerHashMapData").getAbsolutePath();
+    public static final String MESSAGES_HASH_MAP = new File("accountMessagesHashMapData").getAbsolutePath();
 
     private ServerSocket server;
 
