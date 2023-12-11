@@ -175,6 +175,8 @@ public class AccountsPanel {
                     showMessage("Authentication failed. Please check your email and password.", "Error","");
                     // Clear the password field on authentication failure
                     passwordField.setText("");
+                    frame.setSize(450,550);
+
 
                 } else {
 
@@ -213,6 +215,7 @@ public class AccountsPanel {
                         showMessage("Authentication failed. Please check your email and password.", "Error","");
                         // Clear the password field on authentication failure
                         passwordField.setText("");
+                        frame.setSize(450,550);
 
                     }
 
