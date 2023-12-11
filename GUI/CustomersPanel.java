@@ -415,9 +415,26 @@ public class CustomersPanel {
             public void actionPerformed(ActionEvent e) {
                 String selection = sortByDropdown.getSelectedItem().toString();
 
+                ArrayList<Product> sortedProducts = new ArrayList<>();
+
                 switch (selection) {
 
                     case "Price High To Low" -> {
+
+                        sortedProducts = Product.sortByPrice(products, "high");
+
+                    }
+                    case "Price Low to High" -> {
+
+
+
+                    }
+                    case "Quantity Least to Greatest" -> {
+
+
+
+                    }
+                    case "Quantity Greatest to Least" -> {
 
 
 
@@ -427,7 +444,28 @@ public class CustomersPanel {
 
                 productPanel.removeAll();
 
+                for (Product product : sortedProducts) {
 
+                    JLabel productLine = new JLabel(String.format("Product: %s | $%.2f | %d", product.getName(), product.getPrice(), product.getQuantity()));
+                    productLine.setAlignmentX(Component.CENTER_ALIGNMENT);
+                    productLine.setFont(new Font("Arial", Font.PLAIN, 15));
+
+                    productLine.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+
+                            selectedProduct = product;
+                            cardPanel.add(createProductPanel(), "Product Page");
+                            cardLayout.show(cardPanel, "Product Page");
+
+                        }
+                    });
+
+                    productPanel.add(productLine);
+                    productPanel.add(Box.createVerticalStrut(1));
+                    productPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+
+                }
 
                 productPanel.revalidate();
                 productPanel.repaint();
