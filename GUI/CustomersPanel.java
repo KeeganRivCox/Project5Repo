@@ -12,6 +12,7 @@ import java.util.Collections;
 
 public class CustomersPanel {
     String userEmail;
+    Account customerAccount;
 
     private JFrame frame;
     private JPanel cardPanel;
@@ -62,13 +63,14 @@ public class CustomersPanel {
 
     public static void main(String[] args) {
 
-        SwingUtilities.invokeLater(() -> new CustomersPanel("noEmail"));
+        SwingUtilities.invokeLater(() -> new CustomersPanel("cox44@purdue.edu"));
 
     }
 
 
     public CustomersPanel(String userEmail){
         this.userEmail = userEmail;
+        this.customerAccount = new Request().getAccount(userEmail);
 
         frame = new JFrame("Customers");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -76,24 +78,24 @@ public class CustomersPanel {
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
         cardPanel.add(createMainPanel(), "Main Page");
-        cardPanel.add(createAccountPanel(), "Account Options");
-        cardPanel.add(createSellerListingsPanel(), "Seller Listings");
-        cardPanel.add(createProductListingsPanel(), "Product Listings");
-        cardPanel.add(createCustomerPurchaseHistoryPanel(), "Customer Purchase History");
-        cardPanel.add(createSellerListingSortPanel(), "Seller Listing Sort");
-        cardPanel.add(createLogOutPanel(), "Log Out");
-        cardPanel.add(createContactSellerPanel(), "Contact Sellers");
-        cardPanel.add(createSellerListingsPanel(), "Seller Listings");
-        cardPanel.add(createStoreListingsPagePanel(), "Store Listings");
-        cardPanel.add(createSearchOptionsPanel(), "Search Options");
-        cardPanel.add(searchProductNamePanel(), "Search Product Input");
-        cardPanel.add(searchStoreNamePanel(), "Search Store Input");
-        cardPanel.add(searchProductDescriptionPanel(), "Search Product Description Input");
+//        cardPanel.add(createAccountPanel(), "Account Options");
+//        cardPanel.add(createSellerListingsPanel(), "Seller Listings");
+//        cardPanel.add(createProductListingsPanel(), "Product Listings");
+//        cardPanel.add(createCustomerPurchaseHistoryPanel(), "Customer Purchase History");
+//        cardPanel.add(createSellerListingSortPanel(), "Seller Listing Sort");
+//        cardPanel.add(createLogOutPanel(), "Log Out");
+//        cardPanel.add(createContactSellerPanel(), "Contact Sellers");
+//        cardPanel.add(createSellerListingsPanel(), "Seller Listings");
+//        cardPanel.add(createStoreListingsPagePanel(), "Store Listings");
+//        cardPanel.add(createSearchOptionsPanel(), "Search Options");
+//        cardPanel.add(searchProductNamePanel(), "Search Product Input");
+//        cardPanel.add(searchStoreNamePanel(), "Search Store Input");
+//        cardPanel.add(searchProductDescriptionPanel(), "Search Product Description Input");
 
 
         frame.add(cardPanel);
 
-        cardLayout.show(cardPanel, "Customer");
+        cardLayout.show(cardPanel, "Main Page");
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
@@ -116,6 +118,7 @@ public class CustomersPanel {
         switchToAccountPanelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
+                cardPanel.add(createAccountPanel(), "Account Options");
                 cardLayout.show(cardPanel, "Account Options");
 
             }
@@ -124,7 +127,7 @@ public class CustomersPanel {
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
-        topPanel.add(Box.createHorizontalStrut(130));
+        topPanel.add(Box.createHorizontalStrut(100));
         topPanel.add(applicationLabel);
         topPanel.add(Box.createHorizontalStrut(20));
         topPanel.add(switchToAccountPanelButton);
@@ -159,6 +162,7 @@ public class CustomersPanel {
         seeAllProductsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
+                cardPanel.add(createProductListingsPanel(), "Product Listings");
                 cardLayout.show(cardPanel, "Product Listings");
 
             }
@@ -240,30 +244,18 @@ public class CustomersPanel {
         JPanel createAccountPanel = new JPanel();
         createAccountPanel.setLayout(new BoxLayout(createAccountPanel, BoxLayout.Y_AXIS));
 
-        JLabel titleLabel = new JLabel("Customer Name's Account");
+        String customerUsername = customerAccount.getUsername();
+        JLabel titleLabel = new JLabel(String.format("%s's Account", customerUsername));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
 
-				/*
-				JButton switchToMainPageButton = new JButton("<");
-				switchToMainPageButton.setFont(new Font("Arial", Font.PLAIN, 18));
-				switchToMainPageButton.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-								cardLayout.first(cardPanel);
-						}
-				});
-				 */
-
-        //JButton logOutButton = new JButton(("X"));
-        //logOutButton.setFont(new Font("Arial", Font.PLAIN, 18));
-        //Dimension logOutButtonDimension = new Dimension(10, 10);
-        //logOutButton.setPreferredSize(logOutButtonDimension);
 
         JPanel topPanel = new JPanel();
         Dimension topPanelDimension = new Dimension(400, 20);
-        //topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.setPreferredSize(topPanelDimension);
         topPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
+        topPanel.add(Box.createHorizontalStrut(20));
         topPanel.add(createBackToMenuButton());
         topPanel.add(Box.createHorizontalStrut(10));
         topPanel.add(titleLabel);
@@ -281,7 +273,6 @@ public class CustomersPanel {
 
                 cardPanel.add(createShoppingCartPanel(), "Shopping Cart");
                 cardLayout.show(cardPanel, "Shopping Cart");
-                frame.setSize(400, 300);
             }
         });
 
@@ -397,17 +388,20 @@ public class CustomersPanel {
     // method that creates the panel for the product listings page
     private JPanel createProductListingsPanel() { //not entirely sure how to implement the refresh feature based on what is selected in the dropdow
         ArrayList<Product> allProducts = getAllProducts();
+
         JPanel productsListingPanel = new JPanel();
         productsListingPanel.setLayout(new BoxLayout(productsListingPanel, BoxLayout.Y_AXIS));
-        JLabel titleLabel = new JLabel("            All Products               "); //not completely centered
+        JLabel titleLabel = new JLabel("All Products"); //not completely centered
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
 //        JButton accountPageButton = new JButton("Account");
 //        accountPageButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JPanel titlePanel = new JPanel();
-        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
+        titlePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         titlePanel.add(createBackToMenuButton());
+        titlePanel.add(Box.createHorizontalStrut(30));
         titlePanel.add(titleLabel);
+        titlePanel.add(Box.createHorizontalStrut(20));
         titlePanel.add(createBackToAccountPageButton());
         JPanel productPanel = new JPanel();
         productPanel.setLayout((new BoxLayout(productPanel, BoxLayout.Y_AXIS)));
@@ -1435,16 +1429,20 @@ public class CustomersPanel {
     }
 
     private JPanel createShoppingCartPanel() {
-        custShoppingCartName = "Robert";
+        frame.setSize(400, 300);
+        frame.setLocationRelativeTo(null);
+        String customerUsername = customerAccount.getUsername();
         JPanel shoppingCartPanel = new JPanel();
-        shoppingCartPanel.setLayout(new BoxLayout(shoppingCartPanel, BoxLayout.Y_AXIS));
+        shoppingCartPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
 
         // Customer Name Label
 
 
         JButton backButton = createBackToMenuButton();
 
-        JLabel customerNameLabel = new JLabel(custShoppingCartName+"'s Shopping Cart");
+        JLabel customerNameLabel = new JLabel(customerUsername +"'s Shopping Cart");
         customerNameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         customerNameLabel.setFont(new Font("Arial", Font.BOLD, 20));
 
@@ -1460,17 +1458,23 @@ public class CustomersPanel {
         itemsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         itemsLabel.setFont(new Font("Arial", Font.PLAIN, 16));
 
-        // Sample Data (Replace with dynamic data)
-        String[] storeData = {"Store One", "Store Two", "Store Three"};
-        String[] productData = {"Product A", "Product B", "Product C"};
-        double[] priceData = {10.0, 20.0, 15.0};
+        // Retrieve customer shopping cart
+
+        Customer customer = new Request().getCustomer(userEmail);
+        ShoppingCart customerShoppingCart = customer.getShoppingCart();
 
         // Create a JPanel to hold the cart items
         JPanel cartItemsPanel = new JPanel();
+        cartItemsPanel.setPreferredSize(new Dimension(350, 100));
+        cartItemsPanel.setMaximumSize(new Dimension(350, 100));
         cartItemsPanel.setLayout(new BoxLayout(cartItemsPanel, BoxLayout.Y_AXIS));
+
+        JPanel helperPanel = new JPanel();
+        helperPanel.setLayout(new BorderLayout());
 
         // Headers
         JPanel headersPanel = new JPanel();
+        headersPanel.setAlignmentY(Component.TOP_ALIGNMENT);
         headersPanel.setLayout(new GridLayout(1, 5, 10, 5)); // 1 row, 5 columns
         headersPanel.add(new JLabel("Store"));
         headersPanel.add(new JLabel("Product"));
@@ -1478,20 +1482,19 @@ public class CustomersPanel {
         headersPanel.add(new JLabel("Quantity"));
         headersPanel.add(new JLabel("Delete"));
 
-        cartItemsPanel.add(headersPanel);
+        helperPanel.add(headersPanel, BorderLayout.NORTH);
 
-        // Set a fixed height for each row
-        int rowHeight = 30;
+        cartItemsPanel.add(helperPanel);
 
-        // Populate the cart with sample data (replace with dynamic data)
-        for (int i = 0; i < storeData.length; i++) {
+        // Populate cart with shopping cart items
+
+        for (Product product : customerShoppingCart.getProductList()) {
+
             JPanel rowPanel = new JPanel();
             rowPanel.setLayout(new GridLayout(1, 5, 10, 5)); // 1 row, 5 columns
-            rowPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, rowHeight));
-            rowPanel.setPreferredSize(new Dimension(0, rowHeight));
-            JLabel storeLabel = new JLabel(storeData[i]);
-            JLabel productLabel = new JLabel(productData[i]);
-            JLabel priceLabel = new JLabel(String.valueOf(priceData[i]));
+            JLabel storeLabel = new JLabel(product.getStore().getName());
+            JLabel productLabel = new JLabel(product.getName());
+            JLabel priceLabel = new JLabel(String.valueOf(product.getPrice()));
 
             SpinnerModel quantityModel = new SpinnerNumberModel(1, 0, Integer.MAX_VALUE, 1);
             JSpinner quantitySpinner = new JSpinner(quantityModel);
@@ -1508,17 +1511,14 @@ public class CustomersPanel {
                         "Confirm Deletion", JOptionPane.YES_NO_OPTION);
 
                 if (deleteConfirmation == JOptionPane.YES_OPTION) {
-                    // User confirmed deletion, remove all components from the rowPanel
-                    rowPanel.removeAll();
+                    // User confirmed deletion, remove all components from the cartItemsPanel
 
-                    // Revalidate and repaint the panel
+                    cartItemsPanel.remove(rowPanel);
+                    customerShoppingCart.getProductList().remove(product);
+                    new Request().updateCustomer(customer);
                     cartItemsPanel.revalidate();
                     cartItemsPanel.repaint();
 
-                    // Resize the frame by reducing its height by 80 pixels
-                    JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(shoppingCartPanel);
-                    Dimension currentSize = frame.getSize();
-                    frame.setSize(new Dimension(currentSize.width, currentSize.height - 80));
                 }
             });
 
@@ -1540,11 +1540,7 @@ public class CustomersPanel {
                         cartItemsPanel.revalidate();
                         cartItemsPanel.repaint();
 
-                        // Resize the frame by reducing its height by 80 pixels
-                        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(shoppingCartPanel);
-                        Dimension currentSize = frame.getSize();
-                        frame.setSize(new Dimension(currentSize.width, currentSize.height - 80));
-                    } else {
+                       } else {
                         // Reset quantity to 1 if the user chooses not to delete
                         quantitySpinner.setValue(1);
                     }
@@ -1558,7 +1554,9 @@ public class CustomersPanel {
             rowPanel.add(deleteButton);
 
             cartItemsPanel.add(rowPanel);
+
         }
+
 
         // Checkout Button
         JButton checkoutButton = new JButton("Checkout");
@@ -1578,13 +1576,15 @@ public class CustomersPanel {
         });
 
         // Add components to the shopping cart panel
-        shoppingCartPanel.add(titlePanel);
-        shoppingCartPanel.add(Box.createVerticalStrut(10));
-        shoppingCartPanel.add(itemsLabel);
-        shoppingCartPanel.add(cartItemsPanel);
-        shoppingCartPanel.add(Box.createVerticalStrut(20));
-        shoppingCartPanel.add(checkoutButton);
-        shoppingCartPanel.add(Box.createVerticalStrut(20));
+        gbc.weighty = 10;
+        gbc.gridy = 0;
+        shoppingCartPanel.add(titlePanel, gbc);
+        gbc.gridy = 1;
+        shoppingCartPanel.add(itemsLabel, gbc);
+        gbc.gridy = 2;
+        shoppingCartPanel.add(cartItemsPanel, gbc);
+        gbc.gridy = 3;
+        shoppingCartPanel.add(checkoutButton, gbc);
 
         return shoppingCartPanel;
     }
@@ -1961,7 +1961,9 @@ public class CustomersPanel {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cardLayout.first(cardPanel);
+                cardPanel.removeAll();
+                cardPanel.add(createMainPanel(), "Main Page");
+                cardLayout.show(cardPanel, "Main Page");
                 frame.setSize(400, 500);
                 frame.setLocationRelativeTo(null);
             }
