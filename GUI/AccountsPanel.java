@@ -533,7 +533,7 @@ public class AccountsPanel {
 
     private JPanel createPasswordPanel() {
         JPanel passwordPanel = new JPanel();
-        passwordPanel.setOpaque(false);
+        passwordPanel.setBackground(customColor);
         passwordPanel.setLayout(new BoxLayout(passwordPanel, BoxLayout.Y_AXIS));
         passwordPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -541,19 +541,27 @@ public class AccountsPanel {
 
         JLabel newPasswordLabel = new JLabel("Enter New Password");
         newPasswordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        newPasswordLabel.setFont(largeFont);
+        newPasswordLabel.setFont(new Font("Arial", Font.BOLD, 20));
 
         JPasswordField newPasswordField = new JPasswordField();
         newPasswordField.setMaximumSize(new Dimension(300, 30)); // Adjusted dimensions
+        newPasswordField.setMinimumSize(new Dimension(300, 30)); // Adjusted dimensions
+
         newPasswordField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JPasswordField confirmNewPasswordField = new JPasswordField();
         confirmNewPasswordField.setMaximumSize(new Dimension(300, 30)); // Adjusted dimensions
+        confirmNewPasswordField.setMinimumSize(new Dimension(300, 30)); // Adjusted dimensions
         confirmNewPasswordField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JButton resetPasswordButton = new JButton("Reset Password");
         resetPasswordButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         resetPasswordButton.setFont(largeFont);
+        resetPasswordButton.setBorder(customBorder);
+        resetPasswordButton.setBackground(greyButtonColor);
+        resetPasswordButton.setMaximumSize(new Dimension(150,30));
+        resetPasswordButton.setMinimumSize(new Dimension(150,30));
+
         resetPasswordButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -567,6 +575,7 @@ public class AccountsPanel {
                 if (!newPassword.equals(confirmNewPassword)) {
 
                     showMessage("Passwords do not match. Please try again.", "Error", "PasswordPanel");
+                    frame.setSize(600,250);
                     return;
 
                 } else {
@@ -574,6 +583,8 @@ public class AccountsPanel {
                     // Check for password complexity requirements
                     if (newPassword.length() < 8 || !newPassword.matches(".*\\d.*") || !newPassword.matches(".*[!@#$%^&*()-_=+\\[\\]{};:'\",.<>/?].*")) {
                         showMessage("Password must be at least 8 characters long, include 1 digit, and 1 special character.", "Error", "PasswordPanel");
+                        frame.setSize(600,250);
+
                         return;
 
                     }
@@ -587,10 +598,12 @@ public class AccountsPanel {
                     showMessage("Password reset successfully. Redirecting to Sign In.", "Success", "SignIn");
                     newPasswordField.setText("");
                     confirmNewPasswordField.setText("");
+                    frame.setSize(450,550);
 
                 } else {
 
                     showMessage("Failed to update the password.", "Error", "PasswordPanel");
+                    frame.setSize(600,250);
 
                 }
 
@@ -602,15 +615,16 @@ public class AccountsPanel {
         passwordPanel.add(newPasswordLabel);
         passwordPanel.add(Box.createVerticalStrut(15));
 
-        passwordPanel.add(createFieldWithLabel("             New Password", newPasswordField));
+        passwordPanel.add(createFieldWithLabel("New Password:               ", newPasswordField));
         passwordPanel.add(Box.createVerticalStrut(10));
-        passwordPanel.add(createFieldWithLabel("Confirm New Password", confirmNewPasswordField));
+        passwordPanel.add(createFieldWithLabel("Confirm New Password: ", confirmNewPasswordField));
         passwordPanel.add(Box.createVerticalStrut(10));
 
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
         buttonPanel.add(resetPasswordButton);
-        buttonPanel.add(Box.createHorizontalStrut(10)); // Add some spacing between buttons
+        buttonPanel.add(Box.createHorizontalStrut(40)); // Add some spacing between buttons
         buttonPanel.add(createBackToMenuButton());
 
         passwordPanel.add(buttonPanel);
@@ -625,7 +639,7 @@ public class AccountsPanel {
         deleteAccountRequestPanel.setLayout(new BoxLayout(deleteAccountRequestPanel, BoxLayout.Y_AXIS));
         deleteAccountRequestPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        Font largeFont = new Font("Arial", Font.PLAIN, 18);
+        Font largeFont = new Font("Arial", Font.PLAIN, 16);
 
         JLabel deleteAccountRequestLabel = new JLabel("Delete Account");
         deleteAccountRequestLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -634,12 +648,13 @@ public class AccountsPanel {
         JTextField deleteAccountEmailField = new JTextField();
         deleteAccountEmailField.setMaximumSize(new Dimension(250, 30));
         deleteAccountEmailField.setMinimumSize(new Dimension(250, 30));
-
+        deleteAccountEmailField.setFont(largeFont);
         deleteAccountEmailField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JTextField deleteAccountUsernameField = new JTextField();
         deleteAccountUsernameField.setMaximumSize(new Dimension(250, 30));
         deleteAccountUsernameField.setMinimumSize(new Dimension(250, 30));
+        deleteAccountUsernameField.setFont(largeFont);
         deleteAccountUsernameField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         deleteAccountEmailField.setText(""); // Clear the email field
@@ -704,25 +719,31 @@ public class AccountsPanel {
 
     private JPanel createDeleteAccountPasswordPanel() {
         JPanel deleteAccountPasswordPanel = new JPanel();
+        deleteAccountPasswordPanel.setBackground(customColor);
         deleteAccountPasswordPanel.setLayout(new BoxLayout(deleteAccountPasswordPanel, BoxLayout.Y_AXIS));
         deleteAccountPasswordPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        Font largeFont = new Font("Arial", Font.PLAIN, 18);
+        Font largeFont = new Font("Arial", Font.PLAIN, 16);
 
         JLabel deleteAccountPasswordLabel = new JLabel("Delete Account");
         deleteAccountPasswordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        deleteAccountPasswordLabel.setFont(largeFont);
+        deleteAccountPasswordLabel.setFont(new Font("Arial", Font.BOLD, 20));
 
         JPasswordField deleteAccountPasswordField = new JPasswordField();
         deleteAccountPasswordField.setMaximumSize(new Dimension(300, 30));
+        deleteAccountPasswordField.setMinimumSize(new Dimension(300, 30));
         deleteAccountPasswordField.setAlignmentX(Component.CENTER_ALIGNMENT);
+        deleteAccountPasswordField.setFont(largeFont);
 
         JPasswordField confirmDeleteAccountPasswordField = new JPasswordField();
         confirmDeleteAccountPasswordField.setMaximumSize(new Dimension(300, 30));
+        confirmDeleteAccountPasswordField.setMinimumSize(new Dimension(300, 30));
         confirmDeleteAccountPasswordField.setAlignmentX(Component.CENTER_ALIGNMENT);
+        confirmDeleteAccountPasswordField.setFont(largeFont);
 
         JButton deleteAccountButton = new JButton("Delete Account");
-        deleteAccountButton.setOpaque(false);
+        deleteAccountButton.setBackground(greyButtonColor);
+        deleteAccountButton.setBorder(customBorder);
         deleteAccountButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         deleteAccountButton.setMaximumSize(new Dimension(150,30));
         deleteAccountButton.setMinimumSize(new Dimension(150,30));
@@ -751,6 +772,7 @@ public class AccountsPanel {
                         showMessage("Account deleted successfully. Redirecting to Sign In.", "Success", "SignIn");
                         deleteAccountPasswordField.setText("");
                         confirmDeleteAccountPasswordField.setText("");
+                        frame.setSize(450,550);
 
                     } else {
 
@@ -770,12 +792,13 @@ public class AccountsPanel {
         deleteAccountPasswordPanel.add(deleteAccountPasswordLabel);
         deleteAccountPasswordPanel.add(Box.createVerticalStrut(15));
 
-        deleteAccountPasswordPanel.add(createFieldWithLabel("             Password", deleteAccountPasswordField));
+        deleteAccountPasswordPanel.add(createFieldWithLabel("Password:               ", deleteAccountPasswordField));
         deleteAccountPasswordPanel.add(Box.createVerticalStrut(10));
-        deleteAccountPasswordPanel.add(createFieldWithLabel("Confirm Password", confirmDeleteAccountPasswordField));
+        deleteAccountPasswordPanel.add(createFieldWithLabel("Confirm Password:", confirmDeleteAccountPasswordField));
         deleteAccountPasswordPanel.add(Box.createVerticalStrut(10));
 
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
         buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -813,23 +836,23 @@ public class AccountsPanel {
                 break;
             case "ResetPassword":
                 cardLayout.show(cardPanel, "ResetPassword");
-                frame.setSize(400, 200);
+                frame.setSize(400, 250);
                 break;
             case "PasswordPanel":
                 cardLayout.show(cardPanel, "PasswordPanel");
-                frame.setSize(600, 200);
+                frame.setSize(600, 250);
                 break;
             case "DeleteAccount":
                 cardLayout.show(cardPanel, "DeleteAccount");
-                frame.setSize(600, 200);
+                frame.setSize(600, 250);
                 break;
             case "DeleteAccountRequest":
                 cardLayout.show(cardPanel, "DeleteAccountRequest");
-                frame.setSize(400, 200);
+                frame.setSize(400, 250);
                 break;
             default:
                 cardLayout.show(cardPanel, "SignIn");
-                frame.setSize(400, 500);
+                frame.setSize(400, 550);
                 break;
         }
     }
