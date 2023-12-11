@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +20,9 @@ public class AccountsPanel {
     private String resetEmail;
     private String resetUsername;
     private JPasswordField passwordField; // Moved the password field to the class level
+    Color customColor = new Color(206, 184, 136);
+    Color greyButtonColor = new Color(196, 191, 192);
+    Border customBorder = BorderFactory.createLineBorder(Color.BLACK,3);
 
     public String accountRole = "";
 
@@ -51,66 +55,95 @@ public class AccountsPanel {
     }
 
     private JPanel createSignInPanel() {
-        frame.setSize(400,500);
+        frame.setSize(450,550);
         frame.setResizable(false);
+
         JPanel signInPanel = new JPanel();
+        signInPanel.setBackground(customColor);
         signInPanel.setLayout(new BoxLayout(signInPanel, BoxLayout.Y_AXIS));
         signInPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        ImageIcon boilerBayIcon = new ImageIcon("images/boilerBayLogo.png");
+        JLabel boilerBayLabel = new JLabel();
+        boilerBayLabel.setMinimumSize(new Dimension(100, 100));
+        boilerBayLabel.setMaximumSize(new Dimension(100, 100));
+        boilerBayLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        boilerBayLabel.setIcon(new ImageIcon(boilerBayIcon.getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT)));
+
+
         // Increased font size
-        Font largeFont = new Font("Arial", Font.PLAIN, 18);
+        Font largeFont = new Font("Arial", Font.BOLD, 20);
 
         JLabel welcomeLabel = new JLabel("Welcome to Boiler Bay!");
         welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         welcomeLabel.setFont(largeFont);
 
+        JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
+        topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+        topPanel.setMinimumSize(new Dimension(350, 50));
+        topPanel.setMaximumSize(new Dimension(350, 50));
+
+        topPanel.add(Box.createHorizontalStrut(30));
+
+        topPanel.add(welcomeLabel);
+        topPanel.add(Box.createHorizontalStrut(20));
+        topPanel.add(boilerBayLabel);
+
         JLabel signInLabel = new JLabel("Sign In:");
         signInLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         signInLabel.setFont(largeFont);
 
-        JLabel emailInputLabel = new JLabel("Email");
-        emailInputLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        emailInputLabel.setFont(largeFont);
+
+//        JLabel emailInputLabel = new JLabel("Email:     ");
+//        emailInputLabel.setOpaque(false);
+//        emailInputLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+//        emailInputLabel.setFont(largeFont);
         emailField = new JTextField();
-        emailField.setMaximumSize(new Dimension(300, 30)); // Adjusted dimensions
+        emailField.setMaximumSize(new Dimension(250, 30)); // Adjusted dimensions
+        emailField.setMinimumSize(new Dimension(250, 30)); // Adjusted dimensions
         emailField.setAlignmentX(Component.CENTER_ALIGNMENT);
+        emailField.setFont(new Font("Arial", Font.PLAIN, 16));
 
         passwordField = new JPasswordField();
-        passwordField.setMaximumSize(new Dimension(300, 30)); // Adjusted dimensions
+        passwordField.setMaximumSize(new Dimension(250, 30)); // Adjusted dimensions
+        passwordField.setMinimumSize(new Dimension(250, 30)); // Adjusted dimensions
         passwordField.setAlignmentX(Component.CENTER_ALIGNMENT);
+        passwordField.setFont(new Font("Arial", Font.PLAIN, 16));
+        passwordField.setColumns(15);
 
         JButton forgotPasswordButton = new JButton("Forgot Password");
         forgotPasswordButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        forgotPasswordButton.setBackground(greyButtonColor);
+        forgotPasswordButton.setBorder(customBorder);
         forgotPasswordButton.setFont(largeFont);
         forgotPasswordButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(cardPanel, "ResetPassword");
-                frame.setSize(400, 200);
+                frame.setSize(400, 250);
             }
         });
 
         JButton deleteAccountButton = new JButton("Delete Account");
+        deleteAccountButton.setBackground(greyButtonColor);
+        deleteAccountButton.setBorder(customBorder);
         deleteAccountButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         deleteAccountButton.setFont(largeFont);
         deleteAccountButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(cardPanel, "DeleteAccountRequest");
-                frame.setSize(400, 200);
+                frame.setSize(400, 250);
             }
         });
 
         JButton createAccountButton = new JButton("Create a New Account");
+        createAccountButton.setBackground(greyButtonColor);
+        createAccountButton.setBorder(customBorder);
         createAccountButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         createAccountButton.setFont(largeFont);
-
-        // Increase button size
-        Dimension buttonSize = new Dimension(170, 35);
-        createAccountButton.setPreferredSize(buttonSize);
-        forgotPasswordButton.setPreferredSize(buttonSize);
-        deleteAccountButton.setPreferredSize(buttonSize);
-
         createAccountButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -121,6 +154,8 @@ public class AccountsPanel {
         });
 
         JButton submitEmailButton = new JButton("Submit");
+        submitEmailButton.setBackground(greyButtonColor);
+        submitEmailButton.setBorder(customBorder);
         submitEmailButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         submitEmailButton.setFont(largeFont);
         submitEmailButton.addActionListener(new ActionListener() {
@@ -140,6 +175,8 @@ public class AccountsPanel {
                     showMessage("Authentication failed. Please check your email and password.", "Error","");
                     // Clear the password field on authentication failure
                     passwordField.setText("");
+                    frame.setSize(450,550);
+
 
                 } else {
 
@@ -178,6 +215,7 @@ public class AccountsPanel {
                         showMessage("Authentication failed. Please check your email and password.", "Error","");
                         // Clear the password field on authentication failure
                         passwordField.setText("");
+                        frame.setSize(450,550);
 
                     }
 
@@ -186,6 +224,17 @@ public class AccountsPanel {
             }
         });
 
+        // Increase button size
+        Dimension buttonSize = new Dimension(300, 30);
+
+        createAccountButton.setMinimumSize(buttonSize);
+        createAccountButton.setMaximumSize(buttonSize);
+        forgotPasswordButton.setMaximumSize(buttonSize);
+        forgotPasswordButton.setMinimumSize(buttonSize);
+        deleteAccountButton.setMaximumSize(buttonSize);
+        deleteAccountButton.setMinimumSize(buttonSize);
+        submitEmailButton.setMinimumSize(buttonSize);
+        submitEmailButton.setMaximumSize(buttonSize);
 
         JLabel needHelpLabel = new JLabel("Need Help?");
         needHelpLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -195,64 +244,90 @@ public class AccountsPanel {
         newToBoilerBayLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         newToBoilerBayLabel.setFont(largeFont);
 
+        JSeparator sep = new JSeparator();
+        sep.setBackground(Color.BLACK);
+        sep.setForeground(Color.BLACK);
+
+        JSeparator sep2 = new JSeparator();
+        sep2.setBackground(Color.BLACK);
+        sep2.setForeground(Color.BLACK);
+
+        JSeparator sep3 = new JSeparator();
+        sep3.setBackground(Color.BLACK);
+        sep3.setForeground(Color.BLACK);
+
         signInPanel.add(Box.createVerticalStrut(20));
-        signInPanel.add(welcomeLabel);
+        signInPanel.add(topPanel);
         signInPanel.add(Box.createVerticalStrut(15));
-        signInPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
-        signInPanel.add(Box.createVerticalStrut(10));
+        signInPanel.add(sep3);
+        signInPanel.add(Box.createVerticalStrut(5));
         signInPanel.add(signInLabel);
         signInPanel.add(Box.createVerticalStrut(15));
 
         // Add text labels before fields
-        signInPanel.add(createFieldWithLabel("       Email", emailField));
+        signInPanel.add(createFieldWithLabel("Email:         ", emailField));
         signInPanel.add(Box.createVerticalStrut(10));
-        signInPanel.add(createFieldWithLabel("Password", passwordField));
-        signInPanel.add(Box.createVerticalStrut(10));
+        signInPanel.add(createFieldWithLabel("Password: ", passwordField));
+        signInPanel.add(Box.createVerticalStrut(15));
         signInPanel.add(submitEmailButton);
-        signInPanel.add(Box.createVerticalStrut(20));
-        signInPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
+        signInPanel.add(Box.createVerticalStrut(15));
+        signInPanel.add(sep);
         signInPanel.add(Box.createVerticalStrut(10));
         signInPanel.add(needHelpLabel);
-        signInPanel.add(Box.createVerticalStrut(10));
+        signInPanel.add(Box.createVerticalStrut(15));
         signInPanel.add(forgotPasswordButton);
+        signInPanel.add(Box.createVerticalStrut(10));
         signInPanel.add(deleteAccountButton);
         signInPanel.add(Box.createVerticalStrut(20));
-        signInPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
-        signInPanel.add(Box.createVerticalStrut(20));
+        signInPanel.add(sep2);
+        signInPanel.add(Box.createVerticalStrut(15));
         signInPanel.add(newToBoilerBayLabel);
-        signInPanel.add(Box.createVerticalStrut(10));
+        signInPanel.add(Box.createVerticalStrut(15));
         signInPanel.add(createAccountButton);
-        signInPanel.add(Box.createVerticalStrut(20));
+        signInPanel.add(Box.createVerticalStrut(40));
 
         return signInPanel;
     }
 
     private JPanel createFieldWithLabel(String labelText, JComponent field) {
         JPanel panel = new JPanel();
+        panel.setOpaque(false);
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+
         JLabel label = new JLabel(labelText);
         label.setFont(new Font("Arial", Font.PLAIN, 18)); // Set font size
         label.setPreferredSize(new Dimension(100, 20)); // Adjusted label size
+
         panel.add(label);
         panel.add(field);
+
         return panel;
     }
 
     private JPanel createNewAccountPanel() {
         JPanel newAccountPanel = new JPanel(new GridLayout(0, 2, 10, 10)); // GridLayout with 2 columns and 10x10 spacing
         newAccountPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
+        newAccountPanel.setBackground(customColor);
 
         Font largeFont = new Font("Arial", Font.PLAIN, 18);
+        Font fieldFont = new Font("Arial", Font.PLAIN,16);
 
         JLabel createAccountLabel = new JLabel("Create a New Account");
         createAccountLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        createAccountLabel.setFont(largeFont);
+        createAccountLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
         JTextField nameField = new JTextField();
+        nameField.setFont(fieldFont);
+
         JTextField usernameField = new JTextField();
+        usernameField.setFont(fieldFont);
+
         JTextField emailField = new JTextField();
+        emailField.setFont(fieldFont);
+
         JPasswordField passwordField = new JPasswordField();
+        passwordField.setFont(fieldFont);
+
 
         Dimension fieldSize = new Dimension(150, 10);
 
@@ -270,6 +345,8 @@ public class AccountsPanel {
         JButton submitButton = new JButton("Submit");
         submitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         submitButton.setFont(largeFont);
+        submitButton.setBackground(greyButtonColor);
+        submitButton.setBorder(customBorder);
         submitButton.addActionListener(new ActionListener() {
             @Override
 
@@ -315,7 +392,7 @@ public class AccountsPanel {
                         emailField.setText("");
                         passwordField.setText("");
                         cardLayout.show(cardPanel, "SignIn");
-                        frame.setSize(400, 500);
+                        frame.setSize(400, 550);
 
                     }
                     case 1 -> { // Email already taken
@@ -344,11 +421,13 @@ public class AccountsPanel {
         JButton backButton = new JButton("Back to Sign In");
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backButton.setFont(largeFont);
+        backButton.setBackground(greyButtonColor);
+        backButton.setBorder(customBorder);
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(cardPanel, "SignIn");
-                frame.setSize(400, 500);
+                frame.setSize(400, 550);
             }
         });
 
@@ -356,11 +435,11 @@ public class AccountsPanel {
         newAccountPanel.add(createAccountLabel);
 
         // Add text labels and fields in a table-like structure
-        addFieldWithLabel(newAccountPanel, "Name", nameField);
-        addFieldWithLabel(newAccountPanel, "Username", usernameField);
-        addFieldWithLabel(newAccountPanel, "Email", emailField);
-        addFieldWithLabel(newAccountPanel, "Password", passwordField);
-        addFieldWithLabel(newAccountPanel, "Role", roleDropdown);
+        addFieldWithLabel(newAccountPanel, "         Name:", nameField);
+        addFieldWithLabel(newAccountPanel, "         Username", usernameField);
+        addFieldWithLabel(newAccountPanel, "         Email", emailField);
+        addFieldWithLabel(newAccountPanel, "         Password", passwordField);
+        addFieldWithLabel(newAccountPanel, "         Role", roleDropdown);
 
         newAccountPanel.add(submitButton);
         newAccountPanel.add(backButton);
@@ -371,26 +450,35 @@ public class AccountsPanel {
     // Implementing server methods: In progress... - Keegan
     private JPanel createResetPasswordPanel() {
         JPanel resetPasswordPanel = new JPanel();
+        resetPasswordPanel.setBackground(customColor);
         resetPasswordPanel.setLayout(new BoxLayout(resetPasswordPanel, BoxLayout.Y_AXIS));
         resetPasswordPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        Font largeFont = new Font("Arial", Font.PLAIN, 18);
+        Font largeFont = new Font("Arial", Font.PLAIN, 16);
 
         JLabel resetPasswordLabel = new JLabel("Reset Password");
         resetPasswordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        resetPasswordLabel.setFont(largeFont);
+        resetPasswordLabel.setFont(new Font("Arial", Font.BOLD,20));
 
         JTextField resetEmailField = new JTextField();
-        resetEmailField.setMaximumSize(new Dimension(300, 30)); // Adjusted dimensions
+        resetEmailField.setMaximumSize(new Dimension(250, 30)); // Adjusted dimensions
+        resetEmailField.setMinimumSize(new Dimension(250, 30)); // Adjusted dimensions
+        resetEmailField.setFont(largeFont);
         resetEmailField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JTextField resetUsernameField = new JTextField();
-        resetUsernameField.setMaximumSize(new Dimension(300, 30)); // Adjusted dimensions
+        resetUsernameField.setMaximumSize(new Dimension(250, 30)); // Adjusted dimensions
+        resetUsernameField.setMinimumSize(new Dimension(250, 30)); // Adjusted dimensions
+        resetUsernameField.setFont(largeFont);
         resetUsernameField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JButton resetSubmitButton = new JButton("Submit");
         resetSubmitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        resetSubmitButton.setFont(largeFont);
+        resetSubmitButton.setBorder(customBorder);
+        resetSubmitButton.setBackground(greyButtonColor);
+        resetSubmitButton.setFont(new Font("Arial", Font.PLAIN,18));
+        resetSubmitButton.setMaximumSize(new Dimension(150,30));
+        resetSubmitButton.setMinimumSize(new Dimension(150,30));
         resetSubmitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -422,16 +510,19 @@ public class AccountsPanel {
         resetPasswordPanel.add(Box.createVerticalStrut(20));
         resetPasswordPanel.add(resetPasswordLabel);
         resetPasswordPanel.add(Box.createVerticalStrut(15));
-
-        resetPasswordPanel.add(createFieldWithLabel("Email", resetEmailField));
-        resetPasswordPanel.add(Box.createVerticalStrut(10));
-        resetPasswordPanel.add(createFieldWithLabel("Username", resetUsernameField));
-        resetPasswordPanel.add(Box.createVerticalStrut(10));
+        resetPasswordPanel.add(createFieldWithLabel("Email:           ", resetEmailField));
+        resetPasswordPanel.add(Box.createVerticalStrut(15));
+        resetPasswordPanel.add(createFieldWithLabel("Username:  ", resetUsernameField));
+        resetPasswordPanel.add(Box.createVerticalStrut(15));
 
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-        buttonPanel.add(resetSubmitButton);
+        buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         buttonPanel.add(Box.createHorizontalStrut(10)); // Add some spacing between buttons
+
+        buttonPanel.add(resetSubmitButton);
+        buttonPanel.add(Box.createHorizontalStrut(20)); // Add some spacing between buttons
         buttonPanel.add(createBackToMenuButton());
 
         resetPasswordPanel.add(buttonPanel);
@@ -442,6 +533,7 @@ public class AccountsPanel {
 
     private JPanel createPasswordPanel() {
         JPanel passwordPanel = new JPanel();
+        passwordPanel.setOpaque(false);
         passwordPanel.setLayout(new BoxLayout(passwordPanel, BoxLayout.Y_AXIS));
         passwordPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -529,6 +621,7 @@ public class AccountsPanel {
 
     private JPanel createDeleteAccountRequestPanel() {
         JPanel deleteAccountRequestPanel = new JPanel();
+        deleteAccountRequestPanel.setBackground(customColor);
         deleteAccountRequestPanel.setLayout(new BoxLayout(deleteAccountRequestPanel, BoxLayout.Y_AXIS));
         deleteAccountRequestPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -536,14 +629,17 @@ public class AccountsPanel {
 
         JLabel deleteAccountRequestLabel = new JLabel("Delete Account");
         deleteAccountRequestLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        deleteAccountRequestLabel.setFont(largeFont);
+        deleteAccountRequestLabel.setFont(new Font("Arial", Font.BOLD,20));
 
         JTextField deleteAccountEmailField = new JTextField();
-        deleteAccountEmailField.setMaximumSize(new Dimension(300, 30));
+        deleteAccountEmailField.setMaximumSize(new Dimension(250, 30));
+        deleteAccountEmailField.setMinimumSize(new Dimension(250, 30));
+
         deleteAccountEmailField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JTextField deleteAccountUsernameField = new JTextField();
-        deleteAccountUsernameField.setMaximumSize(new Dimension(300, 30));
+        deleteAccountUsernameField.setMaximumSize(new Dimension(250, 30));
+        deleteAccountUsernameField.setMinimumSize(new Dimension(250, 30));
         deleteAccountUsernameField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         deleteAccountEmailField.setText(""); // Clear the email field
@@ -551,7 +647,11 @@ public class AccountsPanel {
 
         JButton deleteAccountRequestButton = new JButton("Submit");
         deleteAccountRequestButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        deleteAccountRequestButton.setBackground(greyButtonColor);
+        deleteAccountRequestButton.setBorder(customBorder);
         deleteAccountRequestButton.setFont(largeFont);
+        deleteAccountRequestButton.setMaximumSize(new Dimension(150,30));
+        deleteAccountRequestButton.setMinimumSize(new Dimension(150,30));
         deleteAccountRequestButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -584,12 +684,13 @@ public class AccountsPanel {
         deleteAccountRequestPanel.add(deleteAccountRequestLabel);
         deleteAccountRequestPanel.add(Box.createVerticalStrut(15));
 
-        deleteAccountRequestPanel.add(createFieldWithLabel("        Email", deleteAccountEmailField));
+        deleteAccountRequestPanel.add(createFieldWithLabel("Email:         ", deleteAccountEmailField));
         deleteAccountRequestPanel.add(Box.createVerticalStrut(10));
-        deleteAccountRequestPanel.add(createFieldWithLabel("Username", deleteAccountUsernameField));
+        deleteAccountRequestPanel.add(createFieldWithLabel("Username: ", deleteAccountUsernameField));
         deleteAccountRequestPanel.add(Box.createVerticalStrut(10));
 
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
         buttonPanel.add(deleteAccountRequestButton);
         buttonPanel.add(Box.createHorizontalStrut(10)); // Add some spacing between buttons
@@ -621,7 +722,10 @@ public class AccountsPanel {
         confirmDeleteAccountPasswordField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JButton deleteAccountButton = new JButton("Delete Account");
+        deleteAccountButton.setOpaque(false);
         deleteAccountButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        deleteAccountButton.setMaximumSize(new Dimension(150,30));
+        deleteAccountButton.setMinimumSize(new Dimension(150,30));
         deleteAccountButton.setFont(largeFont);
         deleteAccountButton.addActionListener(new ActionListener() {
             @Override
@@ -673,6 +777,8 @@ public class AccountsPanel {
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+        buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         buttonPanel.add(deleteAccountButton);
         buttonPanel.add(Box.createHorizontalStrut(10)); // Add some spacing between buttons
         buttonPanel.add(createBackToMenuButton());
@@ -685,11 +791,15 @@ public class AccountsPanel {
 
     // Helper method to add text labels before fields
     private void addFieldWithLabel(JPanel panel, String labelText, JComponent field) {
+
         JLabel label = new JLabel(labelText);
         label.setFont(new Font("Arial", Font.PLAIN, 18)); // Set font size
+
         panel.add(label);
         panel.add(field);
     }
+
+
 
     private void showMessage(String message, String title, String redirectToPanel) {
         messageLabel.setText(message);
@@ -729,11 +839,16 @@ public class AccountsPanel {
         Font largeFont = new Font("Arial", Font.PLAIN, 18);
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backButton.setFont(largeFont);
+        backButton.setBorder(customBorder);
+        backButton.setBackground(greyButtonColor);
+        backButton.setMaximumSize(new Dimension(150,30));
+        backButton.setMinimumSize(new Dimension(150,30));
+
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(cardPanel, "SignIn");
-                frame.setSize(400, 500);
+                frame.setSize(400, 550);
             }
         });
         return backButton;

@@ -55,6 +55,10 @@ public class SellerPanel {
     JButton searchByDescriptionButton;
     JButton returnToMainPageButton;
     private JPanel mainSellerPanel;
+    // Purdue Color formatting
+    final Color goldColor = new Color(206, 184, 136);
+    final Color greyButtonColor = new Color(196, 191, 192);
+    final Border customBorder = BorderFactory.createLineBorder(Color.BLACK, 3);
 
 
     public static void main(String[] args) {
@@ -104,14 +108,26 @@ public class SellerPanel {
         frame.setResizable(false);
         JPanel mainPagePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         mainPagePanel.setLayout(new BoxLayout(mainPagePanel, BoxLayout.Y_AXIS));
+        mainPagePanel.setBackground(goldColor);
 
-        JLabel applicationLabel = new JLabel("Boiler Bay");
-        applicationLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        applicationLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        ImageIcon imageIcon = new ImageIcon("images/boilerBayLogo.png");
+        JLabel imageLabel = new JLabel();
+        imageLabel.setMinimumSize(new Dimension(100, 100));
+        imageLabel.setMaximumSize(new Dimension(100, 100));
+        imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        imageLabel.setIcon(new ImageIcon(imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT)));
+
+//        JLabel applicationLabel = new JLabel("Boiler Bay");
+//        applicationLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+//        applicationLabel.setFont(new Font("Arial", Font.BOLD, 24));
 
         JButton logOutButton = new JButton("Log Out");
-        logOutButton.setFont(new Font("Arial", Font.PLAIN, 10));
-        logOutButton.addActionListener(new ActionListener() {
+        logOutButton.setMinimumSize(new Dimension(70, 30));
+        logOutButton.setMaximumSize(new Dimension(70, 30));
+        logOutButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        logOutButton.setBackground(greyButtonColor);
+        logOutButton.setForeground(Color.BLACK);
+        logOutButton.setBorder(customBorder);        logOutButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cardPanel.removeAll();
                 cardPanel.add(createLogOutPanel(), "Log Out");
@@ -121,51 +137,69 @@ public class SellerPanel {
         });
 
         JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
-        topPanel.add(Box.createHorizontalStrut(130));
-        topPanel.add(applicationLabel);
-        topPanel.add(Box.createHorizontalStrut(20));
+        topPanel.add(Box.createHorizontalStrut(140));
+        topPanel.add(imageLabel);
+        topPanel.add(Box.createHorizontalStrut(40));
         topPanel.add(logOutButton);
 
         JLabel toDoLabel = new JLabel("What would you like to do?");
         toDoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        toDoLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        toDoLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
         JButton listStoreButton = createButton("List\nStores");
+        listStoreButton.setBackground(greyButtonColor);
+        listStoreButton.setForeground(Color.BLACK);
+        listStoreButton.setBorder(customBorder);
         listStoreButton.addActionListener(e -> {
 //            cardPanel.removeAll();
             cardPanel.add(createListStorePanel(), "List Store");
             cardLayout.show(cardPanel, "List Store");
-            frame.setSize(400, 500);
+            frame.setSize(400, 400);
         });
 
         JButton createProductButton = createButton("Create\nProduct");
+        createProductButton.setBackground(greyButtonColor);
+        createProductButton.setForeground(Color.BLACK);
+        createProductButton.setBorder(customBorder);
         createProductButton.addActionListener(e -> {
             cardPanel.removeAll();
             cardPanel.add(createProductPanel(), "Create Product");
+            frame.setSize(400, 400);
             cardLayout.show(cardPanel, "Create Product");
         });
 
         JButton createStoreButton = createButton("Create\nStore");
+        createStoreButton.setBackground(greyButtonColor);
+        createStoreButton.setForeground(Color.BLACK);
+        createStoreButton.setBorder(customBorder);
         createStoreButton.addActionListener(e -> {
             cardPanel.removeAll();
             cardPanel.add(createStorePanel(), "Create Store");
             cardLayout.show(cardPanel, "Create Store");
-            frame.setSize(400, 200);
+            frame.setSize(400, 300);
         });
 
         JButton storeStatisticsButton = createButton("Store\nStatistics");
+        storeStatisticsButton.setBackground(greyButtonColor);
+        storeStatisticsButton.setForeground(Color.BLACK);
+        storeStatisticsButton.setBorder(customBorder);
         storeStatisticsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cardPanel.removeAll();
                 cardPanel.add(createViewSpecificStoreStatisticsPanel(), "Store Statistics");
                 cardLayout.show(cardPanel, "Store Statistics");
+                frame.setSize(400, 350);
 
             }
         });
 
         JButton editProductButton = createButton("Edit\nProduct");
+        editProductButton.setBackground(greyButtonColor);
+        editProductButton.setForeground(Color.BLACK);
+        editProductButton.setBorder(customBorder);
         editProductButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cardPanel.add(createEditStorePanel(), "Edit Store");
@@ -174,26 +208,37 @@ public class SellerPanel {
                 frame.setSize(400, 500);
             }
         });
+
         JButton editStoreButton = createButton("Edit\nStore");
+        editStoreButton.setBackground(greyButtonColor);
+        editStoreButton.setForeground(Color.BLACK);
+        editStoreButton.setBorder(customBorder);
         editStoreButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cardPanel.add(createEditStorePanel(), "Edit Store");
                 cardLayout.show(cardPanel, "Edit Store");
+                frame.setSize(400, 500);
+
             }
         });
 
         JButton messageCustomerButton = new JButton("Message Customer");
         messageCustomerButton.setPreferredSize(new Dimension(310, 35));
         messageCustomerButton.setFont(new Font("Arial", Font.PLAIN, 16));
+        messageCustomerButton.setBackground(greyButtonColor);
+        messageCustomerButton.setForeground(Color.BLACK);
+        messageCustomerButton.setBorder(customBorder);
         messageCustomerButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // Add your action for the "Message Customer" button here
                 cardPanel.add(createContactCustomerPanel(), "Contact Customers");
                 cardLayout.show(cardPanel, "Contact Customers");  // Show the "Contact Customers" panel
+                frame.setSize(400, 500);  // Set the frame size accordingly
             }
         });
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.setOpaque(false);
         Dimension buttonPanelDimension = new Dimension(400, 80);
         buttonPanel.setPreferredSize(buttonPanelDimension);
         buttonPanel.add(listStoreButton);
@@ -204,19 +249,19 @@ public class SellerPanel {
         buttonPanel.add(editStoreButton);
         buttonPanel.add(messageCustomerButton);
 
+
         topPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, topPanel.getPreferredSize().height + 40));
 //        searchPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, searchPanel.getPreferredSize().height + 50));
         buttonPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, buttonPanel.getPreferredSize().height + 250));
 
-
-        mainPagePanel.add(Box.createVerticalStrut(20));
+        mainPagePanel.add(Box.createVerticalStrut(10));
         mainPagePanel.add(topPanel);
-        mainPagePanel.add(Box.createVerticalStrut(25));
         mainPagePanel.add(toDoLabel);
-        mainPagePanel.add(Box.createVerticalStrut(25));
+        mainPagePanel.add(Box.createVerticalStrut(20));
         mainPagePanel.add(buttonPanel);
         mainPagePanel.add(Box.createVerticalStrut(20));
         mainSellerPanel = mainPagePanel;
+
         return mainPagePanel;
     }
 
