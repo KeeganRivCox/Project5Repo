@@ -109,7 +109,7 @@ public class SellerPanel {
         mainPagePanel.setLayout(new BoxLayout(mainPagePanel, BoxLayout.Y_AXIS));
         mainPagePanel.setBackground(goldColor);
 
-        ImageIcon imageIcon = new ImageIcon("images/boilerBayLogo.png");
+        ImageIcon imageIcon = new ImageIcon("images/boilerBayLogo.jpeg");
         JLabel imageLabel = new JLabel();
         imageLabel.setMinimumSize(new Dimension(100, 100));
         imageLabel.setMaximumSize(new Dimension(100, 100));
@@ -131,7 +131,6 @@ public class SellerPanel {
                 cardPanel.removeAll();
                 cardPanel.add(createLogOutPanel(), "Log Out");
                 cardLayout.show(cardPanel, "Log Out");
-                frame.setSize(400,200);
             }
         });
 
@@ -156,7 +155,6 @@ public class SellerPanel {
 //            cardPanel.removeAll();
             cardPanel.add(createListStorePanel(), "List Store");
             cardLayout.show(cardPanel, "List Store");
-            frame.setSize(400, 400);
         });
 
         JButton createProductButton = createButton("Create\nProduct");
@@ -166,7 +164,6 @@ public class SellerPanel {
         createProductButton.addActionListener(e -> {
             cardPanel.removeAll();
             cardPanel.add(createProductPanel(), "Create Product");
-            frame.setSize(400, 400);
             cardLayout.show(cardPanel, "Create Product");
         });
 
@@ -178,7 +175,6 @@ public class SellerPanel {
             cardPanel.removeAll();
             cardPanel.add(createStorePanel(), "Create Store");
             cardLayout.show(cardPanel, "Create Store");
-            frame.setSize(400, 300);
         });
 
         JButton storeStatisticsButton = createButton("Store\nStatistics");
@@ -190,7 +186,6 @@ public class SellerPanel {
                 cardPanel.removeAll();
                 cardPanel.add(createViewSpecificStoreStatisticsPanel(), "Store Statistics");
                 cardLayout.show(cardPanel, "Store Statistics");
-                frame.setSize(400, 350);
 
             }
         });
@@ -204,7 +199,6 @@ public class SellerPanel {
                 cardPanel.add(createEditStorePanel(), "Edit Store");
                 cardLayout.show(cardPanel, "Edit Store");
                 editStoreFlag = true;
-                frame.setSize(400, 500);
             }
         });
 
@@ -216,7 +210,6 @@ public class SellerPanel {
             public void actionPerformed(ActionEvent e) {
                 cardPanel.add(createEditStorePanel(), "Edit Store");
                 cardLayout.show(cardPanel, "Edit Store");
-                frame.setSize(400, 500);
 
             }
         });
@@ -232,7 +225,6 @@ public class SellerPanel {
                 // Add your action for the "Message Customer" button here
                 cardPanel.add(createContactCustomerPanel(), "Contact Customers");
                 cardLayout.show(cardPanel, "Contact Customers");  // Show the "Contact Customers" panel
-                frame.setSize(400, 500);  // Set the frame size accordingly
             }
         });
 
