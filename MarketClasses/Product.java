@@ -11,6 +11,7 @@ public class Product implements Serializable {
     private double price;
     double revenueGenerated;
     private final Store store;
+    private int serialNumber;
 
     public Product(String name, double price, int quantity, String description, Store store) {
         this.name = name;
@@ -205,6 +206,14 @@ public class Product implements Serializable {
     // returns the store the product is located at
     public Store getStore() {
         return this.store;
+    }
+
+    public int getSerialNumber() {
+        return this.serialNumber;
+    }
+
+    public void setSerialNumber(int serialNumber) {
+        this.serialNumber = serialNumber;
     }
 
     // modifies the name of a product

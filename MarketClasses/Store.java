@@ -19,6 +19,44 @@ public class Store implements Serializable {
         this.productsSold = 0;
     }
 
+    public void addProduct(Product product) {
+
+        if (this.productList.isEmpty()) {
+            product.setSerialNumber(0);
+            this.productList.add(product);
+        } else {
+            product.setSerialNumber(this.productList.size());
+            this.productList.add(product);
+        }
+
+    }
+
+    public void removeProduct(Product product) {
+
+        int serialNumber = product.getSerialNumber();
+
+        this.productList.remove(serialNumber);
+
+        if (serialNumber == productList.size() - 1) {
+            productList.get(serialNumber).setSerialNumber(serialNumber);
+            return;
+        }
+
+        for (int i = serialNumber; i < productList.size(); i++) {
+
+            productList.get(serialNumber).setSerialNumber(serialNumber);
+            serialNumber++;
+
+        }
+
+    }
+
+    public Product getProduct(Product product) {
+
+        return this.productList.get(product.getSerialNumber());
+
+    }
+
     // returns a list of stores sorted by amount of products sold
     public static ArrayList<Store> sortByProductsSold(ArrayList<Store> allStores, String sortType) {
         Comparator<Store> productsSoldComparator = Comparator.comparingInt(Store::getProductsSold);
