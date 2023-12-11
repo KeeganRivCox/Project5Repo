@@ -25,10 +25,6 @@ public class CustomersPanel {
     private JPanel sellerListings;
     private JTextArea selectedMessage;
 
-    Color customColor = new Color(206, 184, 136);
-    Color greyButtonColor = new Color(196, 191, 192);
-    Border customBorder = BorderFactory.createLineBorder(Color.BLACK, 3);
-
     Boolean fromProductListings = false;
     Boolean fromStoreListings = false;
     Boolean fromSellerListings = false;
@@ -76,6 +72,11 @@ public class CustomersPanel {
 
     private int currentP = 0;
 
+    Color customColor = new Color(206, 184, 136);
+    Color greyButtonColor = new Color(196, 191, 192);
+    Border customBorder = BorderFactory.createLineBorder(Color.BLACK, 3);
+
+
     public static void main(String[] args) {
 
         SwingUtilities.invokeLater(() -> new CustomersPanel("cox44@purdue.edu"));
@@ -122,18 +123,25 @@ public class CustomersPanel {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         JPanel mainPagePanel = new JPanel();
+        mainPagePanel.setBackground(customColor);
         mainPagePanel.setLayout(new BoxLayout(mainPagePanel, BoxLayout.Y_AXIS));
         //mainPagePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel applicationLabel = new JLabel("Boiler Bay");
-        applicationLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        applicationLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        ImageIcon imageIcon = new ImageIcon("images/boilerBayLogo.png");
+        JLabel imageLabel = new JLabel();
+        imageLabel.setMinimumSize(new Dimension(100, 100));
+        imageLabel.setMaximumSize(new Dimension(100, 100));
+        imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        imageLabel.setIcon(new ImageIcon(imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT)));
 
-        JButton switchToAccountPanelButton = new JButton("Account");
-        switchToAccountPanelButton.setFont(new Font("Arial", Font.PLAIN, 10));
+        JButton switchToAccountPanelButton = createBackToAccountPageButton();
+        switchToAccountPanelButton.setBackground(greyButtonColor);
+        switchToAccountPanelButton.setForeground(Color.BLACK);
+        switchToAccountPanelButton.setBorder(customBorder);
+        switchToAccountPanelButton.setFont(new Font("Arial", Font.PLAIN, 16));
         switchToAccountPanelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                frame.setSize(400, 300);
                 cardPanel.add(createAccountPanel(), "Account Options");
                 cardLayout.show(cardPanel, "Account Options");
 
@@ -141,16 +149,22 @@ public class CustomersPanel {
         });
 
         JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
-        topPanel.add(Box.createHorizontalStrut(100));
-        topPanel.add(applicationLabel);
-        topPanel.add(Box.createHorizontalStrut(20));
+
+        topPanel.add(Box.createHorizontalStrut(120));
+        topPanel.add(imageLabel);
+        topPanel.add(Box.createHorizontalStrut(50));
         topPanel.add(switchToAccountPanelButton);
+        topPanel.add(Box.createHorizontalStrut(10));
 
         JButton searchButton = new JButton("Search");
+        searchButton.setBackground(greyButtonColor);
+        searchButton.setForeground(Color.BLACK);
+        searchButton.setBorder(customBorder);
         searchButton.setPreferredSize(new Dimension(300, 50));
-        searchButton.setFont(new Font("Arial", Font.PLAIN, 30));
+        searchButton.setFont(new Font("Times New Roman", Font.PLAIN, 30));
         searchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
@@ -161,10 +175,11 @@ public class CustomersPanel {
         });
 
 
-        //JTextField searchField = new JTextField();
+        //JTextField searchField = new JTextField()
         //searchField.setPreferredSize(new Dimension(300, 30));
 
         JPanel searchPanel = new JPanel(new FlowLayout());
+        searchPanel.setOpaque(false);
         Dimension searchPanelDimension = new Dimension(400, 40);
         searchPanel.setPreferredSize(searchPanelDimension);
         //searchPanel.add(searchField);
@@ -173,11 +188,14 @@ public class CustomersPanel {
         Dimension buttonDimension = new Dimension(100,100);
         JButton seeAllProductsButton = new JButton("Products");
         seeAllProductsButton.setPreferredSize(buttonDimension);
+        seeAllProductsButton.setBackground(greyButtonColor);
+        seeAllProductsButton.setForeground(Color.BLACK);
+        seeAllProductsButton.setBorder(customBorder);
         //seeAllProductsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         seeAllProductsButton.setFont(new Font("Arial", Font.PLAIN, 16));
         seeAllProductsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                frame.setSize(400, 500);
                 cardPanel.add(createProductListingsPanel(getAllProducts()), "Product Listings");
                 cardLayout.show(cardPanel, "Product Listings");
 
@@ -185,6 +203,9 @@ public class CustomersPanel {
         });
 
         JButton seeAllStoresButton = new JButton("Stores");
+        seeAllStoresButton.setBackground(greyButtonColor);
+        seeAllStoresButton.setForeground(Color.BLACK);
+        seeAllStoresButton.setBorder(customBorder);
         seeAllStoresButton.setPreferredSize(buttonDimension);
         //seeAllStoresButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         seeAllStoresButton.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -197,6 +218,9 @@ public class CustomersPanel {
 
         JButton seeAllSellersButton = new JButton("Sellers");
         seeAllSellersButton.setPreferredSize(buttonDimension);
+        seeAllSellersButton.setBackground(greyButtonColor);
+        seeAllSellersButton.setForeground(Color.BLACK);
+        seeAllSellersButton.setBorder(customBorder);
         //seeAllSellersButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         seeAllSellersButton.setFont(new Font("Arial", Font.PLAIN, 16));
         seeAllSellersButton.addActionListener(new ActionListener() {
@@ -204,10 +228,12 @@ public class CustomersPanel {
                 cardPanel.removeAll();
                 cardPanel.add(createSellerListingSortPanel(), "Seller Listing Sort");
                 cardLayout.show(cardPanel, "Seller Listing Sort");
+
             }
         });
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.setOpaque(false);
         Dimension buttonPanelDimension = new Dimension(400, 80);
         buttonPanel.setPreferredSize(buttonPanelDimension);
         buttonPanel.add(seeAllProductsButton);
@@ -215,14 +241,27 @@ public class CustomersPanel {
         buttonPanel.add(seeAllSellersButton);
 
 
+        ImageIcon imageIconBottom = new ImageIcon("images/boilerTrain.png");
+        JLabel imageBottomLabel = new JLabel();
+        imageBottomLabel.setMinimumSize(new Dimension(100, 100));
+        imageBottomLabel.setMaximumSize(new Dimension(100, 100));
+        imageBottomLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        imageBottomLabel.setIcon(new ImageIcon(imageIconBottom.getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT)));
 
-        mainPagePanel.add(Box.createVerticalStrut(20));
+        JPanel bestSellersPanel = new JPanel();
+        bestSellersPanel.setOpaque(false);
+        bestSellersPanel.setLayout(new BoxLayout(bestSellersPanel, BoxLayout.Y_AXIS));
+        bestSellersPanel.add(imageBottomLabel);
+
+
+        mainPagePanel.add(Box.createVerticalStrut(10));
         mainPagePanel.add(topPanel);
-
         mainPagePanel.add(searchPanel);
         mainPagePanel.add(Box.createVerticalStrut(10));
-
         mainPagePanel.add(buttonPanel);
+
+        mainPagePanel.add(Box.createVerticalStrut(20));
+        mainPagePanel.add(bestSellersPanel);
 
         mainPagePanel.add(Box.createVerticalStrut(20));
 
@@ -2482,12 +2521,21 @@ public class CustomersPanel {
         Font largeFont = new Font("Arial", Font.PLAIN, 18);
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backButton.setFont(largeFont);
+        backButton.setBackground(greyButtonColor);
+        backButton.setForeground(Color.BLACK);
+        backButton.setBorder(customBorder);
+        Dimension backDimension = new Dimension(60, 30);
+        backButton.setMinimumSize(backDimension);
+        backButton.setMaximumSize(backDimension);
+
+
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 fromProductListings = false;
                 fromStoreListings = false;
                 cardPanel.add(createMainPanel(), "Main Page");
+                frame.setSize(400, 500);
                 cardLayout.show(cardPanel, "Main Page");
             }
         });
@@ -2497,14 +2545,25 @@ public class CustomersPanel {
 
     private JButton createBackToAccountPageButton() {
         JButton accountButton = new JButton("Account");
-        accountButton.setFont(new Font("Arial", Font.PLAIN, 15));
+        accountButton.setFont(new Font("Arial", Font.PLAIN, 12));
         accountButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        accountButton.setBackground(greyButtonColor);
+        accountButton.setForeground(Color.BLACK);
+        accountButton.setBorder(customBorder);
+
+        Dimension accountDimension = new Dimension(70, 30);
+        accountButton.setMinimumSize(accountDimension);
+        accountButton.setMaximumSize(accountDimension);
+
         accountButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cardPanel.add(createAccountPanel(), "Account Options");
                 cardLayout.show(cardPanel, "Account Options");
+                frame.setSize(400, 375);
+
             }
         });
+
         return accountButton;
     }
     private static ArrayList<Store> getAllStores() {
