@@ -23,7 +23,7 @@ public class Product implements Serializable {
     }
 
     // sorts the list of products by price
-    private static ArrayList<Product> sortByPrice(ArrayList<Product> allProducts, String sortType) {
+    public static ArrayList<Product> sortByPrice(ArrayList<Product> allProducts, String sortType) {
 
         Comparator<Product> priceComparator = (c1, c2) -> (int) (c1.price - c2.price);
 
@@ -57,7 +57,7 @@ public class Product implements Serializable {
     }
 
     // sorts the list of products by quantity
-    private static ArrayList<Product> sortByQuantity(ArrayList<Product> allProducts, String sortType) {
+    public static ArrayList<Product> sortByQuantity(ArrayList<Product> allProducts, String sortType) {
 
         Comparator<Product> quantityComparator = Comparator.comparingInt(c -> c.quantity);
 
@@ -229,7 +229,7 @@ public class Product implements Serializable {
 
     // Keegan - A method to return if two products are equal
     public boolean equals(Product product) {
-        return this.getStore().equals(product.getStore()) && this.getDescription().equals(product.getDescription()) && this.getPrice() == product.getPrice() && this.getQuantity() == product.getQuantity();
+        return this.getName().equals(product.getName()) && this.getStore().equals(product.getStore()) && this.getDescription().equals(product.getDescription());
     }
 }
 
