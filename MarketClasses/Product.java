@@ -163,6 +163,41 @@ public class Product implements Serializable {
 
     }
 
+    public static ArrayList<Product> sortByAmountInShoppingCarts(ArrayList<Product> products, String sortType) {
+
+        Comparator<Product> inShoppingCartsComparator = Comparator.comparingDouble(Product::getAmountInShoppingCarts);
+
+        ArrayList<Product> sortedProducts = products;
+
+        switch (sortType) {
+            case "high" -> {
+
+
+                sortedProducts.sort(Collections.reverseOrder(inShoppingCartsComparator));
+                return sortedProducts;
+
+
+            }
+            case "low" -> {
+
+
+                sortedProducts.sort(inShoppingCartsComparator);
+                return sortedProducts;
+
+
+            }
+            default -> {
+
+
+                return sortedProducts;
+
+
+            }
+
+        }
+
+    }
+
     public void updateProduct(int quantityToPurchase) {
       
         int quantityAvailable = this.quantity;
@@ -171,6 +206,30 @@ public class Product implements Serializable {
         this.revenueGenerated += quantityToPurchase * this.price;
         this.quantitySold += quantityToPurchase;
       
+    }
+
+    public int getAmountInShoppingCarts() {
+
+        ArrayList<Customer> allCustomers = new Request().getAllCustomers();
+
+        int amountInShoppingCarts = 0;
+
+        for (Customer customer : allCustomers) {
+
+            for (Product product : customer.getShoppingCart().getProductList()) {
+
+                if (this.getStore().equals(product.getStore()) && this.serialNumber == product.getSerialNumber()) {
+
+                    amountInShoppingCarts++;
+
+                }
+
+            }
+
+        }
+
+        return amountInShoppingCarts;
+
     }
 
     // returns the product name
