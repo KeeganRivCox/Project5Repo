@@ -128,7 +128,6 @@ public class SellerPanel {
         logOutButton.setForeground(Color.BLACK);
         logOutButton.setBorder(customBorder);        logOutButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                cardPanel.removeAll();
                 cardPanel.add(createLogOutPanel(), "Log Out");
                 cardLayout.show(cardPanel, "Log Out");
             }
@@ -266,6 +265,7 @@ public class SellerPanel {
     }
 
     private JPanel createLogOutPanel() {
+        frame.setSize(400, 200);
         JPanel logOutPanel = new JPanel();
         logOutPanel.setLayout(new BoxLayout(logOutPanel, BoxLayout.Y_AXIS));
 
@@ -1385,6 +1385,11 @@ public class SellerPanel {
                 productToUpdate.setQuantity(quantity);
 
                 new Request().updateSeller(productToUpdate.getStore().getSellerOwner());
+
+                cardPanel.removeAll();
+                cardPanel.add(createEditProductPanel(), "Edit Product");
+                cardLayout.show(cardPanel, "Edit Product");
+                frame.setSize(400,500);
 
             } else {
                 // User clicked 'No', do nothing or handle accordingly
