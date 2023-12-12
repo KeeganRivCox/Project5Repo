@@ -1,7 +1,10 @@
+import javax.sound.sampled.LineUnavailableException;
+import javax.swing.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Random;
 
 public class Store implements Serializable {
     private String name;
@@ -9,6 +12,7 @@ public class Store implements Serializable {
     private ArrayList<Purchaser> purchaserList;
     private ArrayList<Product> productList;
     private int productsSold;
+    private Random serialGenerator = new Random();
 
     // constructor
     public Store(String name, Seller seller, ArrayList<Purchaser> purchaserList, ArrayList<Product> productList) {
@@ -21,13 +25,37 @@ public class Store implements Serializable {
 
     public void addProduct(Product product) {
 
-        if (this.productList.isEmpty()) {
-            product.setSerialNumber(0);
-            this.productList.add(product);
-        } else {
-            product.setSerialNumber(this.productList.size());
-            this.productList.add(product);
+        if (this.getProducts().size() == 1000) {
+
+            JOptionPane.showMessageDialog(null, "You have reached the product limit for a store", "Product Creation", JOptionPane.ERROR_MESSAGE);
+            return;
+
         }
+
+        boolean inUse;
+        int serialNumber;
+
+        do {
+
+            inUse = false;
+
+            serialNumber = serialGenerator.nextInt(1000);
+
+            for (Product product1 : this.getProducts()) {
+
+                if (product1.getSerialNumber() == serialNumber) {
+
+                    inUse = true;
+                    break;
+
+                }
+
+            }
+
+        } while (inUse);
+
+        product.setSerialNumber(serialNumber);
+        this.getProducts().add(product);
 
     }
 
@@ -35,25 +63,33 @@ public class Store implements Serializable {
 
         int serialNumber = product.getSerialNumber();
 
-        this.productList.remove(serialNumber);
+        for (Product product1 : this.getProducts()) {
 
-        if (serialNumber == productList.size() - 1) {
-            productList.get(serialNumber).setSerialNumber(serialNumber);
-            return;
-        }
+            if (product1.getSerialNumber() == serialNumber) {
 
-        for (int i = serialNumber; i < productList.size(); i++) {
+                this.getProducts().remove(product1);
+                return;
 
-            productList.get(serialNumber).setSerialNumber(serialNumber);
-            serialNumber++;
+            }
 
         }
 
     }
 
+    // A method to fetch the most fresh versions of a product
     public Product getProduct(Product product) {
 
-        return this.productList.get(product.getSerialNumber());
+        for (Product productInStore : this.getProducts()) {
+
+            if (productInStore.getSerialNumber() == product.getSerialNumber()) {
+
+                return productInStore;
+
+            }
+
+        }
+
+        return null;
 
     }
 

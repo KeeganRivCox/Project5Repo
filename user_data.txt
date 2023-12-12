@@ -1,8 +1,0 @@
-Robert,zhourobert05@gmail.com,zhourobert05,IAMROBERT1!,Seller
-Bob,bob@gmail.com,bob,IAMBOB1!,Customer
-lily,monroe2004@gmail.com,lily27,Tigerbook13!,Customer
-Keegan,c@gmail.com,1,AstroBoy@1,Customer
-Keegan,nageekr@gmail.com,Kyclon,adeetya123,Seller
-Billy,customer05@gmail.com,Customer05,AstroBoy@1,Customer
-Bob,selller00@gmail.com,Seller00,AstroBoy@1,Seller
-Keegan,buyer@gmail.com,Buyer,AstroBoy@2,Customer
