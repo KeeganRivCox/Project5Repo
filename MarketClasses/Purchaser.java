@@ -18,11 +18,11 @@ public class Purchaser implements Serializable {
         this.revenueGenerated = revenueGenerated;
     }
 
-    private static ArrayList<Purchaser> sortByRevenueGenerated(Store store, String sortType) {
+    public static ArrayList<Purchaser> sortByRevenueGenerated(ArrayList<Purchaser> purchasers, String sortType) {
 
         Comparator<Purchaser> revenueGeneratedComparator = (c1, c2) -> (int) (c1.getRevenueGenerated() - c2.getRevenueGenerated());
 
-        ArrayList<Purchaser> sortedPurchasers = store.getPurchasers();
+        ArrayList<Purchaser> sortedPurchasers = purchasers;
 
         switch (sortType) {
             case "high" -> {
@@ -53,11 +53,11 @@ public class Purchaser implements Serializable {
 
     }
 
-    private static ArrayList<Purchaser> sortByQuantityPurchased(Store store, String sortType) {
+    public static ArrayList<Purchaser> sortByQuantityPurchased(ArrayList<Purchaser> purchasers, String sortType) {
 
         Comparator<Purchaser> quantityPurchasedComparator = Comparator.comparingInt(Purchaser::getQuantityPurchased);
 
-        ArrayList<Purchaser> sortedPurchasers = store.getPurchasers();
+        ArrayList<Purchaser> sortedPurchasers = purchasers;
 
         switch (sortType) {
             case "high" -> {
