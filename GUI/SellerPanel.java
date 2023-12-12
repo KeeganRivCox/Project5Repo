@@ -109,7 +109,7 @@ public class SellerPanel {
         mainPagePanel.setLayout(new BoxLayout(mainPagePanel, BoxLayout.Y_AXIS));
         mainPagePanel.setBackground(goldColor);
 
-        ImageIcon imageIcon = new ImageIcon("images/boilerBayLogo.jpeg");
+        ImageIcon imageIcon = new ImageIcon("images/boilerBayLogo.png");
         JLabel imageLabel = new JLabel();
         imageLabel.setMinimumSize(new Dimension(100, 100));
         imageLabel.setMaximumSize(new Dimension(100, 100));
@@ -1796,7 +1796,6 @@ public class SellerPanel {
         return createViewSpecificStoreStatisticsSaleType;
     }
 
-    // TODO: implement sort by quantity sold and revenue generated (low to high, high to low);
     private JPanel createViewSpecificStoreCustomerSalesPanel() {
         frame.setSize(450, 450);
         frame.setLocationRelativeTo(null);

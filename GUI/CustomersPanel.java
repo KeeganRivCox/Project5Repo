@@ -106,7 +106,7 @@ public class CustomersPanel {
 //        cardPanel.add(createSearchOptionsPanel(), "Search Options");
 //        cardPanel.add(searchProductNamePanel(), "Search Product Input");
 //        cardPanel.add(searchStoreNamePanel(), "Search Store Input");
-//        cardPanel.add(searchProductDescriptionPanel(), "Search Product Description Input");
+//        cardPanel.add(searchProductDescriptionPanel(), "Search Product Description Input");;
 
 
         frame.add(cardPanel);
