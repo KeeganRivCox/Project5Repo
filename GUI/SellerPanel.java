@@ -116,7 +116,7 @@ public class SellerPanel {
         mainPagePanel.setLayout(new BoxLayout(mainPagePanel, BoxLayout.Y_AXIS));
         mainPagePanel.setBackground(goldColor);
 
-        ImageIcon imageIcon = new ImageIcon("images/boilerBayLogo.jpeg");
+        ImageIcon imageIcon = new ImageIcon("images/boilerBayLogo.png");
         JLabel imageLabel = new JLabel();
         imageLabel.setMinimumSize(new Dimension(100, 100));
         imageLabel.setMaximumSize(new Dimension(100, 100));
@@ -126,6 +126,7 @@ public class SellerPanel {
 //        JLabel applicationLabel = new JLabel("Boiler Bay");
 //        applicationLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 //        applicationLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        //
 
         JButton logOutButton = new JButton("Log Out");
         logOutButton.setMinimumSize(new Dimension(70, 30));
@@ -133,7 +134,8 @@ public class SellerPanel {
         logOutButton.setFont(new Font("Arial", Font.PLAIN, 14));
         logOutButton.setBackground(greyButtonColor);
         logOutButton.setForeground(Color.BLACK);
-        logOutButton.setBorder(customBorder);        logOutButton.addActionListener(new ActionListener() {
+        logOutButton.setBorder(customBorder);
+        logOutButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cardPanel.add(createLogOutPanel(), "Log Out");
                 cardLayout.show(cardPanel, "Log Out");
@@ -1969,6 +1971,7 @@ public class SellerPanel {
 
 
     private JPanel createViewSpecificStoreCustomerSalesPanel(ArrayList<Purchaser> customers) {
+
         frame.setSize(450, 450);
 
         JPanel createViewSpecificStoreCustomerSales = new JPanel();
