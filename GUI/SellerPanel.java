@@ -585,11 +585,9 @@ public class SellerPanel {
             selectedStore = newStore;
 
             // Open "Create Product" card
-            cardPanel.removeAll();
             cardPanel.add(createProductPanel(), "Create Product");
             cardLayout.show(cardPanel, "Create Product");
 //            frame.setResizable(true);
-            frame.setSize(400, 300);
         });
 
         // Add components to the form panel
