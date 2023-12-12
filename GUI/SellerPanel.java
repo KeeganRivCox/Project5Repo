@@ -119,6 +119,7 @@ public class SellerPanel {
 //        JLabel applicationLabel = new JLabel("Boiler Bay");
 //        applicationLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 //        applicationLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        //
 
         JButton logOutButton = new JButton("Log Out");
         logOutButton.setMinimumSize(new Dimension(70, 30));
@@ -126,7 +127,8 @@ public class SellerPanel {
         logOutButton.setFont(new Font("Arial", Font.PLAIN, 14));
         logOutButton.setBackground(greyButtonColor);
         logOutButton.setForeground(Color.BLACK);
-        logOutButton.setBorder(customBorder);        logOutButton.addActionListener(new ActionListener() {
+        logOutButton.setBorder(customBorder);
+        logOutButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cardPanel.removeAll();
                 cardPanel.add(createLogOutPanel(), "Log Out");
