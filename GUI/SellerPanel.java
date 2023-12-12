@@ -8,6 +8,10 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +23,9 @@ public class SellerPanel {
 
     private final JFrame frame;
     private final JPanel cardPanel;
+    private JPanel shoppingCartsPanel;
+    private JPanel productSalesPanel;
+    private JPanel customerSalesPanel;
 
     private Store selectedStore;
 
@@ -93,8 +100,7 @@ public class SellerPanel {
         frame.add(cardPanel);
 
         cardLayout.show(cardPanel, "Main Page");
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+frame.setLocation(300,250);        frame.setVisible(true);
 
     }
 
@@ -103,8 +109,7 @@ public class SellerPanel {
     // Keegan - Server implementation: in progress..
     private JPanel createMainPanel() {
         frame.setSize(400, 500);
-        frame.setLocationRelativeTo(null);
-        frame.setResizable(false);
+frame.setLocation(300,250);        frame.setResizable(false);
         JPanel mainPagePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         mainPagePanel.setLayout(new BoxLayout(mainPagePanel, BoxLayout.Y_AXIS));
         mainPagePanel.setBackground(goldColor);
@@ -130,7 +135,6 @@ public class SellerPanel {
         logOutButton.setBorder(customBorder);
         logOutButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                cardPanel.removeAll();
                 cardPanel.add(createLogOutPanel(), "Log Out");
                 cardLayout.show(cardPanel, "Log Out");
             }
@@ -167,6 +171,7 @@ public class SellerPanel {
             cardPanel.removeAll();
             cardPanel.add(createProductPanel(), "Create Product");
             cardLayout.show(cardPanel, "Create Product");
+            frame.setSize(400, 400);
         });
 
         JButton createStoreButton = createButton("Create\nStore");
@@ -176,6 +181,7 @@ public class SellerPanel {
         createStoreButton.addActionListener(e -> {
             cardPanel.removeAll();
             cardPanel.add(createStorePanel(), "Create Store");
+            frame.setSize(400,400);
             cardLayout.show(cardPanel, "Create Store");
         });
 
@@ -268,7 +274,9 @@ public class SellerPanel {
     }
 
     private JPanel createLogOutPanel() {
+        frame.setSize(400, 200);
         JPanel logOutPanel = new JPanel();
+        logOutPanel.setBackground(goldColor);
         logOutPanel.setLayout(new BoxLayout(logOutPanel, BoxLayout.Y_AXIS));
 
         JLabel confirmLabel = new JLabel("     Are you sure you want to log out?     ");
@@ -282,16 +290,19 @@ public class SellerPanel {
         Dimension labelDimension = new Dimension(50, 50);
         JButton noButton = new JButton("No");
         noButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        noButton.setBackground(greyButtonColor);
+        noButton.setBorder(customBorder);
         noButton.setPreferredSize(buttonDimension);
         noButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(cardPanel, "Main Page");
                 frame.setSize(400,500);
-                frame.setLocationRelativeTo(null);
-            }
+        frame.setLocation(300,250);            }
         });
 
         JButton yesButton = new JButton("Yes");
+        yesButton.setBackground(greyButtonColor);
+        yesButton.setBorder(customBorder);
         yesButton.setFont(new Font("Arial", Font.PLAIN, 18));
         yesButton.setPreferredSize(buttonDimension);
         yesButton.addActionListener(new ActionListener() {
@@ -306,6 +317,7 @@ public class SellerPanel {
         fillerLabel.setPreferredSize(labelDimension);
 
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
         buttonPanel.setPreferredSize(new Dimension(200, 100));
         buttonPanel.setLayout(new FlowLayout());
         buttonPanel.add(yesButton);
@@ -330,9 +342,9 @@ public class SellerPanel {
 
     private JPanel createListStorePanel() {
         frame.setSize(400, 400);
-        frame.setLocationRelativeTo(null);
-        JPanel listStorePanel = new JPanel();
+frame.setLocation(300,250);        JPanel listStorePanel = new JPanel();
         listStorePanel.setLayout(new BoxLayout(listStorePanel, BoxLayout.Y_AXIS));
+        listStorePanel.setBackground(goldColor);
 
         // Back button
         JButton backButton2 = createBackToMenuButton();
@@ -344,6 +356,7 @@ public class SellerPanel {
 
         // Panel for back button and title
         JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
         topPanel.setMaximumSize(new Dimension(400, 75));
         topPanel.setMinimumSize(new Dimension(400, 75));
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
@@ -359,11 +372,13 @@ public class SellerPanel {
 
         // Create a JPanel to hold vertically listed JLabels
         JPanel storeNamePanel = new JPanel();
+        storeNamePanel.setOpaque(false);
         storeNamePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         storeNamePanel.setLayout(new BoxLayout(storeNamePanel, BoxLayout.Y_AXIS));
 
         // Create helper panel to help center store labels
         JPanel helperPanel = new JPanel();
+        helperPanel.setOpaque(false);
         helperPanel.setLayout(new BorderLayout());
 
         for (Store store : sellerStores) {
@@ -384,6 +399,8 @@ public class SellerPanel {
         JScrollPane psp = new JScrollPane(helperPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         psp.setPreferredSize(scrollPaneDimension);
         psp.setMaximumSize(scrollPaneDimension);
+        psp.getViewport().setBackground(greyButtonColor);
+        psp.setBorder(customBorder);
 
         listStorePanel.setLayout(new BoxLayout(listStorePanel, BoxLayout.Y_AXIS));
 
@@ -406,6 +423,7 @@ public class SellerPanel {
     private JPanel createEditStorePanel() {
         selectedStore = null;
         JPanel editStorePanel = new JPanel();
+        editStorePanel.setBackground(goldColor);
         editStorePanel.setLayout(new BoxLayout(editStorePanel, BoxLayout.Y_AXIS));
 
         // Back button
@@ -418,6 +436,7 @@ public class SellerPanel {
 
         // Panel for back button and title
         JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
         topPanel.setMaximumSize(new Dimension(400, 75));
         topPanel.setMinimumSize(new Dimension(400, 75));
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
@@ -427,6 +446,7 @@ public class SellerPanel {
         topPanel.add(titleLabel);
 
         JPanel storeNamePanel = new JPanel();
+        storeNamePanel.setOpaque(false);
         ArrayList<Store> sellerStores = new Request().getSeller(userEmail).getSellerStores();
         storeNamePanel.setLayout(new BoxLayout(storeNamePanel, BoxLayout.Y_AXIS));
 
@@ -452,7 +472,9 @@ public class SellerPanel {
             });
 
             storeNamePanel.add(label);
-            storeNamePanel.add(new JSeparator(JSeparator.HORIZONTAL));
+            JSeparator sep = new JSeparator(JSeparator.HORIZONTAL);
+            sep.setBackground(Color.BLACK);
+            storeNamePanel.add(sep);
         }
 
         // Remove the last separator to avoid an extra line at the end
@@ -462,6 +484,8 @@ public class SellerPanel {
 
         JScrollPane psp = new JScrollPane(storeNamePanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         psp.setPreferredSize(new Dimension(300, 320));
+        psp.getViewport().setBackground(greyButtonColor);
+        psp.setBorder(customBorder);
 
 
         // Confirm button
@@ -469,6 +493,8 @@ public class SellerPanel {
         JButton confirmButton = new JButton("Confirm");
         confirmButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         confirmButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        confirmButton.setBorder(customBorder);
+        confirmButton.setBackground(greyButtonColor);
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -508,6 +534,7 @@ public class SellerPanel {
     private JPanel createStorePanel() {
         JPanel createStorePanel = new JPanel();
         createStorePanel.setLayout(new BoxLayout(createStorePanel, BoxLayout.Y_AXIS));
+        createStorePanel.setBackground(goldColor);
 
         // Title
         JLabel titleLabel = new JLabel("Create Store");
@@ -519,6 +546,7 @@ public class SellerPanel {
 
         // Top Panel
         JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.add(backToMenuButton);
         topPanel.add(Box.createHorizontalStrut(90));
@@ -530,15 +558,19 @@ public class SellerPanel {
 
         // Form Panel
         JPanel formPanel = new JPanel(new GridLayout(2, 1, 10, 10));
+        formPanel.setOpaque(false);
 
         // Name
         JTextField nameTextField = new JTextField(20);
+        nameTextField.setBorder(customBorder);
 
         formPanel.add(createFieldWithLabel("Name:", nameTextField));
 
         // Create Store Button
         JButton createStoreButton = new JButton("Create Store");
         createStoreButton.setFont(new Font("Arial", Font.PLAIN, 16));
+        createStoreButton.setBackground(greyButtonColor);
+        createStoreButton.setBorder(customBorder);
         createStoreButton.addActionListener(e -> {
             // Handle the creation of the store here
             String name = nameTextField.getText().trim();
@@ -558,11 +590,9 @@ public class SellerPanel {
             selectedStore = newStore;
 
             // Open "Create Product" card
-            cardPanel.removeAll();
             cardPanel.add(createProductPanel(), "Create Product");
             cardLayout.show(cardPanel, "Create Product");
 //            frame.setResizable(true);
-            frame.setSize(400, 300);
         });
 
         // Add components to the form panel
@@ -577,6 +607,7 @@ public class SellerPanel {
         selectedProduct = null;
         JPanel editProductPanel = new JPanel();
         editProductPanel.setLayout(new BoxLayout(editProductPanel, BoxLayout.Y_AXIS));
+        editProductPanel.setBackground(goldColor);
 
         Dimension titleDimension = new Dimension(400, 50);
         JLabel titleLabelProduct = new JLabel("Select a Product from " + selectedStore.getName());
@@ -587,6 +618,7 @@ public class SellerPanel {
 
         // Panel for back button and title
         JPanel titlePanelProduct = new JPanel();
+        titlePanelProduct.setOpaque(false);
         titlePanelProduct.setLayout(new BoxLayout(titlePanelProduct, BoxLayout.X_AXIS));  // Use BorderLayout for the title panel
         titlePanelProduct.add(Box.createHorizontalStrut(15));  // Add space between back button and title
         titlePanelProduct.add(createBackToMenuButton());  // Align the back button to the left
@@ -594,6 +626,7 @@ public class SellerPanel {
         titlePanelProduct.add(titleLabelProduct);  // Center-align the title
 
         JPanel storeNamePanelProduct = new JPanel();
+        storeNamePanelProduct.setOpaque(false);
         ArrayList<Product> storeProducts = new Request().getSeller(userEmail).getStore(selectedStore).getProducts();
         storeNamePanelProduct.setLayout(new BoxLayout(storeNamePanelProduct, BoxLayout.Y_AXIS));
 
@@ -618,7 +651,9 @@ public class SellerPanel {
 
 
             storeNamePanelProduct.add(label);
-            storeNamePanelProduct.add(new JSeparator(JSeparator.HORIZONTAL));
+            JSeparator sep = new JSeparator(JSeparator.HORIZONTAL);
+            sep.setBackground(Color.BLACK);
+            storeNamePanelProduct.add(sep);
         }
 
         // Remove the last separator to avoid an extra line at the end
@@ -627,7 +662,8 @@ public class SellerPanel {
         }
 
         JScrollPane pspProduct = new JScrollPane(storeNamePanelProduct, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
+        pspProduct.getViewport().setBackground(greyButtonColor);
+        pspProduct.setBorder(customBorder);
         pspProduct.setPreferredSize(new Dimension(300, 320));
 
 
@@ -635,6 +671,8 @@ public class SellerPanel {
         JButton confirmButtonProduct = new JButton("Confirm");
         confirmButtonProduct.setAlignmentX(Component.CENTER_ALIGNMENT);
         confirmButtonProduct.setFont(new Font("Arial", Font.PLAIN, 18));
+        confirmButtonProduct.setBackground(greyButtonColor);
+        confirmButtonProduct.setBorder(customBorder);
         confirmButtonProduct.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -703,8 +741,9 @@ public class SellerPanel {
     private JPanel createContactCustomerPanel() {
         recievingCustomer = null;
         frame.setSize(400, 500);  // Set the frame size accordingly
-        frame.setLocationRelativeTo(null);  // Center the frame
+frame.setLocation(400,250);  // Center the frame
         JPanel contactSellerPanel = new JPanel();
+        contactSellerPanel.setBackground(goldColor);
         contactSellerPanel.setLayout(new BoxLayout(contactSellerPanel, BoxLayout.Y_AXIS));
 
         // Back button
@@ -716,6 +755,8 @@ public class SellerPanel {
 
         // inbox button
         JButton messagesButton = new JButton("Messages");
+        messagesButton.setBackground(greyButtonColor);
+        messagesButton.setBorder(customBorder);
         //messagesButton.setFont(new Font("Arial", Font.BOLD, 10));
         messagesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -726,6 +767,7 @@ public class SellerPanel {
         });
 
         JPanel titlePanel = new JPanel();
+        titlePanel.setOpaque(false);
         titlePanel.setMaximumSize(new Dimension(400, 100));
         titlePanel.setPreferredSize(new Dimension(400, 100));
         GridBagLayout layout = new GridBagLayout();
@@ -751,6 +793,7 @@ public class SellerPanel {
 
 
         JPanel customerNamePanel = new JPanel();
+        customerNamePanel.setOpaque(false);
         ArrayList<Customer> allCustomers = new Request().getAllCustomers();
         customerNamePanel.setLayout(new BoxLayout(customerNamePanel, BoxLayout.Y_AXIS));
         for (Customer customer : allCustomers) {
@@ -782,7 +825,7 @@ public class SellerPanel {
         if (!allCustomers.isEmpty()) {customerNamePanel.remove(customerNamePanel.getComponentCount() - 1);}
 
         JScrollPane jsp = new JScrollPane(helperPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
+        jsp.setBorder(customBorder);
         // Display selected seller's name
         jsp.setPreferredSize(new Dimension(250, 300));
         jsp.setMaximumSize(new Dimension(250,300));
@@ -792,6 +835,7 @@ public class SellerPanel {
 
         // Container for the message components
         JPanel messagePanel = new JPanel();
+        messagePanel.setOpaque(false);
         messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
 
         // Label above JTextArea
@@ -802,17 +846,21 @@ public class SellerPanel {
         // JTextArea for entering the message
         JTextArea messageTextArea = new JTextArea();
         messageTextArea.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         messageTextArea.setLineWrap(true);
         messageTextArea.setWrapStyleWord(true);
         messageTextArea.setFont(new Font("Arial", Font.PLAIN, 16));
 
 
         JScrollPane messageScrollPane = new JScrollPane(messageTextArea);
+        messageScrollPane.setBorder(customBorder);
         messageScrollPane.setPreferredSize(new Dimension(250, 100));
         messageScrollPane.setMaximumSize(new Dimension(250, 100));
 
         // Button to send the message
         JButton sendMessageButton = new JButton("Send Message");
+        sendMessageButton.setBackground(greyButtonColor);
+        sendMessageButton.setBorder(customBorder);
         sendMessageButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         sendMessageButton.addActionListener(new ActionListener() {
@@ -867,20 +915,24 @@ public class SellerPanel {
 
     private JPanel createSellerMessagesPanel() {
         frame.setSize(400, 500);
-        frame.setLocationRelativeTo(null);
-        JPanel sellerMessagesPanel = new JPanel();
+frame.setLocation(300,250);        JPanel sellerMessagesPanel = new JPanel();
         sellerMessagesPanel.setLayout(new BoxLayout(sellerMessagesPanel, BoxLayout.Y_AXIS));
+        sellerMessagesPanel.setBackground(goldColor);
 
         JButton backToContactCustomersButton = createBackToContactCustomersButton();
+        backToContactCustomersButton.setBorder(customBorder);
+        backToContactCustomersButton.setBackground(greyButtonColor);
         backToContactCustomersButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backToContactCustomersButton.setFont(new Font("Arial", Font.PLAIN, 18));
 
         JLabel sellerMessagesLabel = new JLabel("Seller Messages");
+
         sellerMessagesLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         sellerMessagesLabel.setFont(new Font("Arial", Font.BOLD, 24));
 
         Dimension topDimension = new Dimension(400, 75);
         JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.setMinimumSize(topDimension);
         topPanel.setMaximumSize(topDimension);
@@ -891,6 +943,7 @@ public class SellerPanel {
         topPanel.add(Box.createHorizontalStrut(20));
 
         JPanel messagesPanel = new JPanel();
+        messagesPanel.setOpaque(false);
         ArrayList<String> messageLines = new Request().getMessages(new Request().getAccount(userEmail));
         messagesPanel.setLayout(new BoxLayout(messagesPanel, BoxLayout.Y_AXIS));
         messagesPanel.add(Box.createHorizontalStrut(40));
@@ -931,6 +984,7 @@ public class SellerPanel {
         }
 
         JPanel helperPanel = new JPanel();
+
         helperPanel.setLayout(new BorderLayout());
 
         helperPanel.add(messagesPanel, BorderLayout.NORTH);
@@ -939,13 +993,15 @@ public class SellerPanel {
         if (messageLines.isEmpty()) {messagesPanel.remove(messagesPanel.getComponentCount() - 1);}
 
         JScrollPane jsp = new JScrollPane(helperPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
+        jsp.setBorder(customBorder);
         Dimension jspDimension = new Dimension(350, 250);
         jsp.setMaximumSize(jspDimension);
         jsp.setPreferredSize(jspDimension);
 
         Dimension customerFullMessagePanelDimension = new Dimension(400, 400);
-        JPanel customerFullMessagePanel = new JPanel(new FlowLayout(FlowLayout.CENTER)); // Use FlowLayout with left alignment
+        JPanel customerFullMessagePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        customerFullMessagePanel.setOpaque(false);
+        // Use FlowLayout with left alignment
 //        customerFullMessagePanel.setMaximumSize(customerFullMessagePanelDimension);
 //        customerFullMessagePanel.setMinimumSize(customerFullMessagePanelDimension);
 
@@ -955,6 +1011,7 @@ public class SellerPanel {
         selectedCustomerMessageLabel.setEditable(false); // Prevent editing in JTextArea
         selectedCustomerMessageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         selectedCustomerMessageLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        selectedCustomerMessageLabel.setBorder(customBorder);
 
         JScrollPane messageScrollPane = new JScrollPane(selectedCustomerMessageLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         messageScrollPane.setPreferredSize(new Dimension(350, 100));
@@ -974,9 +1031,12 @@ public class SellerPanel {
     private JPanel createEditStoreDetailsPanel() {
         JPanel editStoreDetailsPanel = new JPanel();
         editStoreDetailsPanel.setLayout(new BoxLayout(editStoreDetailsPanel, BoxLayout.Y_AXIS));
+        editStoreDetailsPanel.setBackground(goldColor);
 
         // Back button
         JButton backButton = createBackToEditStoreButton();
+        backButton.setBackground(greyButtonColor);
+        backButton.setBorder(customBorder);
         String storeText = "    Edit " + selectedStore.getName() + "'s Panel";
         JLabel titleLabel = new JLabel(storeText);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -984,6 +1044,7 @@ public class SellerPanel {
 
         // Panel for back button and title
         JPanel titlePanel = new JPanel();
+        titlePanel.setOpaque(false);
         titlePanel.setLayout(new BorderLayout());
         titlePanel.add(backButton, BorderLayout.WEST);
         titlePanel.add(Box.createHorizontalStrut(20));
@@ -991,6 +1052,8 @@ public class SellerPanel {
 
         // Buttons for various actions
         JButton addProductButton = createButton("Add Product");
+        addProductButton.setBackground(greyButtonColor);
+        addProductButton.setBorder(customBorder);
         addProductButton.addActionListener(e -> {
             cardPanel.removeAll();
             cardPanel.add(createProductPanel(), "Create Product");
@@ -1001,9 +1064,13 @@ public class SellerPanel {
 
 
         JButton csvImportButton = createButton("CSV Import");
+        csvImportButton.setBackground(greyButtonColor);
+        csvImportButton.setBorder(customBorder);
         csvImportButton.addActionListener(e -> handleCSVImport());
 
         JButton deleteStoreButton = createButton("Delete Store");
+        deleteStoreButton.setBackground(greyButtonColor);
+        deleteStoreButton.setBorder(customBorder);
         deleteStoreButton.addActionListener(e -> {
             int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete the store: " + selectedStore.getName() + "?", "Confirmation", JOptionPane.YES_NO_OPTION);
 
@@ -1030,6 +1097,9 @@ public class SellerPanel {
         });
 
         JButton changeStoreNameButton = createButton("Change Store Name");
+        changeStoreNameButton.setBackground(greyButtonColor);
+        changeStoreNameButton.setBorder(customBorder);
+
 
         changeStoreNameButton.addActionListener(e -> {
             // Prompt user for the new store name
@@ -1064,6 +1134,8 @@ public class SellerPanel {
             }
         });
         JButton editStoreProductsButton = createButton("Edit Store Products");
+        editStoreProductsButton.setBackground(greyButtonColor);
+        editStoreProductsButton.setBorder(customBorder);
         editStoreProductsButton.addActionListener(e -> {
             cardPanel.add(createEditProductPanel(), "Edit Product");
             cardLayout.show(cardPanel, "Edit Product");
@@ -1089,6 +1161,10 @@ public class SellerPanel {
     }
 
     private void handleCSVImport() {
+
+        JOptionPane.showMessageDialog(null, "Make sure your file is formatted as:\n" +
+                "productName,productPrice,productQuantity,productDescription", "CSV Import", JOptionPane.INFORMATION_MESSAGE);
+
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV Files", "csv");
         fileChooser.setFileFilter(filter);
@@ -1100,8 +1176,6 @@ public class SellerPanel {
             String filePath = fileChooser.getSelectedFile().getAbsolutePath();
             System.out.println("Selected file: " + filePath);
 
-            // Add your logic to handle the CSV file import
-            // For example, you can pass the filePath to a method that reads and processes the CSV file
             processCSVFile(filePath);
         } else {
             // User canceled file selection
@@ -1110,9 +1184,63 @@ public class SellerPanel {
     }
 
     private void processCSVFile(String filePath) {
-        // Implement your logic to read and process the CSV file
-        System.out.println("Processing CSV file: " + filePath);
-        // Your CSV file processing logic here
+
+        ArrayList<Product> productsToAdd = new ArrayList<>();
+
+        try (BufferedReader bfr = new BufferedReader(new FileReader(filePath))) {
+
+            String line = "";
+
+            while ((line = bfr.readLine()) != null) {
+
+                String[] productDetails = line.split(",");
+
+                if (productDetails.length != 4) {
+
+                    JOptionPane.showMessageDialog(null, String.format("Line %s is incorrectly formatted\n" +
+                            "aborting import", line), "CSV Import", JOptionPane.ERROR_MESSAGE);
+                    return;
+
+                }
+
+                String productName = productDetails[0];
+
+                double productPrice = 0;
+                try {
+                    productPrice = Double.parseDouble(productDetails[1]);
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, String.format("Product %s's price is incorrectly formatted\n" +
+                            "aborting import", productName), "CSV Import", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                int productQuantity = 0;
+                try {
+                    productQuantity = Integer.parseInt(productDetails[2]);
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, String.format("Product %s's quantity is incorrectly formatted\n" +
+                            "aborting import", productName), "CSV Import", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                String productDescription = productDetails[3];
+
+                productsToAdd.add(new Product(productName, productPrice, productQuantity, productDescription, selectedStore));
+
+            }
+
+            for (Product product : productsToAdd) {
+
+                selectedStore.addProduct(product);
+
+            }
+
+            new Request().updateSeller(selectedStore.getSellerOwner());
+
+            JOptionPane.showMessageDialog(null, "Import successful", "CSV Import", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public JPanel createSellerPanel() {
@@ -1122,11 +1250,11 @@ public class SellerPanel {
 
 
     private JPanel createProductPanel() {
-        frame.setSize(400, 300);
-        frame.setLocationRelativeTo(null);
+        frame.setSize(400, 400);
 
         JPanel createProductPanel = new JPanel();
         createProductPanel.setLayout(new BoxLayout(createProductPanel, BoxLayout.Y_AXIS));
+        createProductPanel.setBackground(goldColor);
 
         // Title
         JLabel titleLabel = new JLabel("Create Product");
@@ -1138,35 +1266,48 @@ public class SellerPanel {
 
         // Top Panel
         JPanel topPanel = new JPanel();
+        topPanel.setPreferredSize(new Dimension(400, 50));
+        topPanel.setMaximumSize(new Dimension(400, 50));
+        topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+        topPanel.add(Box.createHorizontalStrut(20));
         topPanel.add(backToMenuButton);
-        topPanel.add(Box.createHorizontalStrut(85));
+        topPanel.add(Box.createHorizontalGlue());
         topPanel.add(titleLabel);
+        topPanel.add(Box.createHorizontalStrut(50));
         topPanel.add(Box.createHorizontalGlue()); // Add glue to push the title to the right
 
+        createProductPanel.add(Box.createVerticalStrut(10));
         createProductPanel.add(topPanel);
-        createProductPanel.add(Box.createVerticalStrut(20));
+        createProductPanel.add(Box.createVerticalStrut(10));
 
         // Form Panel
-        JPanel formPanel = new JPanel(new GridLayout(6, 1, 10, 10));
+        JPanel formPanel = new JPanel(new GridLayout(6, 1, 10, 5));
+        formPanel.setPreferredSize(new Dimension(350, 300));
+        formPanel.setMaximumSize(new Dimension(350, 300));
+        formPanel.setOpaque(false);
 
         // Name
         JTextField nameTextField = new JTextField(20);
+        nameTextField.setBorder(customBorder);
         formPanel.add(createFieldWithLabel("Name:", nameTextField));
 
         // Description
         JTextArea descriptionTextArea = new JTextArea(8, 20); // Increase the number of rows
         JScrollPane descriptionScrollPane = new JScrollPane(descriptionTextArea);
+        descriptionScrollPane.setBorder(customBorder);
         descriptionScrollPane.setPreferredSize(new Dimension(250, 120)); // Adjust the size
         formPanel.add(createFieldWithLabel("Description:", descriptionScrollPane));
 
         // Price
         DoubleSpinner priceSpinner = createDoubleSpinner();
+        priceSpinner.setBorder(customBorder);
         formPanel.add(createFieldWithLabel("Price:", priceSpinner));
 
         // Quantity
         SpinnerModel quantityModel = new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1);
         JSpinner quantitySpinner = new JSpinner(quantityModel);
+        quantitySpinner.setBorder(customBorder);
         formPanel.add(createFieldWithLabel("Quantity:", quantitySpinner));
 
 
@@ -1175,6 +1316,7 @@ public class SellerPanel {
         Store[] stores = new Store[sellerStores.size()];
         stores = sellerStores.toArray(stores);
         JComboBox<Store> storeComboBox = new JComboBox<>(stores);
+        storeComboBox.setBorder(customBorder);
         formPanel.add(createFieldWithLabel("Store:", storeComboBox));
 
         // Create Product Button
@@ -1240,10 +1382,9 @@ public class SellerPanel {
 
             if (confirmResult == JOptionPane.YES_OPTION) {
                 // User clicked 'Yes', process creation
-                // testing purposes
 
-                Product newProudct = new Product(name, price, quantity, description, selectedStore);
-                selectedStore.addProduct(newProudct);
+                Product newProduct = new Product(name, price, quantity, description, selectedStore);
+                selectedStore.addProduct(newProduct);
                 new Request().updateSeller(selectedStore.getSellerOwner());
 
                 // Reset the create product panel
@@ -1260,9 +1401,10 @@ public class SellerPanel {
 
         // Add components to the form panel
         formPanel.add(createProductButton);
-        createProductButton.add(Box.createVerticalStrut(10));
+        createProductButton.add(Box.createVerticalStrut(20));
         createProductPanel.add(formPanel);
-        createProductButton.add(Box.createVerticalStrut(10));
+        createProductButton.setBackground(greyButtonColor);
+        createProductButton.setBorder(customBorder);
 
         return createProductPanel;
     }
@@ -1271,6 +1413,7 @@ public class SellerPanel {
         frame.setResizable(true);
         JPanel createProductPanel = new JPanel();
         createProductPanel.setLayout(new BoxLayout(createProductPanel, BoxLayout.Y_AXIS));
+        createProductPanel.setBackground(goldColor);
 
         // Title
         JLabel titleLabel = new JLabel("    Edit Product: "+ selectedProduct.getName());
@@ -1284,31 +1427,38 @@ public class SellerPanel {
         topPanel.add(Box.createHorizontalStrut(10));
         topPanel.add(titleLabel);
         topPanel.add(Box.createHorizontalGlue()); // Add glue to push the title to the right
+        topPanel.setOpaque(false);
 
         createProductPanel.add(topPanel);
         createProductPanel.add(Box.createVerticalStrut(20));
 
         // Form Panel
         JPanel formPanel = new JPanel(new GridLayout(7, 1, 10, 10));
+        formPanel.setOpaque(false);
 
         // Name
         JTextField nameTextField = new JTextField(20);
+        nameTextField.setBorder(customBorder);
         nameTextField.setText(selectedProduct.getName()); // Autofill the name field
         formPanel.add(createFieldWithLabel("Name:", nameTextField));
 
         // Description
         JTextArea descriptionTextArea = new JTextArea(8, 20); // Increase the number of rows
         JScrollPane descriptionScrollPane = new JScrollPane(descriptionTextArea);
+        descriptionScrollPane.setBorder(customBorder);
         descriptionScrollPane.setPreferredSize(new Dimension(250, 120)); // Adjust the size
         formPanel.add(createFieldWithLabel("Description:", descriptionScrollPane));
 
+
         // Price
         DoubleSpinner priceSpinner = createDoubleSpinner();
+        priceSpinner.setBorder(customBorder);
         formPanel.add(createFieldWithLabel("Price:", priceSpinner));
 
         // Quantity
         SpinnerModel quantityModel = new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1);
         JSpinner quantitySpinner = new JSpinner(quantityModel);
+        quantitySpinner.setBorder(customBorder);
         formPanel.add(createFieldWithLabel("Quantity:", quantitySpinner));
 
         // Store Label
@@ -1322,6 +1472,8 @@ public class SellerPanel {
         // Edit Product Button
         JButton editProductButton = new JButton("Edit Product");
         editProductButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        editProductButton.setBackground(greyButtonColor);
+        editProductButton.setBorder(customBorder);
         editProductButton.addActionListener(e -> {
             // Handle the creation of the product here
             String name = nameTextField.getText().trim();
@@ -1388,6 +1540,11 @@ public class SellerPanel {
 
                 new Request().updateSeller(productToUpdate.getStore().getSellerOwner());
 
+                cardPanel.removeAll();
+                cardPanel.add(createEditProductPanel(), "Edit Product");
+                cardLayout.show(cardPanel, "Edit Product");
+                frame.setSize(400,500);
+
             } else {
                 // User clicked 'No', do nothing or handle accordingly
             }
@@ -1396,6 +1553,8 @@ public class SellerPanel {
         JButton deleteProductButton = new JButton("Delete Product");
         deleteProductButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         deleteProductButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        deleteProductButton.setBackground(greyButtonColor);
+        deleteProductButton.setBorder(customBorder);
         deleteProductButton.addActionListener(e -> {
             // Handle the deletion of the product here
             int deleteResult = JOptionPane.showConfirmDialog(createProductPanel,
@@ -1442,6 +1601,8 @@ public class SellerPanel {
     private Component createBackToEditProductButton() {
 
         JButton backButton = new JButton("<");
+        backButton.setBackground(greyButtonColor);
+        backButton.setBorder(customBorder);
         Font largeFont = new Font("Arial", Font.PLAIN, 18);
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backButton.setFont(largeFont);
@@ -1488,8 +1649,7 @@ public class SellerPanel {
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(cardPanel, "View All Store Sales");
                 frame.setSize(400, 500);
-                frame.setLocationRelativeTo(null);
-            }
+        frame.setLocation(300,250);            }
         });
 
 
@@ -1502,8 +1662,7 @@ public class SellerPanel {
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(cardPanel, "View Specific Store Sales");
                 frame.setSize(600, 500);
-                frame.setLocationRelativeTo(null);
-            }
+        frame.setLocation(300,250);            }
         });
 
         JButton customerShoppingCartButton = new JButton(("View Customer's Shopping Cart"));
@@ -1515,8 +1674,7 @@ public class SellerPanel {
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(cardPanel, "View Customer's Shopping Carts");
                 frame.setSize(600, 500);
-                frame.setLocationRelativeTo(null);
-            }
+        frame.setLocation(300,250);            }
         });
 
         createStoreStatistics.add(Box.createVerticalStrut(20));
@@ -1549,7 +1707,7 @@ public class SellerPanel {
         topPanel.setMaximumSize(topPanelDimension);
         topPanel.setMinimumSize(topPanelDimension);
         topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        topPanel.add(createBackToStoreStatisticsButton());
+        // topPanel.add(createBackToStoreStatisticsButton());
         topPanel.add(Box.createHorizontalStrut(10));
         topPanel.add(titleLabel);
         topPanel.add(Box.createHorizontalStrut(10));
@@ -1634,133 +1792,118 @@ public class SellerPanel {
 
     // View a specific Store's Statistics (selects from store)
     private JPanel createViewSpecificStoreStatisticsPanel() {
-        frame.setSize(450,450);
-        frame.setLocationRelativeTo(null);
-        selectedStore = null;
 
-        JPanel createViewSpecificStoreStatistics = new JPanel();
-        createViewSpecificStoreStatistics.setLayout(new BoxLayout(createViewSpecificStoreStatistics, BoxLayout.Y_AXIS));
+        frame.setSize(450, 450);
 
-        JLabel titleLabel = new JLabel("Which Store's Statistics Would You Like to View?");
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 13));
+        JPanel viewSpecificStoreStatistics = new JPanel();
+        viewSpecificStoreStatistics.setBackground(goldColor);
+        viewSpecificStoreStatistics.setSize(new Dimension(450,450));
+        viewSpecificStoreStatistics.setLayout(new BoxLayout(viewSpecificStoreStatistics, BoxLayout.Y_AXIS));
 
         JPanel topPanel = new JPanel();
-        Dimension topPanelDimension = new Dimension(450, 50);
+        topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
-        topPanel.setMaximumSize(topPanelDimension);
-        topPanel.setMinimumSize(topPanelDimension);
         topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        topPanel.add(Box.createHorizontalStrut(10));
+        topPanel.setPreferredSize(new Dimension(450, 50));
+        topPanel.setMaximumSize(new Dimension(450, 50));
+
+        JLabel titleLabel = new JLabel("View Store Statistics");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+
+        topPanel.add(Box.createHorizontalStrut(20));
         topPanel.add(createBackToMenuButton());
-        topPanel.add(Box.createHorizontalStrut(10));
+        topPanel.add(Box.createHorizontalGlue());
         topPanel.add(titleLabel);
-        topPanel.add(Box.createHorizontalStrut(10));
+        topPanel.add(Box.createHorizontalStrut(50));
+        topPanel.add(Box.createHorizontalGlue());
 
+        viewSpecificStoreStatistics.add(Box.createVerticalStrut(10));
+        viewSpecificStoreStatistics.add(topPanel);
+        viewSpecificStoreStatistics.add(Box.createVerticalStrut(10));
 
-        Dimension scrollPaneDimension = new Dimension(300,300);
+        JPanel stores = new JPanel();
+        stores.setLayout(new BoxLayout(stores, BoxLayout.Y_AXIS));
 
-        // Create a JPanel to hold vertically listed JLabels
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setPreferredSize(new Dimension(280, 300));
+        ArrayList<Store> allStores = getAllStores();
 
-        // Create helper panel to help center store labels
-        JPanel helperPanel = new JPanel();
-        helperPanel.setLayout(new BorderLayout());
-        helperPanel.setSize(new Dimension(280, 300));
+        for (Store store : allStores) {
 
-        ArrayList<Store> sellerStores = new Request().getSeller(userEmail).getSellerStores();
-
-        for (Store store : sellerStores) {
             JLabel storeLabel = new JLabel(store.getName());
             storeLabel.setFont(new Font("Arial", Font.PLAIN, 18));
             storeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            storeLabel.setAlignmentY(Component.CENTER_ALIGNMENT);
             storeLabel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
+
                     selectedStore = store;
 
-                    selectedStoreStatsLabel.setText("Selected Store: " + selectedStore.getName());
+                    cardPanel.add(createViewSpecificStoreStatisticsSaleTypePanel(), "Statistics Choice");
+                    cardLayout.show(cardPanel, "Statistics Choice");
+
                 }
             });
-            panel.add(storeLabel);
-            panel.add(new JSeparator(SwingConstants.HORIZONTAL));
+            stores.add(storeLabel);
+            stores.add(new JSeparator(SwingConstants.HORIZONTAL));
         }
 
-        if (!sellerStores.isEmpty()) {
-            panel.remove(panel.getComponentCount() - 1);
+        if (!allStores.isEmpty()) {
+            stores.remove(stores.getComponentCount() - 1);
         }
 
-        helperPanel.add(panel);
+        JPanel helperPanel = new JPanel();
+        helperPanel.setLayout(new BorderLayout());
+        helperPanel.add(stores, BorderLayout.NORTH);
 
-        JScrollPane psp = new JScrollPane(helperPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        psp.setPreferredSize(scrollPaneDimension);
-        psp.setMaximumSize(scrollPaneDimension);
+        JScrollPane jScrollPane = new JScrollPane(helperPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
+        jScrollPane.setBorder(customBorder);
+        jScrollPane.setPreferredSize(new Dimension(300,300));
+        jScrollPane.setMaximumSize(new Dimension(300,300));
 
-        selectedStoreStatsLabel = new JLabel("Selected Store: ");
-        selectedStoreStatsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        selectedStoreStatsLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        viewSpecificStoreStatistics.add(Box.createVerticalStrut(10));
+        viewSpecificStoreStatistics.add(jScrollPane);
+        viewSpecificStoreStatistics.add(Box.createVerticalStrut(10));
 
-        // Confirm button
-        JButton confirmButton = new JButton("Confirm");
-        confirmButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        confirmButton.setFont(new Font("Arial", Font.PLAIN, 18));
-        confirmButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (selectedStore == null) {
+        JLabel instructionLabel = new JLabel("Select a store to view it's statistics");
+        instructionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        instructionLabel.setFont(new Font("Arial", Font.PLAIN, 18));
 
-                    JOptionPane.showMessageDialog(createViewSpecificStoreStatistics, "Please select a store first", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
+        viewSpecificStoreStatistics.add(instructionLabel);
+        viewSpecificStoreStatistics.add(Box.createVerticalStrut(20));
 
-                }
-                cardPanel.removeAll();
-                cardPanel.add(createViewSpecificStoreStatisticsSaleTypePanel(), "Specific Store Statistics Sort");
-                cardLayout.show(cardPanel, "Specific Store Statistics Sort");
+        return viewSpecificStoreStatistics;
 
-            }
-        });
-
-        createViewSpecificStoreStatistics.add(Box.createVerticalStrut(20));
-        createViewSpecificStoreStatistics.add(topPanel);
-        createViewSpecificStoreStatistics.add(Box.createVerticalStrut(20));
-        createViewSpecificStoreStatistics.add(psp);
-        createViewSpecificStoreStatistics.add(Box.createVerticalStrut(20));
-        createViewSpecificStoreStatistics.add(selectedStoreStatsLabel);
-        createViewSpecificStoreStatistics.add(Box.createVerticalStrut(20));
-        createViewSpecificStoreStatistics.add(confirmButton);
-        createViewSpecificStoreStatistics.add(Box.createVerticalStrut(20));
-
-        return createViewSpecificStoreStatistics;
     }
 
     // selects a specific Store to view Statistics (selects how to sort the statistics sales type by)
     private JPanel createViewSpecificStoreStatisticsSaleTypePanel() {
         frame.setSize(450, 300);
-        frame.setLocationRelativeTo(null);
         JPanel createViewSpecificStoreStatisticsSaleType = new JPanel();
+        createViewSpecificStoreStatisticsSaleType.setBackground(goldColor);
         createViewSpecificStoreStatisticsSaleType.setLayout(new BoxLayout(createViewSpecificStoreStatisticsSaleType, BoxLayout.Y_AXIS));
         JLabel titleLabel = new JLabel("Which Statistics would you Like To View?");
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
         JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
         Dimension topPanelDimension = new Dimension(450, 50);
-        topPanel.setMaximumSize(topPanelDimension);
+        topPanel.setPreferredSize(topPanelDimension);
         topPanel.setMinimumSize(topPanelDimension);
         topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         topPanel.add(Box.createHorizontalStrut(10));
         topPanel.add(createBackToSpecificStoreStatisticsButton());
-        topPanel.add(Box.createHorizontalStrut(10));
+        topPanel.add(Box.createHorizontalGlue());
         topPanel.add(titleLabel);
-        topPanel.add(Box.createHorizontalStrut(10));
+        topPanel.add(Box.createHorizontalStrut(40));
+        topPanel.add(Box.createHorizontalGlue());
 
         Dimension buttonDimension = new Dimension(300, 50);
 
         // change to view sort
         JButton specificStoreSortByCustomer = new JButton(("Customer Sales"));
+        specificStoreSortByCustomer.setBackground(greyButtonColor);
+        specificStoreSortByCustomer.setBorder(customBorder);
         specificStoreSortByCustomer.setMaximumSize(buttonDimension);
         specificStoreSortByCustomer.setMinimumSize(buttonDimension);
         specificStoreSortByCustomer.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -1768,12 +1911,14 @@ public class SellerPanel {
         specificStoreSortByCustomer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cardPanel.removeAll();
-                cardPanel.add(createViewSpecificStoreCustomerSalesPanel(), "View Specific Store Customer Sales");
+                cardPanel.add(createViewSpecificStoreCustomerSalesPanel(selectedStore.getPurchasers()), "View Specific Store Customer Sales");
                 cardLayout.show(cardPanel, "View Specific Store Customer Sales");
             }
         });
 
         JButton specificStoreSortByProduct = new JButton(("Product Sales"));
+        specificStoreSortByProduct.setBackground(greyButtonColor);
+        specificStoreSortByProduct.setBorder(customBorder);
         specificStoreSortByProduct.setMaximumSize(buttonDimension);
         specificStoreSortByProduct.setMinimumSize(buttonDimension);
         specificStoreSortByProduct.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -1781,87 +1926,145 @@ public class SellerPanel {
         specificStoreSortByProduct.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cardPanel.removeAll();
-                cardPanel.add(createViewSpecificStoreProductSalesPanel(), "View Specific Store Product Sales");
+                cardPanel.add(createViewSpecificStoreProductSalesPanel(selectedStore.getProducts()), "View Specific Store Product Sales");
                 cardLayout.show(cardPanel, "View Specific Store Product Sales");
             }
         });
 
-        createViewSpecificStoreStatisticsSaleType.add(Box.createVerticalStrut(20));
+        JButton customerShoppingCarts = new JButton("Customer Shopping Carts");
+        customerShoppingCarts.setBackground(greyButtonColor);
+        customerShoppingCarts.setBorder(customBorder);
+        customerShoppingCarts.setMaximumSize(buttonDimension);
+        customerShoppingCarts.setMinimumSize(buttonDimension);
+        customerShoppingCarts.setAlignmentX(Component.CENTER_ALIGNMENT);
+        customerShoppingCarts.setFont(new Font("Arial", Font.PLAIN, 18));
+        customerShoppingCarts.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardPanel.add(createViewCustomerShoppingCarts(selectedStore.getProducts()), "Shopping Carts");
+                cardLayout.show(cardPanel, "Shopping Carts");
+            }
+        });
+
+        JPanel sortPanel = new JPanel();
+        sortPanel.setPreferredSize(new Dimension(450, 150));
+        sortPanel.setMaximumSize(new Dimension(450, 150));
+        sortPanel.setLayout(new BoxLayout(sortPanel, BoxLayout.Y_AXIS));
+        sortPanel.setBackground(goldColor);
+        sortPanel.add(specificStoreSortByCustomer);
+        sortPanel.add(Box.createVerticalStrut(5));
+        sortPanel.add(specificStoreSortByProduct);
+        sortPanel.add(Box.createVerticalStrut(5));
+        sortPanel.add(customerShoppingCarts);
+
+
+        createViewSpecificStoreStatisticsSaleType.add(Box.createVerticalStrut(10));
         createViewSpecificStoreStatisticsSaleType.add(topPanel);
         createViewSpecificStoreStatisticsSaleType.add(Box.createVerticalStrut(20));
-        createViewSpecificStoreStatisticsSaleType.add(specificStoreSortByCustomer);
-        createViewSpecificStoreStatisticsSaleType.add(Box.createVerticalStrut(20));
-        createViewSpecificStoreStatisticsSaleType.add(specificStoreSortByProduct);
-        createViewSpecificStoreStatisticsSaleType.add(Box.createVerticalStrut(20));
+        createViewSpecificStoreStatisticsSaleType.add(sortPanel);
+        createViewSpecificStoreStatisticsSaleType.add(Box.createVerticalStrut(40));
 
 
         return createViewSpecificStoreStatisticsSaleType;
     }
 
-    private JPanel createViewSpecificStoreCustomerSalesPanel() {
+
+    private JPanel createViewSpecificStoreCustomerSalesPanel(ArrayList<Purchaser> customers) {
+
         frame.setSize(450, 450);
-        frame.setLocationRelativeTo(null);
 
         JPanel createViewSpecificStoreCustomerSales = new JPanel();
+        createViewSpecificStoreCustomerSales.setBackground(goldColor);
         createViewSpecificStoreCustomerSales.setSize(new Dimension(450,450));
         createViewSpecificStoreCustomerSales.setLayout(new BoxLayout(createViewSpecificStoreCustomerSales, BoxLayout.Y_AXIS));
 
-        JPanel titlePanel = new JPanel();
-        titlePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        titlePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        titlePanel.setPreferredSize(new Dimension(450, 50));
+        JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+        topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        topPanel.setPreferredSize(new Dimension(450, 50));
+        topPanel.setMaximumSize(new Dimension(450, 50));
 
         JLabel titleLabel = new JLabel(selectedStore.getName() + " Customer Sales");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
-        titlePanel.add(Box.createHorizontalStrut(10));
-        titlePanel.add(createBackToSpecificStoreStatisticsSaleTypeButton());
-        titlePanel.add(Box.createHorizontalStrut(10));
-        titlePanel.add(titleLabel);
-        titlePanel.add(Box.createHorizontalStrut(20));
+        topPanel.add(Box.createHorizontalStrut(20));
+        topPanel.add(createBackToSpecificStoreStatisticsSaleTypeButton());
+        topPanel.add(Box.createHorizontalGlue());
+        topPanel.add(titleLabel);
+        topPanel.add(Box.createHorizontalStrut(50));
+        topPanel.add(Box.createHorizontalGlue());
 
         createViewSpecificStoreCustomerSales.add(Box.createVerticalStrut(10));
-        createViewSpecificStoreCustomerSales.add(titlePanel);
+        createViewSpecificStoreCustomerSales.add(topPanel);
         createViewSpecificStoreCustomerSales.add(Box.createVerticalStrut(10));
 
         JPanel sortingPanel = new JPanel();
+        sortingPanel.setOpaque(false);
         sortingPanel.setLayout(new BoxLayout(sortingPanel, BoxLayout.X_AXIS));
         sortingPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         sortingPanel.setSize(new Dimension(450,25));
         JLabel sortingLabel = new JLabel("Sort by ");
         sortingPanel.add(sortingLabel);
-        String[] sortingOptions = {"Quantity Sold (Low to High)", "Quantity Sold (High to Low)",
-                                    "Revenue Generated (Low to High)", "Revenue Generated (High to Low)"};
+        String[] sortingOptions = {"Quantity Sold (High to Low)", "Quantity Sold (Low to High)",
+                                    "Revenue Generated (High to Low)", "Revenue Generated (Low to High)"};
         JComboBox<String> sortOptions = new JComboBox<>(sortingOptions);
+        sortOptions.setBorder(customBorder);
         sortOptions.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedOption = (String) sortOptions.getSelectedItem();
 
-                // Saving Implementation for when customers is complete to test with data
+                ArrayList<Purchaser> sortedCustomers = new ArrayList<>();
+
                 switch (selectedOption) {
 
                     case "Quantity Sold (Low to High)" -> {
 
-
+                        sortedCustomers = Purchaser.sortByQuantityPurchased(customers, "low");
 
                     }
                     case "Quantity Sold (High to Low)" -> {
 
-
+                        sortedCustomers = Purchaser.sortByQuantityPurchased(customers, "high");
 
                     }
                     case "Revenue Generated (Low to High)" -> {
 
-
+                        sortedCustomers = Purchaser.sortByRevenueGenerated(customers, "low");
 
                     }
                     case "Revenue Generated (High to Low)" -> {
 
-
+                        sortedCustomers = Purchaser.sortByRevenueGenerated(customers, "high");
 
                     }
                 }
+
+                customerSalesPanel.removeAll();
+
+                for (Purchaser customer : sortedCustomers) {
+                    JLabel customerLabel = new JLabel(String.format("%s generated $%.2f", customer.getUsername(), customer.getRevenueGenerated()));
+                    customerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                    customerLabel.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+
+                            selectedCustomerStatsLabel.setText(String.format("Product: %s, Quantity Sold: %d, Revenue Generated: $%.2f", customer.getUsername(), customer.getQuantityPurchased(), customer.getRevenueGenerated()));
+
+                        }
+                    });
+                    customerSalesPanel.add(customerLabel);
+                    customerSalesPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
+                }
+
+                if (!sortedCustomers.isEmpty()) {
+                    customerSalesPanel.remove(customerSalesPanel.getComponentCount() - 1);
+                }
+
+                customerSalesPanel.revalidate();
+                customerSalesPanel.repaint();
+
             }
         });
         sortOptions.setMinimumSize(new Dimension(200,25));
@@ -1872,30 +2075,34 @@ public class SellerPanel {
         JPanel helperPanel = new JPanel();
         helperPanel.setLayout(new BorderLayout());
 
-        JPanel customerPanel = new JPanel();
-        customerPanel.setLayout(new BoxLayout(customerPanel, BoxLayout.Y_AXIS));
+        customerSalesPanel = new JPanel();
+        customerSalesPanel.setOpaque(false);
+        customerSalesPanel.setLayout(new BoxLayout(customerSalesPanel, BoxLayout.Y_AXIS));
 
         ArrayList<Purchaser> purchasers = selectedStore.getPurchasers();
         for (Purchaser customer : purchasers) {
-            JLabel customerLabel = new JLabel(customer.getUsername());
+            JLabel customerLabel = new JLabel(String.format("%s generated $%.2f", customer.getUsername(), customer.getRevenueGenerated()));
             customerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             customerLabel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
 
+                    selectedCustomerStatsLabel.setText(String.format("Product: %s, Quantity Sold: %d, Revenue Generated: $%.2f", customer.getUsername(), customer.getQuantityPurchased(), customer.getRevenueGenerated()));
+
                 }
             });
-            customerPanel.add(customerLabel);
-            customerPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
+            customerSalesPanel.add(customerLabel);
+            customerSalesPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
         }
 
         if (!purchasers.isEmpty()) {
-            customerPanel.remove(customerPanel.getComponentCount() - 1);
+            customerSalesPanel.remove(customerSalesPanel.getComponentCount() - 1);
         }
 
-        helperPanel.add(customerPanel);
+        helperPanel.add(customerSalesPanel);
 
         JScrollPane jScrollPane = new JScrollPane(helperPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane.setBorder(customBorder);
         jScrollPane.setPreferredSize(new Dimension(300,300));
         jScrollPane.setMaximumSize(new Dimension(300,300));
 
@@ -1912,69 +2119,103 @@ public class SellerPanel {
     }
 
 
-    private JPanel createViewSpecificStoreProductSalesPanel() {
+    private JPanel createViewSpecificStoreProductSalesPanel(ArrayList<Product> products) {
         frame.setSize(450, 450);
-        frame.setLocationRelativeTo(null);
 
         JPanel createViewSpecificStoreProductSalesPanel = new JPanel();
         createViewSpecificStoreProductSalesPanel.setLayout(new BoxLayout(createViewSpecificStoreProductSalesPanel, BoxLayout.Y_AXIS));
+        createViewSpecificStoreProductSalesPanel.setBackground(goldColor);
 
         JLabel titleLabel = new JLabel(selectedStore.getName() + "'s Product Sales");
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 15));
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
 
         JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
         Dimension topPanelDimension = new Dimension(450, 50);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.setMaximumSize(topPanelDimension);
-        topPanel.setMinimumSize(topPanelDimension);
+        topPanel.setPreferredSize(topPanelDimension);
         topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        topPanel.add(Box.createHorizontalStrut(10));
+        topPanel.add(Box.createHorizontalStrut(20));
         topPanel.add(createBackToSpecificStoreStatisticsSaleTypeButton());
-        topPanel.add(Box.createHorizontalStrut(10));
+        topPanel.add(Box.createHorizontalGlue());
         topPanel.add(titleLabel);
-        topPanel.add(Box.createHorizontalStrut(10));
+        topPanel.add(Box.createHorizontalStrut(50));
+        topPanel.add(Box.createHorizontalGlue());
 
         JPanel sortingPanel = new JPanel();
+        sortingPanel.setOpaque(false);
         sortingPanel.setLayout(new BoxLayout(sortingPanel, BoxLayout.X_AXIS));
         sortingPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         sortingPanel.setSize(new Dimension(450,25));
         JLabel sortingLabel = new JLabel("Sort by ");
         sortingPanel.add(sortingLabel);
-        String[] sortingOptions = {"Quantity Sold (Low to High)", "Quantity Sold (High to Low)",
-                "Revenue Generated (Low to High)", "Revenue Generated (High to Low)"};
+        String[] sortingOptions = {"Quantity Sold (High to Low)", "Quantity Sold (Low to High)",
+                "Revenue Generated (High to Low)", "Revenue Generated (Low to High)"};
         JComboBox<String> sortOptions = new JComboBox<>(sortingOptions);
+        sortOptions.setBorder(customBorder);
         sortOptions.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedOption = (String) sortOptions.getSelectedItem();
 
-                // Saving Implementation for when customers is complete to test with data
+                ArrayList<Product> sortedProducts = new ArrayList<>();
+
                 switch (selectedOption) {
 
                     case "Quantity Sold (Low to High)" -> {
 
-
+                        sortedProducts = Product.sortByQuantitySold(products, "low");
 
                     }
                     case "Quantity Sold (High to Low)" -> {
 
-
+                        sortedProducts = Product.sortByQuantitySold(products, "high");
 
                     }
                     case "Revenue Generated (Low to High)" -> {
 
-
+                        sortedProducts = Product.sortByRevenueGenerated(products, "low");
 
                     }
                     case "Revenue Generated (High to Low)" -> {
 
-
+                        sortedProducts = Product.sortByRevenueGenerated(products, "high");
 
                     }
                 }
+
+                productSalesPanel.removeAll();
+
+                for (Product product : sortedProducts) {
+                    JLabel productLabel = new JLabel(product.getName());
+                    productLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+                    productLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                    productLabel.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            selectedProduct = product;
+
+                            String statLine = String.format("Quantity Sold: %d, Revenue Generated: $%.2f", product.getQuantitySold(), product.getRevenueGenerated());
+
+                            selectedProductStatsLabel.setText(statLine);
+                        }
+                    });
+                    productSalesPanel.add(productLabel);
+                    productSalesPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
+                }
+
+                if (!sortedProducts.isEmpty()) {
+                    productSalesPanel.remove(productSalesPanel.getComponentCount() - 1);
+                }
+
+                productSalesPanel.revalidate();
+                productSalesPanel.repaint();
+
             }
         });
+
         sortOptions.setMinimumSize(new Dimension(200,25));
         sortOptions.setMaximumSize(new Dimension(200,25));
         sortingPanel.add(sortOptions);
@@ -1983,22 +2224,19 @@ public class SellerPanel {
         Dimension scrollPaneDimension = new Dimension(300,300);
 
         // Create a JPanel to hold vertically listed JLabels
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setPreferredSize(new Dimension(280, 300));
+        productSalesPanel = new JPanel();
+        productSalesPanel.setOpaque(false);
+        productSalesPanel.setLayout(new BoxLayout(productSalesPanel, BoxLayout.Y_AXIS));
 
         // Create helper panel to help center store labels
         JPanel helperPanel = new JPanel();
+        helperPanel.setOpaque(false);
         helperPanel.setLayout(new BorderLayout());
-        helperPanel.setSize(new Dimension(280, 300));
 
-        ArrayList<Product> storeProducts = selectedStore.getProducts();
-
-        for (Product product : storeProducts) {
+        for (Product product : products) {
             JLabel productLabel = new JLabel(product.getName());
             productLabel.setFont(new Font("Arial", Font.PLAIN, 18));
             productLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            productLabel.setAlignmentY(Component.CENTER_ALIGNMENT);
             productLabel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -2009,19 +2247,20 @@ public class SellerPanel {
                     selectedProductStatsLabel.setText(statLine);
                 }
             });
-            panel.add(productLabel);
-            panel.add(new JSeparator(SwingConstants.HORIZONTAL));
+            productSalesPanel.add(productLabel);
+            productSalesPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
         }
 
-        if (!storeProducts.isEmpty()) {
-            panel.remove(panel.getComponentCount() - 1);
+        if (!products.isEmpty()) {
+            productSalesPanel.remove(productSalesPanel.getComponentCount() - 1);
         }
 
-        helperPanel.add(panel);
+        helperPanel.add(productSalesPanel, BorderLayout.NORTH);
 
         JScrollPane psp = new JScrollPane(helperPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         psp.setPreferredSize(scrollPaneDimension);
         psp.setMaximumSize(scrollPaneDimension);
+        psp.setBorder(customBorder);
 
         selectedProductStatsLabel = new JLabel("Quantity Sold: , Revenue Generated: ");
         selectedProductStatsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -2039,85 +2278,166 @@ public class SellerPanel {
         return createViewSpecificStoreProductSalesPanel;
     }
 
-    private JPanel createViewCustomerShoppingCarts() {
+    private JPanel createViewCustomerShoppingCarts(ArrayList<Product> products) {
+
+        frame.setSize(450, 450);
+
         JPanel createViewCustomerShoppingCarts = new JPanel();
+        createViewCustomerShoppingCarts.setBackground(goldColor);
+        createViewCustomerShoppingCarts.setSize(new Dimension(450,450));
         createViewCustomerShoppingCarts.setLayout(new BoxLayout(createViewCustomerShoppingCarts, BoxLayout.Y_AXIS));
-        JLabel titleLabel = new JLabel("Select Product to view Number in Customer's Shopping Carts");
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
         JPanel topPanel = new JPanel();
-        Dimension topPanelDimension = new Dimension(600, 100);
-        topPanel.setMaximumSize(topPanelDimension);
-        topPanel.setMinimumSize(topPanelDimension);
+        topPanel.setOpaque(false);
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        topPanel.add(createBackToStoreStatisticsButton());
-        topPanel.add(Box.createHorizontalStrut(10));
+        topPanel.setPreferredSize(new Dimension(450, 50));
+        topPanel.setMaximumSize(new Dimension(450, 50));
+
+        JLabel titleLabel = new JLabel(selectedStore.getName() + " Customer Carts");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+
+        topPanel.add(Box.createHorizontalStrut(20));
+        topPanel.add(createBackToSpecificStoreStatisticsSaleTypeButton());
+        topPanel.add(Box.createHorizontalGlue());
         topPanel.add(titleLabel);
-        topPanel.add(Box.createHorizontalStrut(10));
+        topPanel.add(Box.createHorizontalStrut(50));
+        topPanel.add(Box.createHorizontalGlue());
 
-        Dimension buttonDimension = new Dimension(300, 70);
-        createViewCustomerShoppingCarts.add(Box.createVerticalStrut(20));
+        createViewCustomerShoppingCarts.add(Box.createVerticalStrut(10));
         createViewCustomerShoppingCarts.add(topPanel);
+        createViewCustomerShoppingCarts.add(Box.createVerticalStrut(10));
 
-        // dummy products list in a store
-        JPanel storeNamePanel = new JPanel();
-        String[] dummyProducts= new String[]{"Product One", "Product Two", "Product Three", "Product Four", "Product Five",
-                "Product Six", "Product Seven", "Product Eight", "Product Nine", "Product Ten", "Product Eleven", "Product Twelve"};
-        storeNamePanel.setLayout(new BoxLayout(storeNamePanel, BoxLayout.Y_AXIS));
+        JPanel sortingPanel = new JPanel();
+        sortingPanel.setOpaque(false);
+        sortingPanel.setLayout(new BoxLayout(sortingPanel, BoxLayout.X_AXIS));
+        sortingPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        sortingPanel.setSize(new Dimension(450,25));
+        JLabel sortingLabel = new JLabel("Sort by ");
+        sortingPanel.add(sortingLabel);
+        String[] sortingOptions = {"In Carts High to Low", "In Carts Low to High"};
+        JComboBox<String> sortOptions = new JComboBox<>(sortingOptions);
+        sortOptions.setBorder(customBorder);
+        sortOptions.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedOption = (String) sortOptions.getSelectedItem();
+
+                ArrayList<Product> storeProducts = products;
+
+                ArrayList<Product> sortedProducts = new ArrayList<>();
+
+                // Saving Implementation for when customers is complete to test with data
+                switch (selectedOption) {
+
+                    case "In Carts High to Low" -> {
+
+                        sortedProducts = Product.sortByAmountInShoppingCarts(products, "high");
+
+                    }
+                    case "In Carts Low to High" -> {
+
+                        sortedProducts = Product.sortByAmountInShoppingCarts(products, "low");
+
+                    }
+                }
+
+                shoppingCartsPanel.removeAll();
+
+                for (Product product : sortedProducts) {
+                    JLabel shoppingCartLabel = new JLabel(product.getName());
+                    shoppingCartLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                    shoppingCartLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+                    shoppingCartLabel.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+
+                            selectedProductInShoppingCartLabel.setText(String.format("Product %s is currently in %d shopping carts", product.getName(), product.getAmountInShoppingCarts()));
+
+                        }
+                    });
+                    shoppingCartsPanel.add(shoppingCartLabel);
+                    shoppingCartsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
+                }
+
+                if (!products.isEmpty()) {
+                    shoppingCartsPanel.remove(shoppingCartsPanel.getComponentCount() - 1);
+                }
+
+                shoppingCartsPanel.revalidate();
+                shoppingCartsPanel.repaint();
 
 
-        for (String name : dummyProducts) {
-            JLabel label = new JLabel(name);
-            label.setAlignmentX(Component.CENTER_ALIGNMENT);
-            label.setFont(new Font("Arial", Font.PLAIN, 18));
+            }
+        });
+        sortOptions.setMinimumSize(new Dimension(200,25));
+        sortOptions.setMaximumSize(new Dimension(200,25));
+        sortingPanel.add(sortOptions);
+        createViewCustomerShoppingCarts.add(sortingPanel);
 
+        JPanel helperPanel = new JPanel();
+        helperPanel.setLayout(new BorderLayout());
 
-            label.addMouseListener(new MouseAdapter() {
+        shoppingCartsPanel = new JPanel();
+        shoppingCartsPanel.setOpaque(false);
+        shoppingCartsPanel.setLayout(new BoxLayout(shoppingCartsPanel, BoxLayout.Y_AXIS));
+
+        for (Product product : products) {
+            JLabel shoppingCartLabel = new JLabel(product.getName());
+            shoppingCartLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            shoppingCartLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+            shoppingCartLabel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    // Handle click event
-                    productInShoppingCartName = label.getText();
-                    // Update the display with the selected store's name
-                    selectedProductInShoppingCartLabel.setText(productInShoppingCartName + " is currently in " + 2 + " Customers Shopping Carts"); // dummy number of products temporarily
+
+                    selectedProductInShoppingCartLabel.setText(String.format("Product %s is currently in %d shopping carts", product.getName(), product.getAmountInShoppingCarts()));
+
                 }
             });
-
-            storeNamePanel.add(label);
-            storeNamePanel.add(new JSeparator(JSeparator.HORIZONTAL));
+            shoppingCartsPanel.add(shoppingCartLabel);
+            shoppingCartsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
         }
 
-        // Remove the last separator to avoid an extra line at the end
-        storeNamePanel.remove(storeNamePanel.getComponentCount() - 1);
+        if (!products.isEmpty()) {
+            shoppingCartsPanel.remove(shoppingCartsPanel.getComponentCount() - 1);
+        }
 
-        JScrollPane psp = new JScrollPane(storeNamePanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        helperPanel.add(shoppingCartsPanel, BorderLayout.NORTH);
 
-        // Display selected store's name
-        psp.setPreferredSize(new Dimension(500, 320));
-        selectedProductInShoppingCartLabel = new JLabel("Selected Product in Shopping Cart: ");
+        JScrollPane jScrollPane = new JScrollPane(helperPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
+        jScrollPane.setBorder(customBorder);
+        jScrollPane.setPreferredSize(new Dimension(300,300));
+        jScrollPane.setMaximumSize(new Dimension(300,300));
+
+        createViewCustomerShoppingCarts.add(Box.createVerticalStrut(20));
+        createViewCustomerShoppingCarts.add(jScrollPane);
+
+        selectedProductInShoppingCartLabel = new JLabel("Shopping cart statistic" );
         selectedProductInShoppingCartLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        selectedProductInShoppingCartLabel.setFont(new Font("Arial", Font.PLAIN, 18));
 
-
-        createViewCustomerShoppingCarts.add(Box.createVerticalStrut(20));
-        createViewCustomerShoppingCarts.add(topPanel);
-        createViewCustomerShoppingCarts.add(Box.createVerticalStrut(20));
-        createViewCustomerShoppingCarts.add(psp);
-        createViewCustomerShoppingCarts.add(Box.createVerticalStrut(20));
         createViewCustomerShoppingCarts.add(selectedProductInShoppingCartLabel);
         createViewCustomerShoppingCarts.add(Box.createVerticalStrut(20));
 
         return createViewCustomerShoppingCarts;
+
     }
 
 
 
     private static JPanel createFieldWithLabel(String labelText, JComponent field) {
         JPanel panel = new JPanel();
+        panel.setPreferredSize(new Dimension(400, 50));
+        panel.setMaximumSize(new Dimension(400, 50));
+        panel.setOpaque(false);
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-        JLabel label = new JLabel(labelText);
+        JLabel label = new JLabel(labelText, JLabel.LEADING);
         label.setFont(new Font("Arial", Font.PLAIN, 18));
         label.setPreferredSize(new Dimension(100, 20));
+        label.setMaximumSize(new Dimension(100, 20));
+        label.setMinimumSize(new Dimension(100, 20));
+        field.setPreferredSize(new Dimension(300, 20));
+        field.setMaximumSize(new Dimension(300, 50));
         panel.add(label);
         panel.add(field);
         return panel;
@@ -2144,18 +2464,7 @@ public class SellerPanel {
 
 
 
-    private static Double getDouble(JSpinner doubleSpinner) {
-        return (Double) doubleSpinner.getValue();
-    }
 
-    public JPanel getMainSellerPanel() {
-        return mainSellerPanel;
-    }
-
-    public void switchToAccountPanelButton(ActionListener actionListener) {
-        //Work here
-
-    }
 
     private static class DoubleSpinner extends JSpinner {
 
@@ -2169,9 +2478,14 @@ public class SellerPanel {
 
     private JButton createBackToMenuButton() {
         JButton backButton = new JButton("<");
+        backButton.setPreferredSize(new Dimension(30,50));
+        backButton.setMinimumSize(new Dimension(30,50));
+        backButton.setMaximumSize(new Dimension(30, 50));
         Font largeFont = new Font("Arial", Font.PLAIN, 18);
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backButton.setFont(largeFont);
+        backButton.setBorder(customBorder);
+        backButton.setBackground(greyButtonColor);
 //        Dimension buttonSize = new Dimension(70, 10);
 //        backButton.setPreferredSize(buttonSize);
         backButton.addActionListener(new ActionListener() {
@@ -2196,14 +2510,16 @@ public class SellerPanel {
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(cardPanel, "Edit Store");
                 frame.setSize(400, 500);
-                frame.setLocationRelativeTo(null);
-            }
+        frame.setLocation(300,250);            }
         });
         return backButton;
     }
 
-    private JButton createBackToStoreStatisticsButton() {
+    private JButton createBackToViewStoreStatisticsSaleTypeButton() {
         JButton backButton = new JButton("<");
+        backButton.setPreferredSize(new Dimension(30,50));
+        backButton.setMinimumSize(new Dimension(30,50));
+        backButton.setMaximumSize(new Dimension(30, 50));
         Font largeFont = new Font("Arial", Font.PLAIN, 18);
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backButton.setFont(largeFont);
@@ -2212,10 +2528,8 @@ public class SellerPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cardPanel.removeAll();
-                cardPanel.add(createViewSpecificStoreStatisticsPanel(), "Store Statistics");
+                cardPanel.add(createViewSpecificStoreStatisticsSaleTypePanel(), "Store Statistics");
                 cardLayout.show(cardPanel, "Store Statistics");
-                frame.setSize(400, 450);
-                frame.setLocationRelativeTo(null);
             }
         });
         return backButton;
@@ -2223,7 +2537,13 @@ public class SellerPanel {
 
     private JButton createBackToSpecificStoreStatisticsButton() {
         JButton backButton = new JButton("<");
+        backButton.setPreferredSize(new Dimension(30,50));
+        backButton.setMinimumSize(new Dimension(30,50));
+        backButton.setMaximumSize(new Dimension(30, 50));
+        backButton.setBorder(customBorder);
+        backButton.setBackground(greyButtonColor);
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        backButton.setAlignmentY(Component.CENTER_ALIGNMENT);
         Font largeFont = new Font("Arial", Font.PLAIN, 18);
         backButton.setFont(largeFont);
 
@@ -2240,6 +2560,11 @@ public class SellerPanel {
 
     private JButton createBackToSpecificStoreStatisticsSaleTypeButton() {
         JButton backButton = new JButton("<");
+        backButton.setPreferredSize(new Dimension(30,50));
+        backButton.setMinimumSize(new Dimension(30,50));
+        backButton.setMaximumSize(new Dimension(30, 50));
+        backButton.setBorder(customBorder);
+        backButton.setBackground(greyButtonColor);
         Font largeFont = new Font("Arial", Font.PLAIN, 18);
         backButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         backButton.setFont(largeFont);
@@ -2269,6 +2594,16 @@ public class SellerPanel {
         });
         return backButton;
     }
+
+    private static ArrayList<Store> getAllStores() {
+        ArrayList<Seller> allSellers = new Request().getAllSellers();
+        ArrayList<Store> allStores = new ArrayList<>();
+        for (Seller seller: allSellers) {
+            allStores.addAll(seller.getSellerStores());
+        }
+        return allStores;
+    }
+
 }
 
 
