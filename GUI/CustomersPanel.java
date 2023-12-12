@@ -2162,6 +2162,8 @@ public class CustomersPanel {
 
                     product.purchaseProduct(entry.getValue());
 
+                    product.getStore().getPurchasers().add(new Purchaser(currentCustomer.getUsername(), product.getName(), entry.getValue(), entry.getValue() * product.getPrice()));
+
                     new Request().updateSeller(product.getStore().getSellerOwner());
 
                     currentCustomer.getPreviouslyPurchasedProducts().add(new PurchasedProduct(product, entry.getValue()));
