@@ -174,6 +174,7 @@ public class SellerPanel {
         createStoreButton.addActionListener(e -> {
             cardPanel.removeAll();
             cardPanel.add(createStorePanel(), "Create Store");
+            frame.setSize(400,400);
             cardLayout.show(cardPanel, "Create Store");
         });
 
@@ -331,6 +332,7 @@ public class SellerPanel {
         frame.setLocationRelativeTo(null);
         JPanel listStorePanel = new JPanel();
         listStorePanel.setLayout(new BoxLayout(listStorePanel, BoxLayout.Y_AXIS));
+        listStorePanel.setBackground(goldColor);
 
         // Back button
         JButton backButton2 = createBackToMenuButton();
@@ -342,6 +344,7 @@ public class SellerPanel {
 
         // Panel for back button and title
         JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
         topPanel.setMaximumSize(new Dimension(400, 75));
         topPanel.setMinimumSize(new Dimension(400, 75));
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
@@ -357,11 +360,13 @@ public class SellerPanel {
 
         // Create a JPanel to hold vertically listed JLabels
         JPanel storeNamePanel = new JPanel();
+        storeNamePanel.setOpaque(false);
         storeNamePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         storeNamePanel.setLayout(new BoxLayout(storeNamePanel, BoxLayout.Y_AXIS));
 
         // Create helper panel to help center store labels
         JPanel helperPanel = new JPanel();
+        helperPanel.setOpaque(false);
         helperPanel.setLayout(new BorderLayout());
 
         for (Store store : sellerStores) {
@@ -382,6 +387,8 @@ public class SellerPanel {
         JScrollPane psp = new JScrollPane(helperPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         psp.setPreferredSize(scrollPaneDimension);
         psp.setMaximumSize(scrollPaneDimension);
+        psp.getViewport().setBackground(greyButtonColor);
+        psp.setBorder(customBorder);
 
         listStorePanel.setLayout(new BoxLayout(listStorePanel, BoxLayout.Y_AXIS));
 
@@ -404,6 +411,7 @@ public class SellerPanel {
     private JPanel createEditStorePanel() {
         selectedStore = null;
         JPanel editStorePanel = new JPanel();
+        editStorePanel.setBackground(goldColor);
         editStorePanel.setLayout(new BoxLayout(editStorePanel, BoxLayout.Y_AXIS));
 
         // Back button
@@ -416,6 +424,7 @@ public class SellerPanel {
 
         // Panel for back button and title
         JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
         topPanel.setMaximumSize(new Dimension(400, 75));
         topPanel.setMinimumSize(new Dimension(400, 75));
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
@@ -425,6 +434,7 @@ public class SellerPanel {
         topPanel.add(titleLabel);
 
         JPanel storeNamePanel = new JPanel();
+        storeNamePanel.setOpaque(false);
         ArrayList<Store> sellerStores = new Request().getSeller(userEmail).getSellerStores();
         storeNamePanel.setLayout(new BoxLayout(storeNamePanel, BoxLayout.Y_AXIS));
 
@@ -450,7 +460,9 @@ public class SellerPanel {
             });
 
             storeNamePanel.add(label);
-            storeNamePanel.add(new JSeparator(JSeparator.HORIZONTAL));
+            JSeparator sep = new JSeparator(JSeparator.HORIZONTAL);
+            sep.setBackground(Color.BLACK);
+            storeNamePanel.add(sep);
         }
 
         // Remove the last separator to avoid an extra line at the end
@@ -460,6 +472,8 @@ public class SellerPanel {
 
         JScrollPane psp = new JScrollPane(storeNamePanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         psp.setPreferredSize(new Dimension(300, 320));
+        psp.getViewport().setBackground(greyButtonColor);
+        psp.setBorder(customBorder);
 
 
         // Confirm button
@@ -467,6 +481,8 @@ public class SellerPanel {
         JButton confirmButton = new JButton("Confirm");
         confirmButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         confirmButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        confirmButton.setBorder(customBorder);
+        confirmButton.setBackground(greyButtonColor);
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -506,6 +522,7 @@ public class SellerPanel {
     private JPanel createStorePanel() {
         JPanel createStorePanel = new JPanel();
         createStorePanel.setLayout(new BoxLayout(createStorePanel, BoxLayout.Y_AXIS));
+        createStorePanel.setBackground(goldColor);
 
         // Title
         JLabel titleLabel = new JLabel("Create Store");
@@ -517,6 +534,7 @@ public class SellerPanel {
 
         // Top Panel
         JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.add(backToMenuButton);
         topPanel.add(Box.createHorizontalStrut(90));
@@ -528,15 +546,19 @@ public class SellerPanel {
 
         // Form Panel
         JPanel formPanel = new JPanel(new GridLayout(2, 1, 10, 10));
+        formPanel.setOpaque(false);
 
         // Name
         JTextField nameTextField = new JTextField(20);
+        nameTextField.setBorder(customBorder);
 
         formPanel.add(createFieldWithLabel("Name:", nameTextField));
 
         // Create Store Button
         JButton createStoreButton = new JButton("Create Store");
         createStoreButton.setFont(new Font("Arial", Font.PLAIN, 16));
+        createStoreButton.setBackground(greyButtonColor);
+        createStoreButton.setBorder(customBorder);
         createStoreButton.addActionListener(e -> {
             // Handle the creation of the store here
             String name = nameTextField.getText().trim();
@@ -575,6 +597,7 @@ public class SellerPanel {
         selectedProduct = null;
         JPanel editProductPanel = new JPanel();
         editProductPanel.setLayout(new BoxLayout(editProductPanel, BoxLayout.Y_AXIS));
+        editProductPanel.setBackground(goldColor);
 
         Dimension titleDimension = new Dimension(400, 50);
         JLabel titleLabelProduct = new JLabel("Select a Product from " + selectedStore.getName());
@@ -585,6 +608,7 @@ public class SellerPanel {
 
         // Panel for back button and title
         JPanel titlePanelProduct = new JPanel();
+        titlePanelProduct.setOpaque(false);
         titlePanelProduct.setLayout(new BoxLayout(titlePanelProduct, BoxLayout.X_AXIS));  // Use BorderLayout for the title panel
         titlePanelProduct.add(Box.createHorizontalStrut(15));  // Add space between back button and title
         titlePanelProduct.add(createBackToMenuButton());  // Align the back button to the left
@@ -592,6 +616,7 @@ public class SellerPanel {
         titlePanelProduct.add(titleLabelProduct);  // Center-align the title
 
         JPanel storeNamePanelProduct = new JPanel();
+        storeNamePanelProduct.setOpaque(false);
         ArrayList<Product> storeProducts = new Request().getSeller(userEmail).getStore(selectedStore).getProducts();
         storeNamePanelProduct.setLayout(new BoxLayout(storeNamePanelProduct, BoxLayout.Y_AXIS));
 
@@ -616,7 +641,9 @@ public class SellerPanel {
 
 
             storeNamePanelProduct.add(label);
-            storeNamePanelProduct.add(new JSeparator(JSeparator.HORIZONTAL));
+            JSeparator sep = new JSeparator(JSeparator.HORIZONTAL);
+            sep.setBackground(Color.BLACK);
+            storeNamePanelProduct.add(sep);
         }
 
         // Remove the last separator to avoid an extra line at the end
@@ -625,7 +652,8 @@ public class SellerPanel {
         }
 
         JScrollPane pspProduct = new JScrollPane(storeNamePanelProduct, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
+        pspProduct.getViewport().setBackground(greyButtonColor);
+        pspProduct.setBorder(customBorder);
         pspProduct.setPreferredSize(new Dimension(300, 320));
 
 
@@ -633,6 +661,8 @@ public class SellerPanel {
         JButton confirmButtonProduct = new JButton("Confirm");
         confirmButtonProduct.setAlignmentX(Component.CENTER_ALIGNMENT);
         confirmButtonProduct.setFont(new Font("Arial", Font.PLAIN, 18));
+        confirmButtonProduct.setBackground(greyButtonColor);
+        confirmButtonProduct.setBorder(customBorder);
         confirmButtonProduct.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -703,6 +733,7 @@ public class SellerPanel {
         frame.setSize(400, 500);  // Set the frame size accordingly
         frame.setLocationRelativeTo(null);  // Center the frame
         JPanel contactSellerPanel = new JPanel();
+        contactSellerPanel.setBackground(goldColor);
         contactSellerPanel.setLayout(new BoxLayout(contactSellerPanel, BoxLayout.Y_AXIS));
 
         // Back button
@@ -714,6 +745,8 @@ public class SellerPanel {
 
         // inbox button
         JButton messagesButton = new JButton("Messages");
+        messagesButton.setBackground(greyButtonColor);
+        messagesButton.setBorder(customBorder);
         //messagesButton.setFont(new Font("Arial", Font.BOLD, 10));
         messagesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -724,6 +757,7 @@ public class SellerPanel {
         });
 
         JPanel titlePanel = new JPanel();
+        titlePanel.setOpaque(false);
         titlePanel.setMaximumSize(new Dimension(400, 100));
         titlePanel.setPreferredSize(new Dimension(400, 100));
         GridBagLayout layout = new GridBagLayout();
@@ -749,6 +783,7 @@ public class SellerPanel {
 
 
         JPanel customerNamePanel = new JPanel();
+        customerNamePanel.setOpaque(false);
         ArrayList<Customer> allCustomers = new Request().getAllCustomers();
         customerNamePanel.setLayout(new BoxLayout(customerNamePanel, BoxLayout.Y_AXIS));
         for (Customer customer : allCustomers) {
@@ -780,7 +815,7 @@ public class SellerPanel {
         if (!allCustomers.isEmpty()) {customerNamePanel.remove(customerNamePanel.getComponentCount() - 1);}
 
         JScrollPane jsp = new JScrollPane(helperPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
+        jsp.setBorder(customBorder);
         // Display selected seller's name
         jsp.setPreferredSize(new Dimension(250, 300));
         jsp.setMaximumSize(new Dimension(250,300));
@@ -790,6 +825,7 @@ public class SellerPanel {
 
         // Container for the message components
         JPanel messagePanel = new JPanel();
+        messagePanel.setOpaque(false);
         messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
 
         // Label above JTextArea
@@ -800,17 +836,21 @@ public class SellerPanel {
         // JTextArea for entering the message
         JTextArea messageTextArea = new JTextArea();
         messageTextArea.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         messageTextArea.setLineWrap(true);
         messageTextArea.setWrapStyleWord(true);
         messageTextArea.setFont(new Font("Arial", Font.PLAIN, 16));
 
 
         JScrollPane messageScrollPane = new JScrollPane(messageTextArea);
+        messageScrollPane.setBorder(customBorder);
         messageScrollPane.setPreferredSize(new Dimension(250, 100));
         messageScrollPane.setMaximumSize(new Dimension(250, 100));
 
         // Button to send the message
         JButton sendMessageButton = new JButton("Send Message");
+        sendMessageButton.setBackground(greyButtonColor);
+        sendMessageButton.setBorder(customBorder);
         sendMessageButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         sendMessageButton.addActionListener(new ActionListener() {
@@ -868,17 +908,22 @@ public class SellerPanel {
         frame.setLocationRelativeTo(null);
         JPanel sellerMessagesPanel = new JPanel();
         sellerMessagesPanel.setLayout(new BoxLayout(sellerMessagesPanel, BoxLayout.Y_AXIS));
+        sellerMessagesPanel.setBackground(goldColor);
 
         JButton backToContactCustomersButton = createBackToContactCustomersButton();
+        backToContactCustomersButton.setBorder(customBorder);
+        backToContactCustomersButton.setBackground(greyButtonColor);
         backToContactCustomersButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backToContactCustomersButton.setFont(new Font("Arial", Font.PLAIN, 18));
 
         JLabel sellerMessagesLabel = new JLabel("Seller Messages");
+
         sellerMessagesLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         sellerMessagesLabel.setFont(new Font("Arial", Font.BOLD, 24));
 
         Dimension topDimension = new Dimension(400, 75);
         JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.setMinimumSize(topDimension);
         topPanel.setMaximumSize(topDimension);
@@ -889,6 +934,7 @@ public class SellerPanel {
         topPanel.add(Box.createHorizontalStrut(20));
 
         JPanel messagesPanel = new JPanel();
+        messagesPanel.setOpaque(false);
         ArrayList<String> messageLines = new Request().getMessages(new Request().getAccount(userEmail));
         messagesPanel.setLayout(new BoxLayout(messagesPanel, BoxLayout.Y_AXIS));
         messagesPanel.add(Box.createHorizontalStrut(40));
@@ -929,6 +975,7 @@ public class SellerPanel {
         }
 
         JPanel helperPanel = new JPanel();
+
         helperPanel.setLayout(new BorderLayout());
 
         helperPanel.add(messagesPanel, BorderLayout.NORTH);
@@ -937,13 +984,15 @@ public class SellerPanel {
         if (messageLines.isEmpty()) {messagesPanel.remove(messagesPanel.getComponentCount() - 1);}
 
         JScrollPane jsp = new JScrollPane(helperPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
+        jsp.setBorder(customBorder);
         Dimension jspDimension = new Dimension(350, 250);
         jsp.setMaximumSize(jspDimension);
         jsp.setPreferredSize(jspDimension);
 
         Dimension customerFullMessagePanelDimension = new Dimension(400, 400);
-        JPanel customerFullMessagePanel = new JPanel(new FlowLayout(FlowLayout.CENTER)); // Use FlowLayout with left alignment
+        JPanel customerFullMessagePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        customerFullMessagePanel.setOpaque(false);
+        // Use FlowLayout with left alignment
 //        customerFullMessagePanel.setMaximumSize(customerFullMessagePanelDimension);
 //        customerFullMessagePanel.setMinimumSize(customerFullMessagePanelDimension);
 
@@ -953,6 +1002,7 @@ public class SellerPanel {
         selectedCustomerMessageLabel.setEditable(false); // Prevent editing in JTextArea
         selectedCustomerMessageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         selectedCustomerMessageLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        selectedCustomerMessageLabel.setBorder(customBorder);
 
         JScrollPane messageScrollPane = new JScrollPane(selectedCustomerMessageLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         messageScrollPane.setPreferredSize(new Dimension(350, 100));
@@ -972,9 +1022,12 @@ public class SellerPanel {
     private JPanel createEditStoreDetailsPanel() {
         JPanel editStoreDetailsPanel = new JPanel();
         editStoreDetailsPanel.setLayout(new BoxLayout(editStoreDetailsPanel, BoxLayout.Y_AXIS));
+        editStoreDetailsPanel.setBackground(goldColor);
 
         // Back button
         JButton backButton = createBackToEditStoreButton();
+        backButton.setBackground(greyButtonColor);
+        backButton.setBorder(customBorder);
         String storeText = "    Edit " + selectedStore.getName() + "'s Panel";
         JLabel titleLabel = new JLabel(storeText);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -982,6 +1035,7 @@ public class SellerPanel {
 
         // Panel for back button and title
         JPanel titlePanel = new JPanel();
+        titlePanel.setOpaque(false);
         titlePanel.setLayout(new BorderLayout());
         titlePanel.add(backButton, BorderLayout.WEST);
         titlePanel.add(Box.createHorizontalStrut(20));
@@ -989,6 +1043,8 @@ public class SellerPanel {
 
         // Buttons for various actions
         JButton addProductButton = createButton("Add Product");
+        addProductButton.setBackground(greyButtonColor);
+        addProductButton.setBorder(customBorder);
         addProductButton.addActionListener(e -> {
             cardPanel.removeAll();
             cardPanel.add(createProductPanel(), "Create Product");
@@ -999,9 +1055,13 @@ public class SellerPanel {
 
 
         JButton csvImportButton = createButton("CSV Import");
+        csvImportButton.setBackground(greyButtonColor);
+        csvImportButton.setBorder(customBorder);
         csvImportButton.addActionListener(e -> handleCSVImport());
 
         JButton deleteStoreButton = createButton("Delete Store");
+        deleteStoreButton.setBackground(greyButtonColor);
+        deleteStoreButton.setBorder(customBorder);
         deleteStoreButton.addActionListener(e -> {
             int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete the store: " + selectedStore.getName() + "?", "Confirmation", JOptionPane.YES_NO_OPTION);
 
@@ -1028,6 +1088,9 @@ public class SellerPanel {
         });
 
         JButton changeStoreNameButton = createButton("Change Store Name");
+        changeStoreNameButton.setBackground(greyButtonColor);
+        changeStoreNameButton.setBorder(customBorder);
+
 
         changeStoreNameButton.addActionListener(e -> {
             // Prompt user for the new store name
@@ -1062,6 +1125,8 @@ public class SellerPanel {
             }
         });
         JButton editStoreProductsButton = createButton("Edit Store Products");
+        editStoreProductsButton.setBackground(greyButtonColor);
+        editStoreProductsButton.setBorder(customBorder);
         editStoreProductsButton.addActionListener(e -> {
             cardPanel.add(createEditProductPanel(), "Edit Product");
             cardLayout.show(cardPanel, "Edit Product");
@@ -1125,6 +1190,7 @@ public class SellerPanel {
 
         JPanel createProductPanel = new JPanel();
         createProductPanel.setLayout(new BoxLayout(createProductPanel, BoxLayout.Y_AXIS));
+        createProductPanel.setBackground(goldColor);
 
         // Title
         JLabel titleLabel = new JLabel("Create Product");
@@ -1136,6 +1202,7 @@ public class SellerPanel {
 
         // Top Panel
         JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.add(backToMenuButton);
         topPanel.add(Box.createHorizontalStrut(85));
@@ -1147,24 +1214,29 @@ public class SellerPanel {
 
         // Form Panel
         JPanel formPanel = new JPanel(new GridLayout(6, 1, 10, 10));
+        formPanel.setOpaque(false);
 
         // Name
         JTextField nameTextField = new JTextField(20);
+        nameTextField.setBorder(customBorder);
         formPanel.add(createFieldWithLabel("Name:", nameTextField));
 
         // Description
         JTextArea descriptionTextArea = new JTextArea(8, 20); // Increase the number of rows
         JScrollPane descriptionScrollPane = new JScrollPane(descriptionTextArea);
+        descriptionScrollPane.setBorder(customBorder);
         descriptionScrollPane.setPreferredSize(new Dimension(250, 120)); // Adjust the size
         formPanel.add(createFieldWithLabel("Description:", descriptionScrollPane));
 
         // Price
         DoubleSpinner priceSpinner = createDoubleSpinner();
+        priceSpinner.setBorder(customBorder);
         formPanel.add(createFieldWithLabel("Price:", priceSpinner));
 
         // Quantity
         SpinnerModel quantityModel = new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1);
         JSpinner quantitySpinner = new JSpinner(quantityModel);
+        quantitySpinner.setBorder(customBorder);
         formPanel.add(createFieldWithLabel("Quantity:", quantitySpinner));
 
 
@@ -1173,6 +1245,7 @@ public class SellerPanel {
         Store[] stores = new Store[sellerStores.size()];
         stores = sellerStores.toArray(stores);
         JComboBox<Store> storeComboBox = new JComboBox<>(stores);
+        storeComboBox.setBorder(customBorder);
         formPanel.add(createFieldWithLabel("Store:", storeComboBox));
 
         // Create Product Button
@@ -1261,6 +1334,8 @@ public class SellerPanel {
         createProductButton.add(Box.createVerticalStrut(10));
         createProductPanel.add(formPanel);
         createProductButton.add(Box.createVerticalStrut(10));
+        createProductButton.setBackground(greyButtonColor);
+        createProductButton.setBorder(customBorder);
 
         return createProductPanel;
     }
@@ -1269,6 +1344,7 @@ public class SellerPanel {
         frame.setResizable(true);
         JPanel createProductPanel = new JPanel();
         createProductPanel.setLayout(new BoxLayout(createProductPanel, BoxLayout.Y_AXIS));
+        createProductPanel.setBackground(goldColor);
 
         // Title
         JLabel titleLabel = new JLabel("    Edit Product: "+ selectedProduct.getName());
@@ -1282,31 +1358,38 @@ public class SellerPanel {
         topPanel.add(Box.createHorizontalStrut(10));
         topPanel.add(titleLabel);
         topPanel.add(Box.createHorizontalGlue()); // Add glue to push the title to the right
+        topPanel.setOpaque(false);
 
         createProductPanel.add(topPanel);
         createProductPanel.add(Box.createVerticalStrut(20));
 
         // Form Panel
         JPanel formPanel = new JPanel(new GridLayout(7, 1, 10, 10));
+        formPanel.setOpaque(false);
 
         // Name
         JTextField nameTextField = new JTextField(20);
+        nameTextField.setBorder(customBorder);
         nameTextField.setText(selectedProduct.getName()); // Autofill the name field
         formPanel.add(createFieldWithLabel("Name:", nameTextField));
 
         // Description
         JTextArea descriptionTextArea = new JTextArea(8, 20); // Increase the number of rows
         JScrollPane descriptionScrollPane = new JScrollPane(descriptionTextArea);
+        descriptionScrollPane.setBorder(customBorder);
         descriptionScrollPane.setPreferredSize(new Dimension(250, 120)); // Adjust the size
         formPanel.add(createFieldWithLabel("Description:", descriptionScrollPane));
 
+
         // Price
         DoubleSpinner priceSpinner = createDoubleSpinner();
+        priceSpinner.setBorder(customBorder);
         formPanel.add(createFieldWithLabel("Price:", priceSpinner));
 
         // Quantity
         SpinnerModel quantityModel = new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1);
         JSpinner quantitySpinner = new JSpinner(quantityModel);
+        quantitySpinner.setBorder(customBorder);
         formPanel.add(createFieldWithLabel("Quantity:", quantitySpinner));
 
         // Store Label
@@ -1320,6 +1403,8 @@ public class SellerPanel {
         // Edit Product Button
         JButton editProductButton = new JButton("Edit Product");
         editProductButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        editProductButton.setBackground(greyButtonColor);
+        editProductButton.setBorder(customBorder);
         editProductButton.addActionListener(e -> {
             // Handle the creation of the product here
             String name = nameTextField.getText().trim();
@@ -1394,6 +1479,8 @@ public class SellerPanel {
         JButton deleteProductButton = new JButton("Delete Product");
         deleteProductButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         deleteProductButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        deleteProductButton.setBackground(greyButtonColor);
+        deleteProductButton.setBorder(customBorder);
         deleteProductButton.addActionListener(e -> {
             // Handle the deletion of the product here
             int deleteResult = JOptionPane.showConfirmDialog(createProductPanel,
@@ -1440,6 +1527,8 @@ public class SellerPanel {
     private Component createBackToEditProductButton() {
 
         JButton backButton = new JButton("<");
+        backButton.setBackground(greyButtonColor);
+        backButton.setBorder(customBorder);
         Font largeFont = new Font("Arial", Font.PLAIN, 18);
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backButton.setFont(largeFont);
@@ -1637,6 +1726,7 @@ public class SellerPanel {
         selectedStore = null;
 
         JPanel createViewSpecificStoreStatistics = new JPanel();
+        createViewSpecificStoreStatistics.setBackground(goldColor);
         createViewSpecificStoreStatistics.setLayout(new BoxLayout(createViewSpecificStoreStatistics, BoxLayout.Y_AXIS));
 
         JLabel titleLabel = new JLabel("Which Store's Statistics Would You Like to View?");
@@ -1644,6 +1734,7 @@ public class SellerPanel {
         titleLabel.setFont(new Font("Arial", Font.BOLD, 13));
 
         JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
         Dimension topPanelDimension = new Dimension(450, 50);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.setMaximumSize(topPanelDimension);
@@ -1660,11 +1751,13 @@ public class SellerPanel {
 
         // Create a JPanel to hold vertically listed JLabels
         JPanel panel = new JPanel();
+        panel.setOpaque(false);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setPreferredSize(new Dimension(280, 300));
 
         // Create helper panel to help center store labels
         JPanel helperPanel = new JPanel();
+        helperPanel.setOpaque(false);
         helperPanel.setLayout(new BorderLayout());
         helperPanel.setSize(new Dimension(280, 300));
 
@@ -1683,8 +1776,10 @@ public class SellerPanel {
                     selectedStoreStatsLabel.setText("Selected Store: " + selectedStore.getName());
                 }
             });
+            JSeparator sep = new JSeparator(SwingConstants.HORIZONTAL);
+            sep.setBackground(Color.BLACK);
             panel.add(storeLabel);
-            panel.add(new JSeparator(SwingConstants.HORIZONTAL));
+            panel.add(sep);
         }
 
         if (!sellerStores.isEmpty()) {
@@ -1694,6 +1789,8 @@ public class SellerPanel {
         helperPanel.add(panel);
 
         JScrollPane psp = new JScrollPane(helperPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        psp.getViewport().setBackground(greyButtonColor);
+        psp.setBorder(customBorder);
         psp.setPreferredSize(scrollPaneDimension);
         psp.setMaximumSize(scrollPaneDimension);
 
@@ -1703,6 +1800,8 @@ public class SellerPanel {
 
         // Confirm button
         JButton confirmButton = new JButton("Confirm");
+        confirmButton.setBackground(greyButtonColor);
+        confirmButton.setBorder(customBorder);
         confirmButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         confirmButton.setFont(new Font("Arial", Font.PLAIN, 18));
         confirmButton.addActionListener(new ActionListener() {
@@ -1739,12 +1838,14 @@ public class SellerPanel {
         frame.setSize(450, 300);
         frame.setLocationRelativeTo(null);
         JPanel createViewSpecificStoreStatisticsSaleType = new JPanel();
+        createViewSpecificStoreStatisticsSaleType.setBackground(goldColor);
         createViewSpecificStoreStatisticsSaleType.setLayout(new BoxLayout(createViewSpecificStoreStatisticsSaleType, BoxLayout.Y_AXIS));
         JLabel titleLabel = new JLabel("Which Statistics would you Like To View?");
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
         JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
         Dimension topPanelDimension = new Dimension(450, 50);
         topPanel.setMaximumSize(topPanelDimension);
         topPanel.setMinimumSize(topPanelDimension);
@@ -1759,6 +1860,8 @@ public class SellerPanel {
 
         // change to view sort
         JButton specificStoreSortByCustomer = new JButton(("Customer Sales"));
+        specificStoreSortByCustomer.setBackground(greyButtonColor);
+        specificStoreSortByCustomer.setBorder(customBorder);
         specificStoreSortByCustomer.setMaximumSize(buttonDimension);
         specificStoreSortByCustomer.setMinimumSize(buttonDimension);
         specificStoreSortByCustomer.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -1772,6 +1875,8 @@ public class SellerPanel {
         });
 
         JButton specificStoreSortByProduct = new JButton(("Product Sales"));
+        specificStoreSortByProduct.setBackground(greyButtonColor);
+        specificStoreSortByProduct.setBorder(customBorder);
         specificStoreSortByProduct.setMaximumSize(buttonDimension);
         specificStoreSortByProduct.setMinimumSize(buttonDimension);
         specificStoreSortByProduct.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -1802,10 +1907,12 @@ public class SellerPanel {
         frame.setLocationRelativeTo(null);
 
         JPanel createViewSpecificStoreCustomerSales = new JPanel();
+        createViewSpecificStoreCustomerSales.setBackground(goldColor);
         createViewSpecificStoreCustomerSales.setSize(new Dimension(450,450));
         createViewSpecificStoreCustomerSales.setLayout(new BoxLayout(createViewSpecificStoreCustomerSales, BoxLayout.Y_AXIS));
 
         JPanel titlePanel = new JPanel();
+        titlePanel.setOpaque(false);
         titlePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         titlePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titlePanel.setPreferredSize(new Dimension(450, 50));
@@ -1824,6 +1931,7 @@ public class SellerPanel {
         createViewSpecificStoreCustomerSales.add(Box.createVerticalStrut(10));
 
         JPanel sortingPanel = new JPanel();
+        sortingPanel.setOpaque(false);
         sortingPanel.setLayout(new BoxLayout(sortingPanel, BoxLayout.X_AXIS));
         sortingPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         sortingPanel.setSize(new Dimension(450,25));
@@ -1832,6 +1940,7 @@ public class SellerPanel {
         String[] sortingOptions = {"Quantity Sold (Low to High)", "Quantity Sold (High to Low)",
                                     "Revenue Generated (Low to High)", "Revenue Generated (High to Low)"};
         JComboBox<String> sortOptions = new JComboBox<>(sortingOptions);
+        sortOptions.setBorder(customBorder);
         sortOptions.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -1872,6 +1981,7 @@ public class SellerPanel {
         helperPanel.setLayout(new BorderLayout());
 
         JPanel customerPanel = new JPanel();
+        customerPanel.setOpaque(false);
         customerPanel.setLayout(new BoxLayout(customerPanel, BoxLayout.Y_AXIS));
 
         ArrayList<Purchaser> purchasers = selectedStore.getPurchasers();
@@ -1895,6 +2005,7 @@ public class SellerPanel {
         helperPanel.add(customerPanel);
 
         JScrollPane jScrollPane = new JScrollPane(helperPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane.setBorder(customBorder);
         jScrollPane.setPreferredSize(new Dimension(300,300));
         jScrollPane.setMaximumSize(new Dimension(300,300));
 
@@ -1917,12 +2028,14 @@ public class SellerPanel {
 
         JPanel createViewSpecificStoreProductSalesPanel = new JPanel();
         createViewSpecificStoreProductSalesPanel.setLayout(new BoxLayout(createViewSpecificStoreProductSalesPanel, BoxLayout.Y_AXIS));
+        createViewSpecificStoreProductSalesPanel.setBackground(goldColor);
 
         JLabel titleLabel = new JLabel(selectedStore.getName() + "'s Product Sales");
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 15));
 
         JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
         Dimension topPanelDimension = new Dimension(450, 50);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.setMaximumSize(topPanelDimension);
@@ -1935,6 +2048,7 @@ public class SellerPanel {
         topPanel.add(Box.createHorizontalStrut(10));
 
         JPanel sortingPanel = new JPanel();
+        sortingPanel.setOpaque(false);
         sortingPanel.setLayout(new BoxLayout(sortingPanel, BoxLayout.X_AXIS));
         sortingPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         sortingPanel.setSize(new Dimension(450,25));
@@ -1943,6 +2057,7 @@ public class SellerPanel {
         String[] sortingOptions = {"Quantity Sold (Low to High)", "Quantity Sold (High to Low)",
                 "Revenue Generated (Low to High)", "Revenue Generated (High to Low)"};
         JComboBox<String> sortOptions = new JComboBox<>(sortingOptions);
+        sortOptions.setBorder(customBorder);
         sortOptions.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -1983,11 +2098,13 @@ public class SellerPanel {
 
         // Create a JPanel to hold vertically listed JLabels
         JPanel panel = new JPanel();
+        panel.setOpaque(false);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setPreferredSize(new Dimension(280, 300));
 
         // Create helper panel to help center store labels
         JPanel helperPanel = new JPanel();
+        helperPanel.setOpaque(false);
         helperPanel.setLayout(new BorderLayout());
         helperPanel.setSize(new Dimension(280, 300));
 
@@ -2020,7 +2137,9 @@ public class SellerPanel {
 
         JScrollPane psp = new JScrollPane(helperPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         psp.setPreferredSize(scrollPaneDimension);
+
         psp.setMaximumSize(scrollPaneDimension);
+        psp.setBorder(customBorder);
 
         selectedProductStatsLabel = new JLabel("Quantity Sold: , Revenue Generated: ");
         selectedProductStatsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -2113,6 +2232,7 @@ public class SellerPanel {
 
     private static JPanel createFieldWithLabel(String labelText, JComponent field) {
         JPanel panel = new JPanel();
+        panel.setOpaque(false);
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         JLabel label = new JLabel(labelText);
         label.setFont(new Font("Arial", Font.PLAIN, 18));
@@ -2171,6 +2291,8 @@ public class SellerPanel {
         Font largeFont = new Font("Arial", Font.PLAIN, 18);
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backButton.setFont(largeFont);
+        backButton.setBorder(customBorder);
+        backButton.setBackground(greyButtonColor);
 //        Dimension buttonSize = new Dimension(70, 10);
 //        backButton.setPreferredSize(buttonSize);
         backButton.addActionListener(new ActionListener() {
@@ -2222,6 +2344,8 @@ public class SellerPanel {
 
     private JButton createBackToSpecificStoreStatisticsButton() {
         JButton backButton = new JButton("<");
+        backButton.setBorder(customBorder);
+        backButton.setBackground(greyButtonColor);
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         Font largeFont = new Font("Arial", Font.PLAIN, 18);
         backButton.setFont(largeFont);
@@ -2239,6 +2363,8 @@ public class SellerPanel {
 
     private JButton createBackToSpecificStoreStatisticsSaleTypeButton() {
         JButton backButton = new JButton("<");
+        backButton.setBorder(customBorder);
+        backButton.setBackground(greyButtonColor);
         Font largeFont = new Font("Arial", Font.PLAIN, 18);
         backButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         backButton.setFont(largeFont);
