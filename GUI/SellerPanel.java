@@ -100,8 +100,7 @@ public class SellerPanel {
         frame.add(cardPanel);
 
         cardLayout.show(cardPanel, "Main Page");
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+frame.setLocation(300,250);        frame.setVisible(true);
 
     }
 
@@ -110,8 +109,7 @@ public class SellerPanel {
     // Keegan - Server implementation: in progress..
     private JPanel createMainPanel() {
         frame.setSize(400, 500);
-        frame.setLocationRelativeTo(null);
-        frame.setResizable(false);
+frame.setLocation(300,250);        frame.setResizable(false);
         JPanel mainPagePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         mainPagePanel.setLayout(new BoxLayout(mainPagePanel, BoxLayout.Y_AXIS));
         mainPagePanel.setBackground(goldColor);
@@ -173,6 +171,7 @@ public class SellerPanel {
             cardPanel.removeAll();
             cardPanel.add(createProductPanel(), "Create Product");
             cardLayout.show(cardPanel, "Create Product");
+            frame.setSize(400, 400);
         });
 
         JButton createStoreButton = createButton("Create\nStore");
@@ -277,6 +276,7 @@ public class SellerPanel {
     private JPanel createLogOutPanel() {
         frame.setSize(400, 200);
         JPanel logOutPanel = new JPanel();
+        logOutPanel.setBackground(goldColor);
         logOutPanel.setLayout(new BoxLayout(logOutPanel, BoxLayout.Y_AXIS));
 
         JLabel confirmLabel = new JLabel("     Are you sure you want to log out?     ");
@@ -290,16 +290,19 @@ public class SellerPanel {
         Dimension labelDimension = new Dimension(50, 50);
         JButton noButton = new JButton("No");
         noButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        noButton.setBackground(greyButtonColor);
+        noButton.setBorder(customBorder);
         noButton.setPreferredSize(buttonDimension);
         noButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(cardPanel, "Main Page");
                 frame.setSize(400,500);
-                frame.setLocationRelativeTo(null);
-            }
+        frame.setLocation(300,250);            }
         });
 
         JButton yesButton = new JButton("Yes");
+        yesButton.setBackground(greyButtonColor);
+        yesButton.setBorder(customBorder);
         yesButton.setFont(new Font("Arial", Font.PLAIN, 18));
         yesButton.setPreferredSize(buttonDimension);
         yesButton.addActionListener(new ActionListener() {
@@ -314,6 +317,7 @@ public class SellerPanel {
         fillerLabel.setPreferredSize(labelDimension);
 
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
         buttonPanel.setPreferredSize(new Dimension(200, 100));
         buttonPanel.setLayout(new FlowLayout());
         buttonPanel.add(yesButton);
@@ -338,8 +342,7 @@ public class SellerPanel {
 
     private JPanel createListStorePanel() {
         frame.setSize(400, 400);
-        frame.setLocationRelativeTo(null);
-        JPanel listStorePanel = new JPanel();
+frame.setLocation(300,250);        JPanel listStorePanel = new JPanel();
         listStorePanel.setLayout(new BoxLayout(listStorePanel, BoxLayout.Y_AXIS));
         listStorePanel.setBackground(goldColor);
 
@@ -738,7 +741,7 @@ public class SellerPanel {
     private JPanel createContactCustomerPanel() {
         recievingCustomer = null;
         frame.setSize(400, 500);  // Set the frame size accordingly
-        frame.setLocationRelativeTo(null);  // Center the frame
+frame.setLocation(400,250);  // Center the frame
         JPanel contactSellerPanel = new JPanel();
         contactSellerPanel.setBackground(goldColor);
         contactSellerPanel.setLayout(new BoxLayout(contactSellerPanel, BoxLayout.Y_AXIS));
@@ -912,8 +915,7 @@ public class SellerPanel {
 
     private JPanel createSellerMessagesPanel() {
         frame.setSize(400, 500);
-        frame.setLocationRelativeTo(null);
-        JPanel sellerMessagesPanel = new JPanel();
+frame.setLocation(300,250);        JPanel sellerMessagesPanel = new JPanel();
         sellerMessagesPanel.setLayout(new BoxLayout(sellerMessagesPanel, BoxLayout.Y_AXIS));
         sellerMessagesPanel.setBackground(goldColor);
 
@@ -1647,8 +1649,7 @@ public class SellerPanel {
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(cardPanel, "View All Store Sales");
                 frame.setSize(400, 500);
-                frame.setLocationRelativeTo(null);
-            }
+        frame.setLocation(300,250);            }
         });
 
 
@@ -1661,8 +1662,7 @@ public class SellerPanel {
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(cardPanel, "View Specific Store Sales");
                 frame.setSize(600, 500);
-                frame.setLocationRelativeTo(null);
-            }
+        frame.setLocation(300,250);            }
         });
 
         JButton customerShoppingCartButton = new JButton(("View Customer's Shopping Cart"));
@@ -1674,8 +1674,7 @@ public class SellerPanel {
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(cardPanel, "View Customer's Shopping Carts");
                 frame.setSize(600, 500);
-                frame.setLocationRelativeTo(null);
-            }
+        frame.setLocation(300,250);            }
         });
 
         createStoreStatistics.add(Box.createVerticalStrut(20));
@@ -2511,8 +2510,7 @@ public class SellerPanel {
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(cardPanel, "Edit Store");
                 frame.setSize(400, 500);
-                frame.setLocationRelativeTo(null);
-            }
+        frame.setLocation(300,250);            }
         });
         return backButton;
     }
