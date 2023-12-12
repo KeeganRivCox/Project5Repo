@@ -2237,7 +2237,7 @@ public class CustomersPanel {
                 ArrayList<Product> products = getAllProducts();
                 ArrayList<Product> searchedProducts = new ArrayList<>();
                 for (Product product : products) {
-                    if (product.getName().contains(search.getText())) {
+                    if (product.getName().toLowerCase().contains(search.getText().toLowerCase())) {
                         matchFound = true;
                         searchedProducts.add(product);
                     }
