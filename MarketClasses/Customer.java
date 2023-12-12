@@ -13,6 +13,30 @@ public class Customer extends Account implements Serializable {
         this.shoppingCart = shoppingCart;
     }
 
+    public static void updateShoppingCart(Customer currentCustomer) {
+
+        ArrayList<Product> updatedProducts = new ArrayList<>();
+
+        for (Product product : currentCustomer.getShoppingCart().getProductList()) {
+
+            Seller productSeller = new Request().getSeller(product.getStore().getSellerOwner().getEmail());
+
+            Store productStore = productSeller.getStore(product.getStore());
+
+            Product updatedProduct = productStore.getProduct(product);
+
+            updatedProducts.add(updatedProduct);
+
+        }
+
+        currentCustomer.getShoppingCart().getProductList().clear();
+
+        currentCustomer.getShoppingCart().getProductList().addAll(updatedProducts);
+
+        new Request().updateCustomer(currentCustomer);
+
+    }
+
     public Account getAccount() {
 
         return new Account(this.getName(), this.getEmail(), this.getPassword(), this.getUsername(), this.getRole());

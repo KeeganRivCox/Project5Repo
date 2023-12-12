@@ -198,7 +198,17 @@ public class Product implements Serializable {
 
     }
 
-    public void updateProduct(int quantityToPurchase) {
+    public static Product updateProduct(Product product) {
+
+        Seller productSeller = new Request().getSeller(product.getStore().getSellerOwner().getEmail());
+
+        Store productStore = productSeller.getStore(product.getStore());
+
+        return productStore.getProduct(product);
+
+    }
+
+    public void purchaseProduct(int quantityToPurchase) {
       
         int quantityAvailable = this.quantity;
         quantityAvailable -= quantityToPurchase;
