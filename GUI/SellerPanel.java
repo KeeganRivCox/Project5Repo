@@ -167,6 +167,7 @@ public class SellerPanel {
             cardPanel.removeAll();
             cardPanel.add(createProductPanel(), "Create Product");
             cardLayout.show(cardPanel, "Create Product");
+            frame.setSize(400, 400);
         });
 
         JButton createStoreButton = createButton("Create\nStore");
@@ -271,6 +272,7 @@ public class SellerPanel {
     private JPanel createLogOutPanel() {
         frame.setSize(400, 200);
         JPanel logOutPanel = new JPanel();
+        logOutPanel.setBackground(goldColor);
         logOutPanel.setLayout(new BoxLayout(logOutPanel, BoxLayout.Y_AXIS));
 
         JLabel confirmLabel = new JLabel("     Are you sure you want to log out?     ");

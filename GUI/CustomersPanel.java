@@ -677,8 +677,10 @@ public class CustomersPanel {
 
         JPanel storeListingsPanel = new JPanel(); // Main Panel
         storeListingsPanel.setLayout(new BoxLayout(storeListingsPanel, BoxLayout.Y_AXIS));
+        storeListingsPanel.setBackground(customColor);
 
         JPanel topPanel = new JPanel(); // Top panel to hold title and buttons
+        topPanel.setOpaque(false);
         topPanel.setPreferredSize(new Dimension(400, 50));
         topPanel.setMaximumSize(new Dimension(400, 50));
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -699,11 +701,14 @@ public class CustomersPanel {
 
         storeListingsPanel.add(Box.createVerticalStrut(20));
         storeListingsPanel.add(topPanel);
-        storeListingsPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+        JSeparator sep = new JSeparator(JSeparator.HORIZONTAL);
+        sep.setBackground(Color.BLACK);
+        storeListingsPanel.add(sep);
 
 
         String [] dropdownOptions = new String[]{"Most Products Sold", "Least Products Sold"};
         JComboBox sortByDropdown = new JComboBox<>(dropdownOptions);
+        sortByDropdown.setBorder(customBorder);
         sortByDropdown.setBackground(greyButtonColor);
         sortByDropdown.setBorder(customBorder);
         sortByDropdown.addActionListener(new ActionListener() {
@@ -764,6 +769,7 @@ public class CustomersPanel {
         });
 
         JPanel dropDownPanel = new JPanel();
+        dropDownPanel.setOpaque(false);
         dropDownPanel.setPreferredSize(new Dimension(400, 40));
         dropDownPanel.setMaximumSize(new Dimension(400,40));
         dropDownPanel.add(sortByDropdown);
@@ -1005,6 +1011,8 @@ public class CustomersPanel {
         frame.setSize(400,200);
 
         JPanel sellerListingSortPanel = new JPanel();
+        sellerListingSortPanel.setBackground(customColor);
+
         sellerListingSortPanel.setLayout(new BoxLayout(sellerListingSortPanel, BoxLayout.Y_AXIS));
 
         JLabel questionLabel = new JLabel("What would you like to do?");
@@ -1013,6 +1021,8 @@ public class CustomersPanel {
 
         Dimension buttonDimension = new Dimension(300, 40);
         JButton sellerListingButton = new JButton("Show All Sellers");
+        sellerListingButton.setBackground(greyButtonColor);
+        sellerListingButton.setBorder(customBorder);
         sellerListingButton.setPreferredSize(buttonDimension);
         sellerListingButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         sellerListingButton.setFont(new Font("Arial", Font.PLAIN, 18));
@@ -1026,6 +1036,8 @@ public class CustomersPanel {
         });
 
         JButton contactSellersButton = new JButton("Contact Sellers");
+        contactSellersButton.setBackground(greyButtonColor);
+        contactSellersButton.setBorder(customBorder);
         contactSellersButton.setPreferredSize(buttonDimension);
         contactSellersButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         contactSellersButton.setFont(new Font("Arial", Font.PLAIN, 18));
@@ -1038,6 +1050,7 @@ public class CustomersPanel {
             }
         });
         JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.add(createBackToMenuButton());
         topPanel.add(Box.createHorizontalStrut(25));
@@ -1904,6 +1917,7 @@ public class CustomersPanel {
         frame.setSize(400,300);
 
         JPanel searchOptionsPanel = new JPanel();
+        searchOptionsPanel.setBackground(customColor);
         searchOptionsPanel.setLayout(new BoxLayout(searchOptionsPanel, BoxLayout.Y_AXIS));
         searchOptionsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -1913,6 +1927,8 @@ public class CustomersPanel {
 
         Dimension buttonDimension = new Dimension(225, 40);
         JButton productNamesButton = new JButton("Product");
+        productNamesButton.setBorder(customBorder);
+        productNamesButton.setBackground(greyButtonColor);
         productNamesButton.setMaximumSize(buttonDimension);
         productNamesButton.setMinimumSize(buttonDimension);
         productNamesButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -1926,6 +1942,8 @@ public class CustomersPanel {
         });
 
         JButton storeNamesButton = new JButton("Store");
+        storeNamesButton.setBorder(customBorder);
+        storeNamesButton.setBackground(greyButtonColor);
         storeNamesButton.setMaximumSize(buttonDimension);
         storeNamesButton.setMinimumSize(buttonDimension);
         storeNamesButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -1940,6 +1958,8 @@ public class CustomersPanel {
 
         JButton productDescriptionsButton = new JButton("Product Description");
         productDescriptionsButton.setMaximumSize(buttonDimension);
+        productDescriptionsButton.setBackground(greyButtonColor);
+        productDescriptionsButton.setBorder(customBorder);
         productDescriptionsButton.setMinimumSize(buttonDimension);
         productDescriptionsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         productDescriptionsButton.setFont(new Font("Arial", Font.PLAIN, 18));
@@ -1953,6 +1973,7 @@ public class CustomersPanel {
         });
 
         JPanel bottomPanel = new JPanel();
+        bottomPanel.setOpaque(false);
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
         bottomPanel.add(createBackToMenuButton());
         bottomPanel.add(Box.createHorizontalStrut(300));
@@ -2141,10 +2162,12 @@ public class CustomersPanel {
 
         frame.setSize(400, 200);
         JPanel searchedStoreNamePanel = new JPanel();
+        searchedStoreNamePanel.setBackground(customColor);
         searchedStoreNamePanel.setLayout(new BoxLayout(searchedStoreNamePanel, BoxLayout.Y_AXIS));
         searchedStoreNamePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         topPanel.setPreferredSize(new Dimension(400, 40));
         topPanel.setMaximumSize(new Dimension(400, 40));
@@ -2164,6 +2187,8 @@ public class CustomersPanel {
         search.setMaximumSize(new Dimension(300, 50));
 
         JButton searchButton = new JButton("Search");
+        searchButton.setBackground(greyButtonColor);
+        searchButton.setBorder(customBorder);
         searchButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         searchButton.setFont(new Font("Arial", Font.PLAIN, 18));
 
@@ -2205,10 +2230,12 @@ public class CustomersPanel {
     private JPanel searchProductNamePanel () {
         frame.setSize(400, 200);
         JPanel searchedProductNameInput = new JPanel();
+        searchedProductNameInput.setBackground(customColor);
         searchedProductNameInput.setLayout(new BoxLayout(searchedProductNameInput, BoxLayout.Y_AXIS));
         searchedProductNameInput.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         topPanel.setPreferredSize(new Dimension(400, 40));
         topPanel.setMaximumSize(new Dimension(400, 40));
@@ -2228,6 +2255,8 @@ public class CustomersPanel {
         search.setMaximumSize(new Dimension(300, 50));
 
         JButton searchButton = new JButton("Search");
+        searchButton.setBackground(greyButtonColor);
+        searchButton.setBorder(customBorder);
         searchButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         searchButton.setFont(new Font("Arial", Font.PLAIN, 18));
 
@@ -2269,6 +2298,8 @@ public class CustomersPanel {
 
     private JButton createBackToSearchOptionsButton() {
         JButton backButton = new JButton("<");
+        backButton.setBorder(customBorder);
+        backButton.setBackground(greyButtonColor);
         Font largeFont = new Font("Arial", Font.PLAIN, 18);
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backButton.setFont(largeFont);
@@ -2386,10 +2417,12 @@ public class CustomersPanel {
     private JPanel searchProductDescriptionPanel() {
         frame.setSize(400, 200);
         JPanel searchedProductDescription = new JPanel();
+        searchedProductDescription.setBackground(customColor);
         searchedProductDescription.setLayout(new BoxLayout(searchedProductDescription, BoxLayout.Y_AXIS));
         searchedProductDescription.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         topPanel.setPreferredSize(new Dimension(400, 40));
         topPanel.setMaximumSize(new Dimension(400, 40));
@@ -2409,6 +2442,8 @@ public class CustomersPanel {
         search.setMaximumSize(new Dimension(300, 50));
 
         JButton searchButton = new JButton("Search");
+        searchButton.setBackground(greyButtonColor);
+        searchButton.setBorder(customBorder);
         searchButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         searchButton.setFont(new Font("Arial", Font.PLAIN, 18));
 
@@ -2519,6 +2554,8 @@ public class CustomersPanel {
     private JButton createBackToMenuButton() {
         JButton backButton = new JButton("<");
         Font largeFont = new Font("Arial", Font.PLAIN, 18);
+        backButton.setBorder(customBorder);
+        backButton.setBackground(greyButtonColor);
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backButton.setFont(largeFont);
         backButton.setBackground(greyButtonColor);
@@ -2585,5 +2622,7 @@ public class CustomersPanel {
         }
         return allProducts;
     }
+
+
 
 }
