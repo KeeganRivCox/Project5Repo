@@ -105,7 +105,7 @@ public class CustomersPanel {
 //        cardPanel.add(searchProductNamePanel(), "Search Product Input");
 //        cardPanel.add(searchStoreNamePanel(), "Search Store Input");
 //        cardPanel.add(searchProductDescriptionPanel(), "Search Product Description Input");;
-//
+
 
         frame.add(cardPanel);
 
@@ -1024,6 +1024,7 @@ public class CustomersPanel {
 
     private JPanel createLogOutPanel() {
         JPanel logOutPanel = new JPanel();
+        logOutPanel.setBackground(customColor);
         logOutPanel.setLayout(new BoxLayout(logOutPanel, BoxLayout.Y_AXIS));
 
         JLabel confirmLabel = new JLabel("     Are you sure you want to log out?     ");
@@ -1036,6 +1037,8 @@ public class CustomersPanel {
         Dimension buttonDimension = new Dimension(100, 50);
         Dimension labelDimension = new Dimension(50, 50);
         JButton noButton = new JButton("No");
+        noButton.setBorder(customBorder);
+        noButton.setBackground(greyButtonColor);
         noButton.setFont(new Font("Arial", Font.PLAIN, 18));
         noButton.setPreferredSize(buttonDimension);
         noButton.addActionListener(new ActionListener() {
@@ -1047,6 +1050,8 @@ public class CustomersPanel {
         });
 
         JButton yesButton = new JButton("Yes");
+        yesButton.setBorder(customBorder);
+        yesButton.setBackground(greyButtonColor);
         yesButton.setFont(new Font("Arial", Font.PLAIN, 18));
         yesButton.setPreferredSize(buttonDimension);
         yesButton.addActionListener(new ActionListener() {
@@ -1061,6 +1066,7 @@ public class CustomersPanel {
         fillerLabel.setPreferredSize(labelDimension);
 
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
         buttonPanel.setPreferredSize(new Dimension(200, 100));
         buttonPanel.setLayout(new FlowLayout());
         buttonPanel.add(yesButton);
@@ -1453,11 +1459,13 @@ public class CustomersPanel {
         frame.setSize(400, 500);
 
         JPanel pastPurchasesPanel = new JPanel();
+        pastPurchasesPanel.setBackground(customColor);
         pastPurchasesPanel.setLayout(new BoxLayout(pastPurchasesPanel, BoxLayout.Y_AXIS));
         JLabel titleLabel = new JLabel("Purchase History"); //not completely centered
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
 //
         JPanel titlePanel = new JPanel();
+        titlePanel.setOpaque(false);
         titlePanel.setPreferredSize(new Dimension(400, 50));
         titlePanel.setMaximumSize(new Dimension(400, 50));
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
@@ -1469,9 +1477,11 @@ public class CustomersPanel {
         titlePanel.add(Box.createHorizontalGlue());
 
         JPanel helperPanel = new JPanel();
+        helperPanel.setOpaque(false);
         helperPanel.setLayout(new BorderLayout());
 
         JPanel pastPurchases = new JPanel();
+        pastPurchases.setBackground(greyButtonColor);
         pastPurchases.setLayout((new BoxLayout(pastPurchases, BoxLayout.Y_AXIS)));
 
         ArrayList<PurchasedProduct> purchasedProducts = new Request().getCustomer(userEmail).getPreviouslyPurchasedProducts();
@@ -1500,6 +1510,8 @@ public class CustomersPanel {
         }
 
         JButton exportButton = new JButton("Export to CSV");
+        exportButton.setBackground(greyButtonColor);
+        exportButton.setBorder(customBorder);
         exportButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         exportButton.addActionListener(new ActionListener() {
             @Override
@@ -2071,6 +2083,7 @@ public class CustomersPanel {
         String customerUsername = customerAccount.getUsername();
 
         JPanel shoppingCartPanel = new JPanel();
+        shoppingCartPanel.setBackground(customColor);
         shoppingCartPanel.setLayout(new BoxLayout(shoppingCartPanel, BoxLayout.Y_AXIS));
 
         JButton backButton = createBackToAccountPageButton();
@@ -2081,6 +2094,7 @@ public class CustomersPanel {
 
         // Panel for back button and title
         JPanel titlePanel = new JPanel();
+        titlePanel.setOpaque(false);
         titlePanel.setPreferredSize(new Dimension(400, 50));
         titlePanel.setMaximumSize(new Dimension(400, 50));
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
@@ -2093,6 +2107,7 @@ public class CustomersPanel {
 
         // Headers
         JPanel headersPanel = new JPanel();
+        headersPanel.setOpaque(false);
         headersPanel.setPreferredSize(new Dimension(350, 30));
         headersPanel.setMaximumSize(new Dimension(350, 30));
         headersPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
@@ -2105,9 +2120,11 @@ public class CustomersPanel {
 
         // Create a JPanel to hold the cart items
         JPanel cartItemsPanel = new JPanel();
+        cartItemsPanel.setBackground(greyButtonColor);
         cartItemsPanel.setLayout(new BoxLayout(cartItemsPanel, BoxLayout.Y_AXIS));
 
         JPanel helperPanel = new JPanel();
+        helperPanel.setBackground(greyButtonColor);
         helperPanel.setLayout(new BorderLayout());
 
         // Populate cart with shopping cart items
@@ -2148,6 +2165,7 @@ public class CustomersPanel {
             });
 
             JButton deleteButton = new JButton("Delete");
+
             deleteButton.addActionListener(e -> {
                 int deleteConfirmation = JOptionPane.showConfirmDialog(shoppingCartPanel,
                         "Are you sure you want to delete this item?\n\n" +
@@ -2187,9 +2205,10 @@ public class CustomersPanel {
 
         // Checkout Button
         JButton checkoutButton = new JButton("Checkout");
+        checkoutButton.setBorder(customBorder);
+        checkoutButton.setBackground(greyButtonColor);
         checkoutButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         checkoutButton.setFont(new Font("Arial", Font.PLAIN, 16));
-        checkoutButton.setForeground(Color.RED);
 
         checkoutButton.addActionListener(e -> {
             int confirmCheckout = JOptionPane.showConfirmDialog(shoppingCartPanel,
