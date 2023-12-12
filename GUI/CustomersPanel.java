@@ -8,10 +8,8 @@ import java.io.*;
 import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.time.Year;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
-import java.util.Collections;
 
 public class CustomersPanel {
 
@@ -106,8 +104,8 @@ public class CustomersPanel {
 //        cardPanel.add(createSearchOptionsPanel(), "Search Options");
 //        cardPanel.add(searchProductNamePanel(), "Search Product Input");
 //        cardPanel.add(searchStoreNamePanel(), "Search Store Input");
-//        cardPanel.add(searchProductDescriptionPanel(), "Search Product Description Input");
-
+//        cardPanel.add(searchProductDescriptionPanel(), "Search Product Description Input");;
+//
 
         frame.add(cardPanel);
 
@@ -1974,19 +1972,13 @@ public class CustomersPanel {
     }
 
     private JPanel createShoppingCartPanel() {
-        frame.setSize(400, 300);
-        frame.setLocationRelativeTo(null);
+        frame.setSize(400, 400);
         String customerUsername = customerAccount.getUsername();
       
         JPanel shoppingCartPanel = new JPanel();
-        shoppingCartPanel.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
+        shoppingCartPanel.setLayout(new BoxLayout(shoppingCartPanel, BoxLayout.Y_AXIS));
 
-        // Customer Name Label
-
-
-        JButton backButton = createBackToMenuButton();
+        JButton backButton = createBackToAccountPageButton();
 
         JLabel customerNameLabel = new JLabel(customerUsername +"'s Shopping Cart");
         customerNameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -1994,61 +1986,71 @@ public class CustomersPanel {
 
         // Panel for back button and title
         JPanel titlePanel = new JPanel();
+        titlePanel.setPreferredSize(new Dimension(400, 50));
+        titlePanel.setMaximumSize(new Dimension(400, 50));
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
+        titlePanel.add(Box.createHorizontalStrut(20));
         titlePanel.add(backButton);
-        titlePanel.add(Box.createHorizontalStrut(20)); // Add some spacing
+        titlePanel.add(Box.createHorizontalGlue()); // Add some spacing
         titlePanel.add(customerNameLabel);
+        titlePanel.add(Box.createHorizontalStrut(50));
+        titlePanel.add(Box.createHorizontalGlue());
 
-        // Items Label
-        JLabel itemsLabel = new JLabel("Items currently in cart:");
-        itemsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        itemsLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-
-        // Retrieve customer shopping cart
-
-        Customer customer = new Request().getCustomer(userEmail);
-        ShoppingCart customerShoppingCart = customer.getShoppingCart();
+        // Headers
+        JPanel headersPanel = new JPanel();
+        headersPanel.setPreferredSize(new Dimension(350, 30));
+        headersPanel.setMaximumSize(new Dimension(350, 30));
+        headersPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
+        headersPanel.setLayout(new GridLayout(1, 5, 10, 5)); // 1 row, 5 columns
+        headersPanel.add(new JLabel("Store"), JLabel.LEFT_ALIGNMENT);
+        headersPanel.add(new JLabel("Product"), JLabel.LEFT_ALIGNMENT);
+        headersPanel.add(new JLabel("Price"), JLabel.LEFT_ALIGNMENT);
+        headersPanel.add(new JLabel("Quantity"), JLabel.LEFT_ALIGNMENT);
+        headersPanel.add(new JLabel("Delete"), JLabel.LEFT_ALIGNMENT);
 
         // Create a JPanel to hold the cart items
         JPanel cartItemsPanel = new JPanel();
-        cartItemsPanel.setPreferredSize(new Dimension(350, 100));
-        cartItemsPanel.setMaximumSize(new Dimension(350, 100));
         cartItemsPanel.setLayout(new BoxLayout(cartItemsPanel, BoxLayout.Y_AXIS));
 
         JPanel helperPanel = new JPanel();
         helperPanel.setLayout(new BorderLayout());
 
-        // Headers
-        JPanel headersPanel = new JPanel();
-        headersPanel.setAlignmentY(Component.TOP_ALIGNMENT);
-        headersPanel.setLayout(new GridLayout(1, 5, 10, 5)); // 1 row, 5 columns
-        headersPanel.add(new JLabel("Store"));
-        headersPanel.add(new JLabel("Product"));
-        headersPanel.add(new JLabel("Quantity"));
-        headersPanel.add(new JLabel("Price"));
-        headersPanel.add(new JLabel("Delete"));
-
-        helperPanel.add(headersPanel, BorderLayout.NORTH);
-
-        cartItemsPanel.add(helperPanel);
-
         // Populate cart with shopping cart items
+
+        Customer currentCustomer = new Request().getCustomer(userEmail);
+
+        Customer.updateShoppingCart(currentCustomer);
+
+        ShoppingCart customerShoppingCart = currentCustomer.getShoppingCart();
+
+        HashMap<Product, Integer> potentialCheckOuts = new HashMap<>();
 
         for (Product product : customerShoppingCart.getProductList()) {
 
             JPanel rowPanel = new JPanel();
+            rowPanel.setPreferredSize(new Dimension(330, 50));
+            rowPanel.setMaximumSize(new Dimension(330, 50));
+            rowPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
             rowPanel.setLayout(new GridLayout(1, 5, 10, 5)); // 1 row, 5 columns
             JLabel storeLabel = new JLabel(product.getStore().getName());
             JLabel productLabel = new JLabel(product.getName());
-            JLabel priceLabel = new JLabel(String.valueOf(product.getPrice()));
+            JLabel priceLabel = new JLabel(String.format("$%.2f", product.getPrice()));
 
-            SpinnerModel quantityModel = new SpinnerNumberModel(1, 0, Integer.MAX_VALUE, 1);
+            SpinnerModel quantityModel = new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1);
             JSpinner quantitySpinner = new JSpinner(quantityModel);
-            Dimension spinnerSize = new Dimension(60, 20);
+            Dimension spinnerSize = new Dimension(50, 30);
             quantitySpinner.setMaximumSize(spinnerSize);
             quantitySpinner.setMinimumSize(spinnerSize);
+            quantitySpinner.setPreferredSize(spinnerSize);
             JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) quantitySpinner.getEditor();
             editor.getTextField().setEditable(false);
+            potentialCheckOuts.put(product, (Integer) quantitySpinner.getValue());
+            quantitySpinner.addChangeListener(new ChangeListener() {
+                @Override
+                public void stateChanged(ChangeEvent e) {
+                    potentialCheckOuts.put(product, (Integer) quantitySpinner.getValue());
+                }
+            });
 
             JButton deleteButton = new JButton("Delete");
             deleteButton.addActionListener(e -> {
@@ -2061,37 +2063,13 @@ public class CustomersPanel {
                 if (deleteConfirmation == JOptionPane.YES_OPTION) {
                     // User confirmed deletion, remove all components from the cartItemsPanel
 
+                    potentialCheckOuts.remove(product);
                     cartItemsPanel.remove(rowPanel);
                     customerShoppingCart.getProductList().remove(product);
-                    new Request().updateCustomer(customer);
+                    new Request().updateCustomer(currentCustomer);
                     cartItemsPanel.revalidate();
                     cartItemsPanel.repaint();
 
-                }
-            });
-
-            quantitySpinner.addChangeListener(e -> {
-                int quantity = (int) quantitySpinner.getValue();
-
-                if (quantity < 1) {
-                    int deleteConfirmation = JOptionPane.showConfirmDialog(shoppingCartPanel,
-                            "Are you sure you want to delete this item?\n\n" +
-                                    "Store: " + storeLabel.getText() + "\n" +
-                                    "Product: " + productLabel.getText(),
-                            "Confirm Deletion", JOptionPane.YES_NO_OPTION);
-
-                    if (deleteConfirmation == JOptionPane.YES_OPTION) {
-                        // User confirmed deletion, remove all components from the rowPanel
-                        rowPanel.removeAll();
-
-                        // Revalidate and repaint the panel
-                        cartItemsPanel.revalidate();
-                        cartItemsPanel.repaint();
-
-                       } else {
-                        // Reset quantity to 1 if the user chooses not to delete
-                        quantitySpinner.setValue(1);
-                    }
                 }
             });
 
@@ -2104,6 +2082,12 @@ public class CustomersPanel {
             cartItemsPanel.add(rowPanel);
 
         }
+
+        helperPanel.add(cartItemsPanel, BorderLayout.NORTH);
+
+        JScrollPane jsp = new JScrollPane(helperPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        jsp.setPreferredSize(new Dimension(350, 200));
+        jsp.setMaximumSize(new Dimension(350, 200));
 
 
         // Checkout Button
@@ -2120,19 +2104,45 @@ public class CustomersPanel {
             if (confirmCheckout == JOptionPane.YES_OPTION) {
                 // Add checkout logic here
                 // ...
+                StringBuilder purchaseLines = new StringBuilder();
+                HashMap<Product, Integer> definiteCheckouts = new HashMap<>();
+                for (Map.Entry<Product, Integer> entry : potentialCheckOuts.entrySet()) {
+                    Product product = entry.getKey();
+                    Integer amount = entry.getValue();
+                    Product updatedProduct = Product.updateProduct(product);
+                    if (updatedProduct.getQuantity() < amount) {
+                        JOptionPane.showMessageDialog(null, String.format("There are only %d %s in stock", updatedProduct.getQuantity(), updatedProduct.getName()));
+                        return;
+                    }
+                    definiteCheckouts.put(updatedProduct, amount);
+                    purchaseLines.append(String.format("%d %s at $%.2f\n", amount, product.getName(), product.getPrice()));
+                }
+                JOptionPane.showMessageDialog(null, String.format("Checking out %d items...\n%s", potentialCheckOuts.size(), purchaseLines.toString()));
+
+                for (Map.Entry<Product, Integer> entry : definiteCheckouts.entrySet()) {
+
+                    Product product = entry.getKey();
+
+                    product.purchaseProduct(entry.getValue());
+
+                    new Request().updateSeller(product.getStore().getSellerOwner());
+
+                }
+
+                cartItemsPanel.removeAll();
+                cartItemsPanel.revalidate();
+                cartItemsPanel.repaint();
+
             }
         });
 
-        // Add components to the shopping cart panel
-        gbc.weighty = 10;
-        gbc.gridy = 0;
-        shoppingCartPanel.add(titlePanel, gbc);
-        gbc.gridy = 1;
-        shoppingCartPanel.add(itemsLabel, gbc);
-        gbc.gridy = 2;
-        shoppingCartPanel.add(cartItemsPanel, gbc);
-        gbc.gridy = 3;
-        shoppingCartPanel.add(checkoutButton, gbc);
+        shoppingCartPanel.add(titlePanel);
+        shoppingCartPanel.add(Box.createVerticalStrut(10));
+        shoppingCartPanel.add(headersPanel);
+        shoppingCartPanel.add(jsp);
+        shoppingCartPanel.add(Box.createVerticalStrut(10));
+        shoppingCartPanel.add(checkoutButton);
+        shoppingCartPanel.add(Box.createVerticalStrut(20));
 
         return shoppingCartPanel;
     }

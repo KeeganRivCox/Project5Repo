@@ -134,7 +134,7 @@
 22. Customer should be able to see “Nike Shoe” as the search result
 23. Repeat steps 15 and 16 but search by store instead
 24. Search “Phone Store” If the user enters nothing or an invalid store name is put in, the user will receive an error message.
-25. Customer should be able to see “Phone Store” as the search result
+25. Customer should be able to see "iPhone 10" and "iPhone 11"
 26. Repeat steps 15 and 16 but search by product description
 27. In the search text field, type “comfortable” and click the search button. If the user enters nothing or an invalid Product Description, the user will receive an error message.
 28. Customer should be able to see “Nike Shoe” as the search result
@@ -193,7 +193,7 @@
 ## Test 8 - Export CSV:
 1. Run `Server.java`
 2. Run `BoilerBay.java`
-3. Login as “customer@purdue.edu” with password “Purdue@123)
+3. Login as “customer@purdue.edu” with password “Purdue@123"
 4. Click on account and then click on purchase history
 5. Customer should only see Nike Airforce
 6. Click export 
