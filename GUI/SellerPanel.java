@@ -8,6 +8,10 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -583,11 +587,9 @@ public class SellerPanel {
             selectedStore = newStore;
 
             // Open "Create Product" card
-            cardPanel.removeAll();
             cardPanel.add(createProductPanel(), "Create Product");
             cardLayout.show(cardPanel, "Create Product");
 //            frame.setResizable(true);
-            frame.setSize(400, 300);
         });
 
         // Add components to the form panel
@@ -1157,6 +1159,10 @@ public class SellerPanel {
     }
 
     private void handleCSVImport() {
+
+        JOptionPane.showMessageDialog(null, "Make sure your file is formatted as:\n" +
+                "productName,productPrice,productQuantity,productDescription", "CSV Import", JOptionPane.INFORMATION_MESSAGE);
+
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV Files", "csv");
         fileChooser.setFileFilter(filter);
@@ -1168,8 +1174,6 @@ public class SellerPanel {
             String filePath = fileChooser.getSelectedFile().getAbsolutePath();
             System.out.println("Selected file: " + filePath);
 
-            // Add your logic to handle the CSV file import
-            // For example, you can pass the filePath to a method that reads and processes the CSV file
             processCSVFile(filePath);
         } else {
             // User canceled file selection
@@ -1178,9 +1182,63 @@ public class SellerPanel {
     }
 
     private void processCSVFile(String filePath) {
-        // Implement your logic to read and process the CSV file
-        System.out.println("Processing CSV file: " + filePath);
-        // Your CSV file processing logic here
+
+        ArrayList<Product> productsToAdd = new ArrayList<>();
+
+        try (BufferedReader bfr = new BufferedReader(new FileReader(filePath))) {
+
+            String line = "";
+
+            while ((line = bfr.readLine()) != null) {
+
+                String[] productDetails = line.split(",");
+
+                if (productDetails.length != 4) {
+
+                    JOptionPane.showMessageDialog(null, String.format("Line %s is incorrectly formatted\n" +
+                            "aborting import", line), "CSV Import", JOptionPane.ERROR_MESSAGE);
+                    return;
+
+                }
+
+                String productName = productDetails[0];
+
+                double productPrice = 0;
+                try {
+                    productPrice = Double.parseDouble(productDetails[1]);
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, String.format("Product %s's price is incorrectly formatted\n" +
+                            "aborting import", productName), "CSV Import", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                int productQuantity = 0;
+                try {
+                    productQuantity = Integer.parseInt(productDetails[2]);
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, String.format("Product %s's quantity is incorrectly formatted\n" +
+                            "aborting import", productName), "CSV Import", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                String productDescription = productDetails[3];
+
+                productsToAdd.add(new Product(productName, productPrice, productQuantity, productDescription, selectedStore));
+
+            }
+
+            for (Product product : productsToAdd) {
+
+                selectedStore.addProduct(product);
+
+            }
+
+            new Request().updateSeller(selectedStore.getSellerOwner());
+
+            JOptionPane.showMessageDialog(null, "Import successful", "CSV Import", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public JPanel createSellerPanel() {
@@ -1190,8 +1248,7 @@ public class SellerPanel {
 
 
     private JPanel createProductPanel() {
-        frame.setSize(400, 300);
-        frame.setLocationRelativeTo(null);
+        frame.setSize(400, 400);
 
         JPanel createProductPanel = new JPanel();
         createProductPanel.setLayout(new BoxLayout(createProductPanel, BoxLayout.Y_AXIS));
@@ -1207,18 +1264,25 @@ public class SellerPanel {
 
         // Top Panel
         JPanel topPanel = new JPanel();
+        topPanel.setPreferredSize(new Dimension(400, 50));
+        topPanel.setMaximumSize(new Dimension(400, 50));
         topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+        topPanel.add(Box.createHorizontalStrut(20));
         topPanel.add(backToMenuButton);
-        topPanel.add(Box.createHorizontalStrut(85));
+        topPanel.add(Box.createHorizontalGlue());
         topPanel.add(titleLabel);
+        topPanel.add(Box.createHorizontalStrut(50));
         topPanel.add(Box.createHorizontalGlue()); // Add glue to push the title to the right
 
+        createProductPanel.add(Box.createVerticalStrut(10));
         createProductPanel.add(topPanel);
-        createProductPanel.add(Box.createVerticalStrut(20));
+        createProductPanel.add(Box.createVerticalStrut(10));
 
         // Form Panel
-        JPanel formPanel = new JPanel(new GridLayout(6, 1, 10, 10));
+        JPanel formPanel = new JPanel(new GridLayout(6, 1, 10, 5));
+        formPanel.setPreferredSize(new Dimension(350, 300));
+        formPanel.setMaximumSize(new Dimension(350, 300));
         formPanel.setOpaque(false);
 
         // Name
@@ -1316,10 +1380,9 @@ public class SellerPanel {
 
             if (confirmResult == JOptionPane.YES_OPTION) {
                 // User clicked 'Yes', process creation
-                // testing purposes
 
-                Product newProudct = new Product(name, price, quantity, description, selectedStore);
-                selectedStore.addProduct(newProudct);
+                Product newProduct = new Product(name, price, quantity, description, selectedStore);
+                selectedStore.addProduct(newProduct);
                 new Request().updateSeller(selectedStore.getSellerOwner());
 
                 // Reset the create product panel
@@ -1336,9 +1399,8 @@ public class SellerPanel {
 
         // Add components to the form panel
         formPanel.add(createProductButton);
-        createProductButton.add(Box.createVerticalStrut(10));
+        createProductButton.add(Box.createVerticalStrut(20));
         createProductPanel.add(formPanel);
-        createProductButton.add(Box.createVerticalStrut(10));
         createProductButton.setBackground(greyButtonColor);
         createProductButton.setBorder(customBorder);
 
@@ -2365,11 +2427,17 @@ public class SellerPanel {
 
     private static JPanel createFieldWithLabel(String labelText, JComponent field) {
         JPanel panel = new JPanel();
+        panel.setPreferredSize(new Dimension(400, 50));
+        panel.setMaximumSize(new Dimension(400, 50));
         panel.setOpaque(false);
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-        JLabel label = new JLabel(labelText);
+        JLabel label = new JLabel(labelText, JLabel.LEADING);
         label.setFont(new Font("Arial", Font.PLAIN, 18));
         label.setPreferredSize(new Dimension(100, 20));
+        label.setMaximumSize(new Dimension(100, 20));
+        label.setMinimumSize(new Dimension(100, 20));
+        field.setPreferredSize(new Dimension(300, 20));
+        field.setMaximumSize(new Dimension(300, 50));
         panel.add(label);
         panel.add(field);
         return panel;
