@@ -238,7 +238,7 @@ public class CustomersPanel {
         buttonPanel.add(seeAllStoresButton);
         buttonPanel.add(seeAllSellersButton);
 
-
+        
         ImageIcon imageIconBottom = new ImageIcon("images/boilerTrain.png");
         JLabel imageBottomLabel = new JLabel();
         imageBottomLabel.setMinimumSize(new Dimension(100, 100));
