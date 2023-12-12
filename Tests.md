@@ -193,7 +193,7 @@
 ## Test 8 - Export CSV:
 1. Run `Server.java`
 2. Run `BoilerBay.java`
-3. Login as “customer@purdue.edu” with password “Purdue@123)
+3. Login as “customer@purdue.edu” with password “Purdue@123"
 4. Click on account and then click on purchase history
 5. Customer should only see Nike Airforce
 6. Click export 
