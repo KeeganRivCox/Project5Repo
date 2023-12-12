@@ -104,8 +104,8 @@ public class CustomersPanel {
 //        cardPanel.add(createSearchOptionsPanel(), "Search Options");
 //        cardPanel.add(searchProductNamePanel(), "Search Product Input");
 //        cardPanel.add(searchStoreNamePanel(), "Search Store Input");
-//        cardPanel.add(searchProductDescriptionPanel(), "Search Product Description Input");
-
+//        cardPanel.add(searchProductDescriptionPanel(), "Search Product Description Input");;
+//
 
         frame.add(cardPanel);
 
@@ -125,7 +125,7 @@ public class CustomersPanel {
         mainPagePanel.setLayout(new BoxLayout(mainPagePanel, BoxLayout.Y_AXIS));
         //mainPagePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        ImageIcon imageIcon = new ImageIcon("images/boilerBayLogo.jpeg");
+        ImageIcon imageIcon = new ImageIcon("images/boilerBayLogo.png");
         JLabel imageLabel = new JLabel();
         imageLabel.setMinimumSize(new Dimension(100, 100));
         imageLabel.setMaximumSize(new Dimension(100, 100));
@@ -238,8 +238,8 @@ public class CustomersPanel {
         buttonPanel.add(seeAllStoresButton);
         buttonPanel.add(seeAllSellersButton);
 
-
-        ImageIcon imageIconBottom = new ImageIcon("images/boilerTrain.jpeg");
+        
+        ImageIcon imageIconBottom = new ImageIcon("images/boilerTrain.png");
         JLabel imageBottomLabel = new JLabel();
         imageBottomLabel.setMinimumSize(new Dimension(100, 100));
         imageBottomLabel.setMaximumSize(new Dimension(100, 100));
@@ -282,22 +282,29 @@ public class CustomersPanel {
 
         JPanel topPanel = new JPanel();
         topPanel.setOpaque(false);
-        Dimension topPanelDimension = new Dimension(400, 20);
+        Dimension topPanelDimension = new Dimension(400, 50);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
-        topPanel.setPreferredSize(topPanelDimension);
-        topPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
+        topPanel.setMaximumSize(topPanelDimension);
+        topPanel.setMaximumSize(topPanelDimension);
+        topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        topPanel.add(Box.createHorizontalStrut(20));
         topPanel.add(createBackToMenuButton());
         topPanel.add(Box.createHorizontalStrut(20));
         topPanel.add(titleLabel);
-        topPanel.add(Box.createHorizontalStrut(60));
+        topPanel.add(Box.createHorizontalStrut(20));
         //topPanel.add(logOutButton);
 
-        Dimension buttonDimension = new Dimension(300, 50);
+        Dimension buttonDimension = new Dimension(250, 50);
         JButton shoppingCartButton = new JButton(("View Shopping Cart"));
-        shoppingCartButton.setBackground(greyButtonColor);
-        shoppingCartButton.setBorder(customBorder);
-        shoppingCartButton.setPreferredSize(buttonDimension);
+        shoppingCartButton.setMaximumSize(buttonDimension);
+        shoppingCartButton.setMinimumSize(buttonDimension);
         shoppingCartButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        shoppingCartButton.setMaximumSize(buttonDimension);
+        shoppingCartButton.setMinimumSize(buttonDimension);
+        shoppingCartButton.setBackground(greyButtonColor);
+        shoppingCartButton.setForeground(Color.BLACK);
+        shoppingCartButton.setBorder(customBorder);
         shoppingCartButton.setFont(new Font("Arial", Font.PLAIN, 18));
 
         shoppingCartButton.addActionListener(new ActionListener() {
@@ -309,25 +316,34 @@ public class CustomersPanel {
         });
 
         JButton purchaseHistoryButton = new JButton(("My Purchase History"));
-        purchaseHistoryButton.setBackground(greyButtonColor);
-        purchaseHistoryButton.setBorder(customBorder);
-        purchaseHistoryButton.setPreferredSize(buttonDimension);
+        purchaseHistoryButton.setMaximumSize(buttonDimension);
+        purchaseHistoryButton.setMinimumSize(buttonDimension);
         purchaseHistoryButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         purchaseHistoryButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        purchaseHistoryButton.setBackground(greyButtonColor);
+        purchaseHistoryButton.setForeground(Color.BLACK);
+        purchaseHistoryButton.setBorder(customBorder);
         purchaseHistoryButton.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
 
-            cardPanel.add(createPastPurchasesPanel(), "Past Purchases");
-            cardLayout.show(cardPanel, "Past Purchases");
-            frame.setSize(400, 500);
-        }
-    });
+
+                cardPanel.add(createPastPurchasesPanel(), "Past Purchases");
+                cardLayout.show(cardPanel, "Past Purchases");
+                frame.setSize(400, 500);
+            }
+        });
+
 
         JButton logOutButton = new JButton(("Log Out"));
         logOutButton.setBackground(greyButtonColor);
         logOutButton.setBorder(customBorder);
         logOutButton.setPreferredSize(buttonDimension);
+        logOutButton.setMaximumSize(buttonDimension);
+        logOutButton.setMinimumSize(buttonDimension);
         logOutButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        logOutButton.setBackground(greyButtonColor);
+        logOutButton.setForeground(Color.BLACK);
+        logOutButton.setBorder(customBorder);
         logOutButton.setFont(new Font("Arial", Font.PLAIN, 18));
         logOutButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -338,19 +354,16 @@ public class CustomersPanel {
             }
         });
 
-
-
         createAccountPanel.add(Box.createVerticalStrut(20));
         createAccountPanel.add(topPanel);
-        createAccountPanel.add(Box.createVerticalStrut(30));
+        createAccountPanel.add(Box.createVerticalStrut(20));
         createAccountPanel.add(shoppingCartButton);
-        createAccountPanel.add(Box.createVerticalStrut(30));
+        createAccountPanel.add(Box.createVerticalStrut(25));
         createAccountPanel.add(purchaseHistoryButton);
-        createAccountPanel.add(Box.createVerticalStrut(30));
-        //createAccountPanel.add(deleteAccountButton);
-        createAccountPanel.add(Box.createVerticalStrut(80));
+        createAccountPanel.add(Box.createVerticalStrut(25));
         createAccountPanel.add(logOutButton);
         createAccountPanel.add(Box.createVerticalStrut(20));
+
         return createAccountPanel;
     }
 
@@ -371,27 +384,37 @@ public class CustomersPanel {
 
         JPanel topPanel = new JPanel(); // Top panel to hold title and buttons
         topPanel.setOpaque(false);
-        topPanel.setPreferredSize(new Dimension(400, 50));
+        topPanel.setMinimumSize(new Dimension(400, 50));
         topPanel.setMaximumSize(new Dimension(400, 50));
-        topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel titleLabel = new JLabel("Sellers"); // Panel title
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        JLabel titleLabel = new JLabel("All Sellers"); // Panel title
+        titleLabel.setMinimumSize(new Dimension(150, 50));
+        titleLabel.setMaximumSize(new Dimension(150, 50));
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
 
         // Creating buttons
         JButton backToMenuButton = createBackToMenuButton();
         JButton accountPageButton = createBackToAccountPageButton();
 
+        topPanel.add(Box.createHorizontalStrut(20));
         topPanel.add(backToMenuButton);
         topPanel.add(Box.createHorizontalStrut(60));
         topPanel.add(titleLabel);
-        topPanel.add(Box.createHorizontalStrut(30));
+        topPanel.add(Box.createHorizontalStrut(20));
         topPanel.add(accountPageButton);
+        topPanel.add(Box.createHorizontalStrut(20));
+
+        JSeparator topSep = new JSeparator(JSeparator.HORIZONTAL);
+        topSep.setForeground(Color.BLACK);
+        topSep.setBackground(Color.BLACK);
 
         sellerListingsPanel.add(Box.createVerticalStrut(20));
         sellerListingsPanel.add(topPanel);
-        sellerListingsPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+        sellerListingsPanel.add(Box.createVerticalStrut(15));
+        sellerListingsPanel.add(topSep);
 
 
         String [] dropdownOptions = new String[]{"Products Sold High to Low", "Products Sold Low to High"};
@@ -439,9 +462,12 @@ public class CustomersPanel {
                         }
                     });
 
-                    sellerListings.add(sellerLabel);
-                    sellerListings.add(new JSeparator(JSeparator.HORIZONTAL));
+                    JSeparator newSep = new JSeparator(JSeparator.HORIZONTAL);
+                    newSep.setForeground(Color.BLACK);
+                    newSep.setBackground(Color.BLACK);
 
+                    sellerListings.add(sellerLabel);
+                    sellerListings.add(newSep);
                 }
 
                 if(!sellers.isEmpty()){
@@ -467,6 +493,7 @@ public class CustomersPanel {
         sellerListingsPanel.add(dropDownPanel);
 
         JPanel helperPanel = new JPanel();
+        helperPanel.setBackground(greyButtonColor);
         helperPanel.setLayout(new BorderLayout());
 
         sellerListings = new JPanel();
@@ -488,9 +515,12 @@ public class CustomersPanel {
                 }
             });
 
-            sellerListings.add(sellerLabel);
-            sellerListings.add(new JSeparator(JSeparator.HORIZONTAL));
+            JSeparator sep = new JSeparator(JSeparator.HORIZONTAL);
+            sep.setBackground(Color.BLACK);
+            sep.setForeground(Color.BLACK);
 
+            sellerListings.add(sellerLabel);
+            sellerListings.add(sep);
         }
 
 
@@ -513,6 +543,9 @@ public class CustomersPanel {
         JLabel instructionLabel = new JLabel("Click a seller to view their page.");
         instructionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         instructionLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        Dimension instructionDimension = new Dimension(275, 50);
+        instructionLabel.setMinimumSize(instructionDimension);
+        instructionLabel.setMaximumSize(instructionDimension);
 
         sellerListingsPanel.add(Box.createVerticalStrut(10));
         sellerListingsPanel.add(instructionLabel);
@@ -529,23 +562,37 @@ public class CustomersPanel {
         fromProductListings = true;
 
         JPanel productsListingPanel = new JPanel();
+        productsListingPanel.setBackground(customColor);
         productsListingPanel.setLayout(new BoxLayout(productsListingPanel, BoxLayout.Y_AXIS));
+
         JLabel titleLabel = new JLabel("Products"); //not completely centered
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
-//
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titleLabel.setMinimumSize(new Dimension(150, 50));
+        titleLabel.setMaximumSize(new Dimension(150, 50));
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+
         JPanel titlePanel = new JPanel();
-        titlePanel.setPreferredSize(new Dimension(400, 50));
+        titlePanel.setOpaque(false);
+        titlePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titlePanel.setMinimumSize(new Dimension(400, 50));
         titlePanel.setMaximumSize(new Dimension(400, 50));
-        titlePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        titlePanel.add(createBackToMenuButton());
-        titlePanel.add(Box.createHorizontalStrut(50));
-        titlePanel.add(titleLabel);
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
+
+
         titlePanel.add(Box.createHorizontalStrut(20));
+        titlePanel.add(createBackToMenuButton());
+        titlePanel.add(Box.createHorizontalStrut(70));
+        titlePanel.add(titleLabel);
+        titlePanel.add(Box.createHorizontalStrut(30));
         titlePanel.add(createBackToAccountPageButton());
+        titlePanel.add(Box.createHorizontalStrut(20));
 
         String [] dropdownOptions = new String[]{"Price High To Low", "Price Low to High", "Quantity High to Low", "Quantity Low to High"};
         JComboBox sortByDropdown = new JComboBox<>(dropdownOptions);
-
+        sortByDropdown.setMinimumSize(new Dimension(100, 50));
+        sortByDropdown.setMaximumSize(new Dimension(100, 50));
+        sortByDropdown.setBackground(greyButtonColor);
+        sortByDropdown.setBorder(customBorder);
         sortByDropdown.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String selection = sortByDropdown.getSelectedItem().toString();
@@ -614,12 +661,15 @@ public class CustomersPanel {
 
 
         JPanel dropDownPanel = new JPanel();
+        dropDownPanel.setOpaque(false);
         dropDownPanel.setPreferredSize(new Dimension(400, 40));
         dropDownPanel.setMaximumSize(new Dimension(400,40));
         dropDownPanel.add(sortByDropdown);
 
         JPanel helperPanel = new JPanel();
-        helperPanel.setLayout(new BorderLayout());
+        helperPanel.setLayout(new BoxLayout(helperPanel, BoxLayout.Y_AXIS));
+        helperPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        helperPanel.setBackground(greyButtonColor);
 
         productPanel = new JPanel();
         productPanel.setLayout((new BoxLayout(productPanel, BoxLayout.Y_AXIS)));
@@ -641,23 +691,29 @@ public class CustomersPanel {
                 }
             });
 
+            JSeparator sep = new JSeparator(JSeparator.HORIZONTAL);
+            sep.setForeground(Color.BLACK);
+
             productPanel.add(productLine);
             productPanel.add(Box.createVerticalStrut(1));
-            productPanel.add(new JSeparator(JSeparator.HORIZONTAL));
-
+            productPanel.add(sep);
         }
 
-        helperPanel.add(productPanel, BorderLayout.NORTH);
+        helperPanel.add(productPanel);
 
         JScrollPane jsp = new JScrollPane(helperPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jsp.setPreferredSize(new Dimension(300, 300));
-        jsp.setMaximumSize(new Dimension(300,300));
-
+        jsp.setPreferredSize(new Dimension(325, 300));
+        jsp.setMaximumSize(new Dimension(325,300));
+        jsp.setBorder(customBorder);
 
         if (!products.isEmpty()) {
             productPanel.remove(productPanel.getComponentCount() - 1);
         }
 
+        JSeparator newSep = new JSeparator(JSeparator.HORIZONTAL);
+        newSep.setForeground(Color.BLACK);
+        newSep.setBackground(Color.BLACK);
+        newSep.setBorder(customBorder);
 
         JLabel instructionLabel = new JLabel("Click a product to view its page.");
         instructionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -665,14 +721,16 @@ public class CustomersPanel {
 
         productsListingPanel.add(Box.createVerticalStrut(20));
         productsListingPanel.add(titlePanel);
-        productsListingPanel.add(new JSeparator(JSeparator.HORIZONTAL));
-        productsListingPanel.add(Box.createVerticalStrut(5));
+        productsListingPanel.add(Box.createVerticalStrut(15));
+        productsListingPanel.add(newSep);
+        productsListingPanel.add(Box.createVerticalStrut(10));
         productsListingPanel.add(dropDownPanel);
         productsListingPanel.add(Box.createVerticalStrut(5));
         productsListingPanel.add(jsp);
         productsListingPanel.add(Box.createVerticalStrut(20));
         productsListingPanel.add(instructionLabel);
         productsListingPanel.add(Box.createVerticalStrut(20));
+
         return productsListingPanel;
     }
 
@@ -1392,138 +1450,106 @@ public class CustomersPanel {
     }
 
     private JPanel createPastPurchasesPanel() {
+        frame.setSize(400, 500);
+
         JPanel pastPurchasesPanel = new JPanel();
         pastPurchasesPanel.setLayout(new BoxLayout(pastPurchasesPanel, BoxLayout.Y_AXIS));
+        JLabel titleLabel = new JLabel("Purchase History"); //not completely centered
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+//
+        JPanel titlePanel = new JPanel();
+        titlePanel.setPreferredSize(new Dimension(400, 50));
+        titlePanel.setMaximumSize(new Dimension(400, 50));
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
+        titlePanel.add(Box.createHorizontalStrut(20));
+        titlePanel.add(createBackToAccountPageButton());
+        titlePanel.add(Box.createHorizontalGlue());
+        titlePanel.add(titleLabel);
+        titlePanel.add(Box.createHorizontalStrut(50));
+        titlePanel.add(Box.createHorizontalGlue());
 
-        // Back button
-        JButton backButtonPastPurchases = createBackToMenuButton();
-        backButtonPastPurchases.setMaximumSize(new Dimension(45, 30));
+        JPanel helperPanel = new JPanel();
+        helperPanel.setLayout(new BorderLayout());
 
-        Dimension titleDimension = new Dimension(250, 50);
-        JLabel titleLabelPastPurchases = new JLabel("Export Purchase History");
+        JPanel pastPurchases = new JPanel();
+        pastPurchases.setLayout((new BoxLayout(pastPurchases, BoxLayout.Y_AXIS)));
 
-        titleLabelPastPurchases.setMinimumSize(titleDimension);
-        titleLabelPastPurchases.setMaximumSize(titleDimension);
-        titleLabelPastPurchases.setAlignmentX(Component.CENTER_ALIGNMENT);
-        titleLabelPastPurchases.setFont(new Font("Arial", Font.BOLD, 16));
+        ArrayList<PurchasedProduct> purchasedProducts = new Request().getCustomer(userEmail).getPreviouslyPurchasedProducts();
 
-        // Panel for back button and title
-        JPanel titlePanelPastPurchases = new JPanel();
-        titlePanelPastPurchases.setLayout(new BoxLayout(titlePanelPastPurchases, BoxLayout.X_AXIS));
-        titlePanelPastPurchases.add(Box.createHorizontalStrut(15));
-        titlePanelPastPurchases.add(backButtonPastPurchases);
-        titlePanelPastPurchases.add(Box.createHorizontalStrut(20));
-        titlePanelPastPurchases.add(titleLabelPastPurchases);
+        for (PurchasedProduct purchasedProduct : purchasedProducts) {
 
-        // Column labels
-        JLabel productLabel = new JLabel("Product");
-        JLabel priceLabel = new JLabel("Price");
-        JLabel quantityLabel = new JLabel("Quantity");
+            JLabel historyLine = new JLabel(String.format("%d %s at $%.2f", purchasedProduct.getAmountPurchased(), purchasedProduct.getPurchasedProduct().getName(), purchasedProduct.getPurchasedProduct().getPrice()));
+            historyLine.setAlignmentX(Component.CENTER_ALIGNMENT);
+            historyLine.setFont(new Font("Arial", Font.PLAIN, 15));
 
-        JPanel columnLabelsPanel = new JPanel();
-        columnLabelsPanel.setLayout(new GridLayout(1, 3));
-        columnLabelsPanel.add(productLabel);
-        columnLabelsPanel.add(priceLabel);
-        columnLabelsPanel.add(quantityLabel);
+            pastPurchases.add(historyLine);
+            pastPurchases.add(Box.createVerticalStrut(1));
+            pastPurchases.add(new JSeparator(JSeparator.HORIZONTAL));
 
-        JPanel storeNamePanelPastPurchases = new JPanel();
-        String[] dummyStoresItem = new String[]{"Pdt 1", "Price 1", "Qty 1",
-                "Pdt 2", "Price 2", "Qty 2",
-                "Pdt 3", "Price 3", "Qty 3",
-                "Pdt 4", "Price 4", "Qty 4",
-                "Pdt 5", "Price 5", "Qty 5",
-                "Pdt 6", "Price 6", "Qty 6",
-                "Pdt 7", "Price 7", "Qty 7",
-                "Pdt 8", "Price 8", "Qty 8",
-                "Pdt 9", "Price 9", "Qty 9",
-                "Pdt 10", "Price 10", "Qty 10",
-                "Pdt 11", "Price 11", "Qty 11",
-                "Pdt 12", "Price 12", "Qty 12",
-                "Pdt 13", "Price 13", "Qty 13",
-                "Pdt 14", "Price 14", "Qty 14",
-                "Pdt 15", "Price 15", "Qty 15"};
-
-        storeNamePanelPastPurchases.setLayout(new GridLayout(dummyStoresItem.length / 3, 3)); // 3 columns
-
-
-        for (int i = 0; i < dummyStoresItem.length; i += 3) {
-            JLabel productLabelItem = new JLabel(dummyStoresItem[i]);
-            JLabel priceLabelItem = new JLabel(dummyStoresItem[i + 1]);
-            JLabel quantityLabelItem = new JLabel(dummyStoresItem[i + 2]);
-
-            productLabelItem.setAlignmentX(Component.CENTER_ALIGNMENT);
-            productLabelItem.setFont(new Font("Arial", Font.PLAIN, 18));
-
-            priceLabelItem.setAlignmentX(Component.CENTER_ALIGNMENT);
-            priceLabelItem.setFont(new Font("Arial", Font.PLAIN, 18));
-
-            quantityLabelItem.setAlignmentX(Component.CENTER_ALIGNMENT);
-            quantityLabelItem.setFont(new Font("Arial", Font.PLAIN, 18));
-
-
-            storeNamePanelPastPurchases.add(productLabelItem);
-            storeNamePanelPastPurchases.add(priceLabelItem);
-            storeNamePanelPastPurchases.add(quantityLabelItem);
         }
 
-        // Add a line between columns
-        storeNamePanelPastPurchases.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.BLACK));
+        helperPanel.add(pastPurchases, BorderLayout.NORTH);
 
-        JScrollPane pspPastPurchases = new JScrollPane(storeNamePanelPastPurchases, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        JScrollPane jsp = new JScrollPane(helperPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jsp.setPreferredSize(new Dimension(300, 300));
+        jsp.setMaximumSize(new Dimension(300, 300));
 
-        pspPastPurchases.setPreferredSize(new Dimension(300, 320));
 
-        JButton confirmButtonPastPurchases = new JButton("Export");
-        confirmButtonPastPurchases.setAlignmentX(Component.CENTER_ALIGNMENT);
-        confirmButtonPastPurchases.setFont(new Font("Arial", Font.PLAIN, 18));
-        confirmButtonPastPurchases.addActionListener(new ActionListener() {
+        if (!purchasedProducts.isEmpty()) {
+            pastPurchases.remove(pastPurchases.getComponentCount() - 1);
+        }
+
+        JButton exportButton = new JButton("Export to CSV");
+        exportButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        exportButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (dummyStoresItem == null) {
-                    JOptionPane.showMessageDialog(createPastPurchasesPanel(), "You have no Purchase History to Export", "Error!", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    // Handle confirmation action
-                    List<String[]> data = new ArrayList<>();
-                    data.add(new String[]{"Product", "Price", "Quantity"});
 
-                    for (int i = 0; i < dummyStoresItem.length; i += 3) {
-                        String[] row = new String[]{dummyStoresItem[i], dummyStoresItem[i + 1], dummyStoresItem[i + 2]};
-                        data.add(row);
-                    }
+                int choice = JOptionPane.showConfirmDialog(null, "Do you want to export purchase history to a CSV file?", "Export History", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss");
-                    String timestamp = dateFormat.format(new Date());
-                    String fileName = timestamp + "-" + customerShoppingCartQuantity + "-purchase history.csv";
+                if (choice == JOptionPane.YES_OPTION) {
 
-                    try (FileWriter writer = new FileWriter(fileName)) {
-                        for (String[] rowData : data) {
-                            writer.write(String.join(",", rowData) + "\n");
+                    String fileName = JOptionPane.showInputDialog(null, "Enter the name of the file you'd like to create", "Export History", JOptionPane.INFORMATION_MESSAGE);
+
+                    try (PrintWriter pw = new PrintWriter(new FileWriter(fileName))){
+
+                        for (PurchasedProduct purchasedProduct : purchasedProducts) {
+
+                            String productName = purchasedProduct.getPurchasedProduct().getName();;
+
+                            double productPrice = purchasedProduct.getPurchasedProduct().getPrice();
+
+                            int quantityPurchased = purchasedProduct.getAmountPurchased();
+
+                            String productDescription = purchasedProduct.getPurchasedProduct().getDescription();
+
+                            pw.println(String.format("%s,%.2f,%d,%s", productName, productPrice, quantityPurchased, productDescription));
+
                         }
-                        JOptionPane.showMessageDialog(createPastPurchasesPanel(), "Export successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+                        JOptionPane.showMessageDialog(null, "Purchase history successfully exported", "Export History", JOptionPane.INFORMATION_MESSAGE);
+
                     } catch (IOException ex) {
-                        ex.printStackTrace();
-                        JOptionPane.showMessageDialog(createPastPurchasesPanel(), "Error exporting to CSV.", "Error", JOptionPane.ERROR_MESSAGE);
+                        throw new RuntimeException(ex);
                     }
+
+                } else {
+                    return;
                 }
+
             }
         });
 
-        pastPurchasesPanel.setLayout(new BoxLayout(pastPurchasesPanel, BoxLayout.Y_AXIS));
         pastPurchasesPanel.add(Box.createVerticalStrut(20));
-        pastPurchasesPanel.add(titlePanelPastPurchases);
-        pastPurchasesPanel.add(columnLabelsPanel);
-        pastPurchasesPanel.add(pspPastPurchases);
-        pastPurchasesPanel.add(Box.createVerticalStrut(20));
-        //pastPurchasesPanel.add(exportButton);
-
-        pastPurchasesPanel.add(Box.createVerticalStrut(20));
-
+        pastPurchasesPanel.add(titlePanel);
+        pastPurchasesPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+        pastPurchasesPanel.add(Box.createVerticalStrut(10));
+        pastPurchasesPanel.add(jsp);
+        pastPurchasesPanel.add(Box.createVerticalStrut(10));
+        pastPurchasesPanel.add(exportButton);
+        pastPurchasesPanel.add(Box.createVerticalStrut(50));
         return pastPurchasesPanel;
     }
-
-
-
-
 
     private JPanel createSellerPanel(Seller seller) { //should have an object parameter that takes a Seller object
         Seller updatedSeller = new Request().getSeller(seller.getEmail());
@@ -2194,10 +2220,16 @@ public class CustomersPanel {
 
                     product.purchaseProduct(entry.getValue());
 
+                    product.getStore().getPurchasers().add(new Purchaser(currentCustomer.getUsername(), product.getName(), entry.getValue(), entry.getValue() * product.getPrice()));
+
                     new Request().updateSeller(product.getStore().getSellerOwner());
+
+                    currentCustomer.getPreviouslyPurchasedProducts().add(new PurchasedProduct(product, entry.getValue()));
 
                 }
 
+                customerShoppingCart.getProductList().clear();
+                new Request().updateCustomer(currentCustomer);
                 cartItemsPanel.removeAll();
                 cartItemsPanel.revalidate();
                 cartItemsPanel.repaint();
